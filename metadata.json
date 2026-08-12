@@ -1,0 +1,6 @@
+{
+  "name": "Sarva Solar",
+  "description": "Empowering Homes & Businesses with Clean Solar Energy. Premium Solar EPC services, calculators, subsidy guide, products, projects portfolio, and quote management system.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

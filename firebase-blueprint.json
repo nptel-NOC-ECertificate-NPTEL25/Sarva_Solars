@@ -1,0 +1,137 @@
+{
+  "entities": {
+    "Lead": {
+      "title": "Lead",
+      "description": "Customer lead submission for solar consultation",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "email": { "type": "string", "maxLength": 100 },
+        "city": { "type": "string", "maxLength": 100 },
+        "systemSize": { "type": "string", "maxLength": 50 },
+        "monthlyBill": { "type": "string", "maxLength": 50 },
+        "isCommercial": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["New", "Contacted", "Survey Scheduled", "Converted", "Closed"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["name", "phone", "email"]
+    },
+    "QuoteRequest": {
+      "title": "QuoteRequest",
+      "description": "Calculated quote request from solar calculator",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "email": { "type": "string", "maxLength": 100 },
+        "pincode": { "type": "string", "maxLength": 10 },
+        "roofType": { "type": "string", "maxLength": 50 },
+        "approxBill": { "type": "number" },
+        "notes": { "type": "string", "maxLength": 500 },
+        "status": { "type": "string", "enum": ["New", "In Review", "Quote Sent", "Closed"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["name", "phone", "email"]
+    },
+    "JobOpening": {
+      "title": "JobOpening",
+      "description": "Careers job vacancy position",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string", "maxLength": 150 },
+        "location": { "type": "string", "maxLength": 150 },
+        "type": { "type": "string", "enum": ["Full-time", "Part-time", "Contract", "Internship"] },
+        "exp": { "type": "string", "maxLength": 100 },
+        "desc": { "type": "string", "maxLength": 2000 },
+        "department": { "type": "string", "maxLength": 100 },
+        "isActive": { "type": "boolean" },
+        "postedDate": { "type": "string" }
+      },
+      "required": ["title", "location", "type", "exp", "desc", "isActive"]
+    },
+    "JobApplication": {
+      "title": "JobApplication",
+      "description": "Candidate job application",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "jobId": { "type": "string" },
+        "name": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "email": { "type": "string", "maxLength": 100 },
+        "role": { "type": "string", "maxLength": 150 },
+        "experience": { "type": "string", "maxLength": 200 },
+        "message": { "type": "string", "maxLength": 1000 },
+        "status": { "type": "string", "enum": ["New", "Shortlisted", "Interviewed", "Hired", "Rejected"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["name", "phone", "email", "role"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Solar equipment or kit item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 150 },
+        "category": { "type": "string", "maxLength": 100 },
+        "capacityKw": { "type": "number" },
+        "price": { "type": "number" },
+        "efficiencyPercent": { "type": "number" },
+        "warrantyYears": { "type": "number" },
+        "imageUrl": { "type": "string", "maxLength": 500 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "isFeatured": { "type": "boolean" }
+      },
+      "required": ["name", "category", "price"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Portfolio solar installation project",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string", "maxLength": 150 },
+        "clientName": { "type": "string", "maxLength": 100 },
+        "location": { "type": "string", "maxLength": 100 },
+        "capacityKw": { "type": "number" },
+        "systemType": { "type": "string", "maxLength": 100 },
+        "completionDate": { "type": "string" },
+        "imageUrl": { "type": "string", "maxLength": 500 },
+        "savingsPerYear": { "type": "number" },
+        "review": { "type": "string", "maxLength": 1000 }
+      },
+      "required": ["title", "clientName", "capacityKw"]
+    }
+  },
+  "firestore": {
+    "/leads/{leadId}": {
+      "schema": { "$ref": "#/entities/Lead" },
+      "description": "Collection of incoming consultation leads"
+    },
+    "/quotes/{quoteId}": {
+      "schema": { "$ref": "#/entities/QuoteRequest" },
+      "description": "Collection of user solar quote requests"
+    },
+    "/jobs/{jobId}": {
+      "schema": { "$ref": "#/entities/JobOpening" },
+      "description": "Collection of career job openings"
+    },
+    "/jobApplications/{appId}": {
+      "schema": { "$ref": "#/entities/JobApplication" },
+      "description": "Collection of candidate job applications"
+    },
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Collection of solar products"
+    },
+    "/projects/{projectId}": {
+      "schema": { "$ref": "#/entities/Project" },
+      "description": "Collection of completed portfolio projects"
+    }
+  }
+}

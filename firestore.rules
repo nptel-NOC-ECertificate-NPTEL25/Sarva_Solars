@@ -1,0 +1,73 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Leads collection rules
+    match /leads/{leadId} {
+      allow create: if request.resource.data.keys().hasAll(['name', 'phone', 'email'])
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() <= 100
+                    && request.resource.data.phone is string
+                    && request.resource.data.phone.size() <= 20
+                    && request.resource.data.email is string
+                    && request.resource.data.email.size() <= 100;
+      allow read, update, delete: if isSignedIn();
+    }
+
+    // Quotes collection rules
+    match /quotes/{quoteId} {
+      allow create: if request.resource.data.keys().hasAll(['name', 'phone', 'email'])
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() <= 100
+                    && request.resource.data.phone is string
+                    && request.resource.data.phone.size() <= 20
+                    && request.resource.data.email is string
+                    && request.resource.data.email.size() <= 100;
+      allow read, update, delete: if isSignedIn();
+    }
+
+    // Job Openings collection rules
+    match /jobs/{jobId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    // Job Applications collection rules
+    match /jobApplications/{appId} {
+      allow create: if request.resource.data.keys().hasAll(['name', 'phone', 'email', 'role'])
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() <= 100
+                    && request.resource.data.phone is string
+                    && request.resource.data.phone.size() <= 20
+                    && request.resource.data.email is string
+                    && request.resource.data.email.size() <= 100;
+      allow read, update, delete: if isSignedIn();
+    }
+
+    // Products collection rules
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    // Projects collection rules
+    match /projects/{projectId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+  }
+}
