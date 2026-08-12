@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Filter, Phone, Mail, MapPin, Trash2, CheckCircle2, Clock } from 'lucide-react';
 import { Lead } from '../../types';
-import { updateLeadStatus, deleteLead, notifyDataUpdated } from '../../services/api';
+import { updateLead, deleteLead, notifyDataUpdated } from '../../services/api';
 
 interface AdminLeadsTabProps {
   leads: Lead[];
@@ -21,7 +21,7 @@ export const AdminLeadsTab: React.FC<AdminLeadsTabProps> = ({
     const matchesSearch =
       lead.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lead.phone.includes(searchTerm) ||
-      lead.city.toLowerCase().includes(searchTerm.toLowerCase());
+      (lead.city || '').toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'All' || lead.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -31,7 +31,7 @@ export const AdminLeadsTab: React.FC<AdminLeadsTabProps> = ({
       return;
     }
     try {
-      await updateLeadStatus(id, newStatus);
+      await updateLead(id, { status: newStatus });
       setLeadsState((prev) =>
         prev.map((l) => (l.id === id ? { ...l, status: newStatus } : l))
       );
@@ -125,7 +125,7 @@ export const AdminLeadsTab: React.FC<AdminLeadsTabProps> = ({
                   {lead.city}, {lead.state || 'AP'}
                 </td>
                 <td className="p-3.5 font-bold text-amber-600">
-                  {lead.monthlyBillRange || 'Not specified'}
+                  {lead.monthlyBill || 'Not specified'}
                 </td>
                 <td className="p-3.5 text-slate-400 text-[11px]">
                   {lead.createdAt ? new Date(lead.createdAt).toLocaleDateString('en-IN') : 'Recent'}

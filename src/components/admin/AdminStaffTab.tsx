@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { UserCheck, Plus, Edit2, Trash2, Shield, User as UserIcon, Lock, Mail, Phone, CheckCircle2, X } from 'lucide-react';
-import { User } from '../../types';
-import { fetchStaffList, createStaffUser, updateStaffUser, deleteStaffUser, notifyDataUpdated } from '../../services/api';
+import { User, UserRole } from '../../types';
+import { fetchUsers, createStaffUser, updateStaffUser, deleteStaffUser, notifyDataUpdated } from '../../services/api';
 
 interface AdminStaffTabProps {
   currentUser: User;
@@ -18,7 +18,7 @@ export const AdminStaffTab: React.FC<AdminStaffTabProps> = ({ currentUser, showT
     name: '',
     email: '',
     phone: '',
-    role: 'Staff' as 'Admin' | 'Staff' | 'Viewer',
+    role: 'Manager' as 'Admin' | 'Manager' | 'Sales' | 'Technician',
     password: ''
   });
 
@@ -29,7 +29,7 @@ export const AdminStaffTab: React.FC<AdminStaffTabProps> = ({ currentUser, showT
   const loadStaff = async () => {
     setLoading(true);
     try {
-      const data = await fetchStaffList();
+      const data = await fetchUsers();
       setStaff(data);
     } catch (err: any) {
       showToast(err.message || 'Failed to load staff accounts', 'error');
@@ -40,7 +40,7 @@ export const AdminStaffTab: React.FC<AdminStaffTabProps> = ({ currentUser, showT
 
   const handleOpenCreate = () => {
     setEditingStaff(null);
-    setFormData({ name: '', email: '', phone: '', role: 'Staff', password: '' });
+    setFormData({ name: '', email: '', phone: '', role: 'Manager', password: '' });
     setIsModalOpen(true);
   };
 
@@ -50,7 +50,7 @@ export const AdminStaffTab: React.FC<AdminStaffTabProps> = ({ currentUser, showT
       name: member.name,
       email: member.email,
       phone: member.phone || '',
-      role: member.role,
+      role: (['Admin', 'Manager', 'Sales', 'Technician'].includes(member.role) ? member.role : 'Manager') as 'Admin' | 'Manager' | 'Sales' | 'Technician',
       password: ''
     });
     setIsModalOpen(true);
@@ -238,9 +238,10 @@ export const AdminStaffTab: React.FC<AdminStaffTabProps> = ({ currentUser, showT
                   onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
                   className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-slate-900 font-bold"
                 >
-                  <option value="Staff font-bold">Staff (Standard CMS Operations)</option>
+                  <option value="Manager">Manager (Standard CMS Operations)</option>
                   <option value="Admin">Admin (Full Control + Staff Management)</option>
-                  <option value="Viewer">Viewer (Read-Only Access)</option>
+                  <option value="Sales">Sales Executive</option>
+                  <option value="Technician">Technician / Engineer</option>
                 </select>
               </div>
 

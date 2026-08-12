@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Upload, Folder, Copy, Trash2, Check, Image as ImageIcon, ExternalLink, RefreshCw } from 'lucide-react';
-import { uploadMediaAsset, fetchMediaAssets, deleteMediaAsset, notifyDataUpdated } from '../../services/api';
+import { uploadMediaFile, fetchMediaList, deleteMediaFile, notifyDataUpdated } from '../../services/api';
 
 interface MediaAsset {
   id: string;
@@ -25,8 +25,14 @@ export const AdminMediaTab: React.FC<AdminMediaTabProps> = ({ showToast }) => {
 
   const loadAssets = async () => {
     try {
-      const data = await fetchMediaAssets();
-      setAssets(data);
+      const data = await fetchMediaList();
+      setAssets(data.map((item, index) => ({
+        id: item.name || `media-${index}`,
+        name: item.name,
+        url: item.url,
+        sizeBytes: item.size || 0,
+        uploadedAt: item.createdAt || new Date().toISOString()
+      })));
     } catch (err: any) {
       showToast(err.message || 'Failed to fetch media assets', 'error');
     }
@@ -42,7 +48,7 @@ export const AdminMediaTab: React.FC<AdminMediaTabProps> = ({ showToast }) => {
 
     setUploading(true);
     try {
-      const uploaded = await uploadMediaAsset(file);
+      await uploadMediaFile(file);
       showToast(`Media file ${file.name} uploaded successfully!`);
       notifyDataUpdated();
       loadAssets();
@@ -60,13 +66,13 @@ export const AdminMediaTab: React.FC<AdminMediaTabProps> = ({ showToast }) => {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!window.confirm(`CONFIRMATION: Are you sure you want to permanently delete media asset "${name}"?`)) {
+  const handleDelete = async (filename: string) => {
+    if (!window.confirm(`CONFIRMATION: Are you sure you want to permanently delete media asset "${filename}"?`)) {
       return;
     }
     try {
-      await deleteMediaAsset(id);
-      showToast(`Media asset ${name} deleted.`);
+      await deleteMediaFile(filename);
+      showToast(`Media asset ${filename} deleted.`);
       notifyDataUpdated();
       loadAssets();
     } catch (err: any) {
@@ -152,7 +158,7 @@ export const AdminMediaTab: React.FC<AdminMediaTabProps> = ({ showToast }) => {
               </button>
 
               <button
-                onClick={() => handleDelete(asset.id, asset.name)}
+                onClick={() => handleDelete(asset.name)}
                 className="p-1.5 rounded-xl text-red-500 hover:bg-red-50 border border-transparent hover:border-red-100 transition-colors"
                 title="Delete Media Asset"
               >

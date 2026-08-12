@@ -86,7 +86,7 @@ export const AdminQuotesTab: React.FC<AdminQuotesTabProps> = ({
               <th className="p-3.5">Phone & City</th>
               <th className="p-3.5">System Size</th>
               <th className="p-3.5">Net Cost after Subsidy</th>
-              <th className="p-3.5">Payback Term</th>
+              <th className="p-3.5">Rooftop Structure</th>
               <th className="p-3.5">Status</th>
               <th className="p-3.5 text-right">Actions</th>
             </tr>
@@ -100,13 +100,13 @@ export const AdminQuotesTab: React.FC<AdminQuotesTabProps> = ({
                   <div className="text-slate-400">{q.city}</div>
                 </td>
                 <td className="p-3.5 font-bold text-amber-600">
-                  {q.recommendedKw || 3} kWp System
+                  {q.proposedKw || 3} kWp System
                 </td>
                 <td className="p-3.5 font-black text-emerald-600">
-                  ₹{(q.estimatedCostRs || 150000).toLocaleString('en-IN')}
+                  ₹{(q.netCost || q.estimatedCost || 120000).toLocaleString('en-IN')}
                 </td>
                 <td className="p-3.5 text-slate-700 font-medium">
-                  {q.paybackYears || 3.5} Years
+                  {q.roofType || 'RCC Flat Roof'}
                 </td>
                 <td className="p-3.5">
                   <select
@@ -114,11 +114,10 @@ export const AdminQuotesTab: React.FC<AdminQuotesTabProps> = ({
                     onChange={(e) => handleStatusChange(q.id, e.target.value as any)}
                     className="px-2.5 py-1 rounded-xl text-[11px] font-bold border bg-slate-50 text-slate-800 border-slate-200"
                   >
-                    <option value="New">New</option>
-                    <option value="Contacted">Contacted</option>
-                    <option value="Survey Scheduled">Survey Scheduled</option>
-                    <option value="Approved">Approved</option>
-                    <option value="Closed">Closed</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Reviewed">Reviewed</option>
+                    <option value="Quoted">Quoted</option>
+                    <option value="Archived">Archived</option>
                   </select>
                 </td>
                 <td className="p-3.5 text-right">

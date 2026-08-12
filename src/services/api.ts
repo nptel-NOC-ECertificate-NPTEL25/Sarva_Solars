@@ -811,6 +811,17 @@ export async function updateQuoteStatus(id: string, status: QuoteRequest['status
   );
 }
 
+export async function deleteQuoteRequest(id: string): Promise<void> {
+  return apiCall<void>(
+    `${API_BASE}/quotes/${id}`,
+    { method: 'DELETE', headers: getAuthHeaders() },
+    () => {
+      const list = getStored<QuoteRequest[]>('quotes', []);
+      setStored('quotes', list.filter(q => q.id !== id));
+    }
+  );
+}
+
 // JOBS
 export async function fetchJobs(): Promise<JobOpening[]> {
   return apiCall<JobOpening[]>(

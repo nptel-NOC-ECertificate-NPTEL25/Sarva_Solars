@@ -1,11 +1,11 @@
 import React from 'react';
 import { Plus, Edit2, Trash2, Wrench, CheckCircle } from 'lucide-react';
-import { Service } from '../../types';
+import { ServiceItem } from '../../types';
 
 interface AdminServicesTabProps {
-  services: Service[];
+  services: ServiceItem[];
   onStartCreate: () => void;
-  onStartEdit: (service: Service) => void;
+  onStartEdit: (service: ServiceItem) => void;
   onDeleteRequest: (id: string, title: string) => void;
 }
 

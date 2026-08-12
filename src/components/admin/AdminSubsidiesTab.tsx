@@ -1,11 +1,11 @@
 import React from 'react';
 import { Plus, Edit2, Trash2, Award, CheckCircle2, ShieldCheck } from 'lucide-react';
-import { SubsidyScheme } from '../../types';
+import { SubsidyDetail } from '../../types';
 
 interface AdminSubsidiesTabProps {
-  subsidies: SubsidyScheme[];
+  subsidies: SubsidyDetail[];
   onStartCreate: () => void;
-  onStartEdit: (subsidy: SubsidyScheme) => void;
+  onStartEdit: (subsidy: SubsidyDetail) => void;
   onDeleteRequest: (id: string, name: string) => void;
 }
 
