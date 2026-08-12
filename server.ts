@@ -1325,6 +1325,12 @@ app.get('/api/audit-logs', authenticateToken, requireRole(['Admin']), (req: Auth
 
 // ==================== VITE & PRODUCTION SERVING ====================
 async function startServer() {
+  try {
+    await store.initFirestore();
+  } catch (err) {
+    console.error('Failed to sync Firestore on server start:', err);
+  }
+
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
       server: { middlewareMode: true },

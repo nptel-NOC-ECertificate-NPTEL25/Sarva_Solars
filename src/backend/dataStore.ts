@@ -1,6 +1,16 @@
 import fs from 'fs';
 import path from 'path';
 import bcrypt from 'bcryptjs';
+import { initializeApp, getApps } from 'firebase/app';
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  collection,
+  getDocs
+} from 'firebase/firestore';
 import {
   User,
   Lead,
@@ -46,6 +56,20 @@ interface DatabaseSchema {
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 const DB_FILE = path.join(DATA_DIR, 'db.json');
+
+// Initialize Firebase App & Firestore for Backend Storage
+const configPath = path.join(process.cwd(), 'firebase-applet-config.json');
+let firebaseConfig: any = {};
+try {
+  if (fs.existsSync(configPath)) {
+    firebaseConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+  }
+} catch (e) {
+  console.error('Failed to load firebase-applet-config.json:', e);
+}
+
+const firebaseApp = getApps().length === 0 ? initializeApp(firebaseConfig, 'server-app') : getApps()[0];
+const firestoreDb = getFirestore(firebaseApp, firebaseConfig.firestoreDatabaseId || firebaseConfig.projectId);
 
 // Default initial state
 const defaultUsers: User[] = [
@@ -942,6 +966,92 @@ export class DataStore {
     }
   }
 
+  private async syncToFirestoreDoc(collectionName: string, docId: string, data: any) {
+    try {
+      if (!firestoreDb || !docId) return;
+      await setDoc(doc(firestoreDb, collectionName, String(docId)), data);
+    } catch (e) {
+      console.error(`[Firestore Save Error] ${collectionName}/${docId}:`, e);
+    }
+  }
+
+  private async deleteFromFirestoreDoc(collectionName: string, docId: string) {
+    try {
+      if (!firestoreDb || !docId) return;
+      await deleteDoc(doc(firestoreDb, collectionName, String(docId)));
+    } catch (e) {
+      console.error(`[Firestore Delete Error] ${collectionName}/${docId}:`, e);
+    }
+  }
+
+  public async initFirestore() {
+    try {
+      console.log('[Firestore Sync] Connecting to Firestore database...');
+      
+      // Sync Settings
+      const settingsDocRef = doc(firestoreDb, 'settings', 'appSettings');
+      const settingsSnap = await getDoc(settingsDocRef);
+      if (settingsSnap.exists()) {
+        this.db.settings = { ...defaultSettings, ...(settingsSnap.data() as AppSettings) };
+      } else {
+        await setDoc(settingsDocRef, this.db.settings);
+      }
+
+      // Sync Passwords
+      const passDocRef = doc(firestoreDb, 'auth_passwords', 'all');
+      const passSnap = await getDoc(passDocRef);
+      if (passSnap.exists()) {
+        this.db.passwords = { ...this.db.passwords, ...(passSnap.data() as Record<string, string>) };
+      } else {
+        await setDoc(passDocRef, this.db.passwords);
+      }
+
+      // Sync Array Collections
+      const collectionsMap: Array<{ key: keyof DatabaseSchema; defaultData: any[] }> = [
+        { key: 'users', defaultData: defaultUsers },
+        { key: 'leads', defaultData: defaultLeads },
+        { key: 'quotes', defaultData: defaultQuotes },
+        { key: 'products', defaultData: defaultProducts },
+        { key: 'projects', defaultData: defaultProjects },
+        { key: 'blogs', defaultData: defaultBlogs },
+        { key: 'services', defaultData: defaultServices },
+        { key: 'subsidies', defaultData: defaultSubsidies },
+        { key: 'testimonials', defaultData: defaultTestimonials },
+        { key: 'faqs', defaultData: defaultFaqs },
+        { key: 'gallery', defaultData: defaultGallery },
+        { key: 'jobs', defaultData: [] },
+        { key: 'jobApplications', defaultData: [] },
+        { key: 'heroSlides', defaultData: defaultHeroSlides },
+        { key: 'auditLogs', defaultData: [] },
+        { key: 'visitorLogs', defaultData: [] },
+        { key: 'emailNotifications', defaultData: [] }
+      ];
+
+      for (const item of collectionsMap) {
+        const colName = item.key as string;
+        const colRef = collection(firestoreDb, colName);
+        const snap = await getDocs(colRef);
+        if (!snap.empty) {
+          const loadedItems = snap.docs.map(d => d.data());
+          (this.db as any)[colName] = loadedItems;
+        } else {
+          // Seed Firestore with current in-memory items
+          const itemsToSeed = ((this.db as any)[colName] || item.defaultData || []) as any[];
+          for (const docItem of itemsToSeed) {
+            if (docItem && docItem.id) {
+              await setDoc(doc(firestoreDb, colName, String(docItem.id)), docItem);
+            }
+          }
+        }
+      }
+
+      this.saveDatabase();
+      console.log('[Firestore Sync] All collections synchronized with Firestore successfully.');
+    } catch (err) {
+      console.error('[Firestore Init Error]', err);
+    }
+  }
+
   public getDb(): DatabaseSchema {
     return this.db;
   }
@@ -959,6 +1069,7 @@ export class DataStore {
       this.db.auditLogs = this.db.auditLogs.slice(0, 200);
     }
     this.saveDatabase();
+    this.syncToFirestoreDoc('auditLogs', newLog.id, newLog);
   }
 
   // Users & Passwords
@@ -980,12 +1091,15 @@ export class DataStore {
     this.db.users.push(user);
     this.db.passwords[user.id] = bcrypt.hashSync(passwordPlain, 10);
     this.saveDatabase();
+    this.syncToFirestoreDoc('users', user.id, user);
+    this.syncToFirestoreDoc('auth_passwords', 'all', this.db.passwords);
   }
 
   public updateUserPassword(userId: string, newPasswordPlain: string): boolean {
     if (!this.db.passwords[userId]) return false;
     this.db.passwords[userId] = bcrypt.hashSync(newPasswordPlain, 10);
     this.saveDatabase();
+    this.syncToFirestoreDoc('auth_passwords', 'all', this.db.passwords);
     return true;
   }
 
@@ -997,6 +1111,7 @@ export class DataStore {
       ...updates
     };
     this.saveDatabase();
+    this.syncToFirestoreDoc('users', userId, this.db.users[uIdx]);
     return this.db.users[uIdx];
   }
 
@@ -1009,8 +1124,10 @@ export class DataStore {
     };
     if (newPasswordPlain && newPasswordPlain.trim().length > 0) {
       this.db.passwords[userId] = bcrypt.hashSync(newPasswordPlain, 10);
+      this.syncToFirestoreDoc('auth_passwords', 'all', this.db.passwords);
     }
     this.saveDatabase();
+    this.syncToFirestoreDoc('users', userId, this.db.users[uIdx]);
     return this.db.users[uIdx];
   }
 
@@ -1021,6 +1138,8 @@ export class DataStore {
     const deleted = this.db.users.length < initialLen;
     if (deleted) {
       this.saveDatabase();
+      this.deleteFromFirestoreDoc('users', userId);
+      this.syncToFirestoreDoc('auth_passwords', 'all', this.db.passwords);
     }
     return deleted;
   }
@@ -1039,6 +1158,7 @@ export class DataStore {
     };
     this.db.leads.unshift(newLead);
     this.saveDatabase();
+    this.syncToFirestoreDoc('leads', newLead.id, newLead);
     return newLead;
   }
 
@@ -1051,6 +1171,7 @@ export class DataStore {
       updatedAt: new Date().toISOString()
     };
     this.saveDatabase();
+    this.syncToFirestoreDoc('leads', id, this.db.leads[idx]);
     return this.db.leads[idx];
   }
 
@@ -1058,7 +1179,10 @@ export class DataStore {
     const initialLen = this.db.leads.length;
     this.db.leads = this.db.leads.filter((l) => l.id !== id);
     const deleted = this.db.leads.length < initialLen;
-    if (deleted) this.saveDatabase();
+    if (deleted) {
+      this.saveDatabase();
+      this.deleteFromFirestoreDoc('leads', id);
+    }
     return deleted;
   }
 
@@ -1075,6 +1199,7 @@ export class DataStore {
     };
     this.db.quotes.unshift(newQuote);
     this.saveDatabase();
+    this.syncToFirestoreDoc('quotes', newQuote.id, newQuote);
     return newQuote;
   }
 
@@ -1083,6 +1208,7 @@ export class DataStore {
     if (quote) {
       quote.status = status;
       this.saveDatabase();
+      this.syncToFirestoreDoc('quotes', id, quote);
     }
     return quote;
   }
@@ -1095,6 +1221,7 @@ export class DataStore {
       ...updates
     };
     this.saveDatabase();
+    this.syncToFirestoreDoc('quotes', id, this.db.quotes[idx]);
     return this.db.quotes[idx];
   }
 
@@ -1102,7 +1229,10 @@ export class DataStore {
     const initialLen = this.db.quotes.length;
     this.db.quotes = this.db.quotes.filter((q) => q.id !== id);
     const deleted = this.db.quotes.length < initialLen;
-    if (deleted) this.saveDatabase();
+    if (deleted) {
+      this.saveDatabase();
+      this.deleteFromFirestoreDoc('quotes', id);
+    }
     return deleted;
   }
 
@@ -1118,6 +1248,7 @@ export class DataStore {
     };
     this.db.products.unshift(newProd);
     this.saveDatabase();
+    this.syncToFirestoreDoc('products', newProd.id, newProd);
     return newProd;
   }
 
@@ -1126,6 +1257,7 @@ export class DataStore {
     if (idx === -1) return null;
     this.db.products[idx] = { ...this.db.products[idx], ...updates };
     this.saveDatabase();
+    this.syncToFirestoreDoc('products', id, this.db.products[idx]);
     return this.db.products[idx];
   }
 
@@ -1134,6 +1266,7 @@ export class DataStore {
     this.db.products = this.db.products.filter((p) => p.id !== id);
     if (this.db.products.length < len) {
       this.saveDatabase();
+      this.deleteFromFirestoreDoc('products', id);
       return true;
     }
     return false;
@@ -1148,6 +1281,7 @@ export class DataStore {
     const newProj: Project = { ...project, id: `proj-${Date.now()}` };
     this.db.projects.unshift(newProj);
     this.saveDatabase();
+    this.syncToFirestoreDoc('projects', newProj.id, newProj);
     return newProj;
   }
 
@@ -1156,6 +1290,7 @@ export class DataStore {
     if (idx === -1) return null;
     this.db.projects[idx] = { ...this.db.projects[idx], ...updates };
     this.saveDatabase();
+    this.syncToFirestoreDoc('projects', id, this.db.projects[idx]);
     return this.db.projects[idx];
   }
 
@@ -1164,6 +1299,7 @@ export class DataStore {
     this.db.projects = this.db.projects.filter((p) => p.id !== id);
     if (this.db.projects.length < len) {
       this.saveDatabase();
+      this.deleteFromFirestoreDoc('projects', id);
       return true;
     }
     return false;
@@ -1178,6 +1314,7 @@ export class DataStore {
     const newBlog: BlogArticle = { ...blog, id: `blog-${Date.now()}` };
     this.db.blogs.unshift(newBlog);
     this.saveDatabase();
+    this.syncToFirestoreDoc('blogs', newBlog.id, newBlog);
     return newBlog;
   }
 
@@ -1186,6 +1323,7 @@ export class DataStore {
     if (idx === -1) return null;
     this.db.blogs[idx] = { ...this.db.blogs[idx], ...updates };
     this.saveDatabase();
+    this.syncToFirestoreDoc('blogs', id, this.db.blogs[idx]);
     return this.db.blogs[idx];
   }
 
@@ -1194,6 +1332,7 @@ export class DataStore {
     this.db.blogs = this.db.blogs.filter((b) => b.id !== id);
     if (this.db.blogs.length < len) {
       this.saveDatabase();
+      this.deleteFromFirestoreDoc('blogs', id);
       return true;
     }
     return false;
@@ -1212,6 +1351,7 @@ export class DataStore {
     };
     this.db.subsidies.push(newSub);
     this.saveDatabase();
+    this.syncToFirestoreDoc('subsidies', newSub.id, newSub);
     return newSub;
   }
 
@@ -1220,6 +1360,7 @@ export class DataStore {
     if (idx !== -1) {
       this.db.subsidies[idx] = { ...this.db.subsidies[idx], ...updates, updatedDate: new Date().toISOString().split('T')[0] };
       this.saveDatabase();
+      this.syncToFirestoreDoc('subsidies', id, this.db.subsidies[idx]);
       return this.db.subsidies[idx];
     }
     return null;
@@ -1230,6 +1371,7 @@ export class DataStore {
     this.db.subsidies = this.db.subsidies.filter((s) => s.id !== id);
     if (this.db.subsidies.length < len) {
       this.saveDatabase();
+      this.deleteFromFirestoreDoc('subsidies', id);
       return true;
     }
     return false;
@@ -1247,6 +1389,7 @@ export class DataStore {
     };
     this.db.services.push(newSvc);
     this.saveDatabase();
+    this.syncToFirestoreDoc('services', newSvc.id, newSvc);
     return newSvc;
   }
 
@@ -1255,6 +1398,7 @@ export class DataStore {
     if (idx === -1) return null;
     this.db.services[idx] = { ...this.db.services[idx], ...updates };
     this.saveDatabase();
+    this.syncToFirestoreDoc('services', id, this.db.services[idx]);
     return this.db.services[idx];
   }
 
@@ -1263,6 +1407,7 @@ export class DataStore {
     this.db.services = this.db.services.filter((s) => s.id !== id);
     if (this.db.services.length < len) {
       this.saveDatabase();
+      this.deleteFromFirestoreDoc('services', id);
       return true;
     }
     return false;
@@ -1277,6 +1422,7 @@ export class DataStore {
     const newT: Testimonial = { ...t, id: `testi-${Date.now()}` };
     this.db.testimonials.unshift(newT);
     this.saveDatabase();
+    this.syncToFirestoreDoc('testimonials', newT.id, newT);
     return newT;
   }
 
@@ -1285,6 +1431,7 @@ export class DataStore {
     if (idx === -1) return null;
     this.db.testimonials[idx] = { ...this.db.testimonials[idx], ...updates };
     this.saveDatabase();
+    this.syncToFirestoreDoc('testimonials', id, this.db.testimonials[idx]);
     return this.db.testimonials[idx];
   }
 
@@ -1293,6 +1440,7 @@ export class DataStore {
     this.db.testimonials = this.db.testimonials.filter((item) => item.id !== id);
     if (this.db.testimonials.length < len) {
       this.saveDatabase();
+      this.deleteFromFirestoreDoc('testimonials', id);
       return true;
     }
     return false;
@@ -1307,6 +1455,7 @@ export class DataStore {
     const newFaq: FAQItem = { ...faq, id: `faq-${Date.now()}` };
     this.db.faqs.push(newFaq);
     this.saveDatabase();
+    this.syncToFirestoreDoc('faqs', newFaq.id, newFaq);
     return newFaq;
   }
 
@@ -1315,6 +1464,7 @@ export class DataStore {
     if (idx === -1) return null;
     this.db.faqs[idx] = { ...this.db.faqs[idx], ...updates };
     this.saveDatabase();
+    this.syncToFirestoreDoc('faqs', id, this.db.faqs[idx]);
     return this.db.faqs[idx];
   }
 
@@ -1323,6 +1473,7 @@ export class DataStore {
     this.db.faqs = this.db.faqs.filter((item) => item.id !== id);
     if (this.db.faqs.length < len) {
       this.saveDatabase();
+      this.deleteFromFirestoreDoc('faqs', id);
       return true;
     }
     return false;
@@ -1337,6 +1488,7 @@ export class DataStore {
     const newItem: GalleryItem = { ...item, id: `gal-${Date.now()}` };
     this.db.gallery.unshift(newItem);
     this.saveDatabase();
+    this.syncToFirestoreDoc('gallery', newItem.id, newItem);
     return newItem;
   }
 
@@ -1345,6 +1497,7 @@ export class DataStore {
     if (idx === -1) return null;
     this.db.gallery[idx] = { ...this.db.gallery[idx], ...updates };
     this.saveDatabase();
+    this.syncToFirestoreDoc('gallery', id, this.db.gallery[idx]);
     return this.db.gallery[idx];
   }
 
@@ -1353,6 +1506,7 @@ export class DataStore {
     this.db.gallery = this.db.gallery.filter((item) => item.id !== id);
     if (this.db.gallery.length < len) {
       this.saveDatabase();
+      this.deleteFromFirestoreDoc('gallery', id);
       return true;
     }
     return false;
@@ -1366,6 +1520,7 @@ export class DataStore {
   public updateSettings(updates: Partial<AppSettings>) {
     this.db.settings = { ...this.db.settings, ...updates };
     this.saveDatabase();
+    this.syncToFirestoreDoc('settings', 'appSettings', this.db.settings);
     return this.db.settings;
   }
 
@@ -1383,6 +1538,7 @@ export class DataStore {
     if (!this.db.jobs) this.db.jobs = [];
     this.db.jobs.unshift(newJob);
     this.saveDatabase();
+    this.syncToFirestoreDoc('jobs', newJob.id, newJob);
     return newJob;
   }
 
@@ -1392,6 +1548,7 @@ export class DataStore {
     if (idx === -1) return null;
     this.db.jobs[idx] = { ...this.db.jobs[idx], ...updates };
     this.saveDatabase();
+    this.syncToFirestoreDoc('jobs', id, this.db.jobs[idx]);
     return this.db.jobs[idx];
   }
 
@@ -1401,6 +1558,7 @@ export class DataStore {
     this.db.jobs = this.db.jobs.filter((j) => j.id !== id);
     if (this.db.jobs.length < len) {
       this.saveDatabase();
+      this.deleteFromFirestoreDoc('jobs', id);
       return true;
     }
     return false;
@@ -1421,6 +1579,7 @@ export class DataStore {
     if (!this.db.jobApplications) this.db.jobApplications = [];
     this.db.jobApplications.unshift(newApp);
     this.saveDatabase();
+    this.syncToFirestoreDoc('jobApplications', newApp.id, newApp);
     return newApp;
   }
 
@@ -1430,6 +1589,7 @@ export class DataStore {
     if (idx === -1) return null;
     this.db.jobApplications[idx].status = status;
     this.saveDatabase();
+    this.syncToFirestoreDoc('jobApplications', id, this.db.jobApplications[idx]);
     return this.db.jobApplications[idx];
   }
 
@@ -1439,6 +1599,7 @@ export class DataStore {
     this.db.jobApplications = this.db.jobApplications.filter((a) => a.id !== id);
     if (this.db.jobApplications.length < len) {
       this.saveDatabase();
+      this.deleteFromFirestoreDoc('jobApplications', id);
       return true;
     }
     return false;
@@ -1461,6 +1622,7 @@ export class DataStore {
       this.db.visitorLogs = this.db.visitorLogs.slice(0, 500);
     }
     this.saveDatabase();
+    this.syncToFirestoreDoc('visitorLogs', newLog.id, newLog);
     return newLog;
   }
 
@@ -1481,6 +1643,7 @@ export class DataStore {
     if (!this.db.emailNotifications) this.db.emailNotifications = [];
     this.db.emailNotifications.unshift(newNotification);
     this.saveDatabase();
+    this.syncToFirestoreDoc('emailNotifications', newNotification.id, newNotification);
     return newNotification;
   }
 
@@ -1497,6 +1660,7 @@ export class DataStore {
       if (deliveryMethod) item.deliveryMethod = deliveryMethod;
       if (errorMessage) item.errorMessage = errorMessage;
       this.saveDatabase();
+      this.syncToFirestoreDoc('emailNotifications', id, item);
     }
   }
 
@@ -1514,6 +1678,7 @@ export class DataStore {
     };
     this.db.heroSlides.push(newSlide);
     this.saveDatabase();
+    this.syncToFirestoreDoc('heroSlides', newSlide.id, newSlide);
     return newSlide;
   }
 
@@ -1528,6 +1693,7 @@ export class DataStore {
       ...updates
     };
     this.saveDatabase();
+    this.syncToFirestoreDoc('heroSlides', id, this.db.heroSlides[index]);
     return this.db.heroSlides[index];
   }
 
@@ -1535,7 +1701,10 @@ export class DataStore {
     if (!this.db.heroSlides) return;
     this.db.heroSlides = this.db.heroSlides.filter((s) => s.id !== id);
     this.saveDatabase();
+    this.deleteFromFirestoreDoc('heroSlides', id);
   }
 }
 
 export const store = new DataStore();
+// Auto-init Firestore sync
+store.initFirestore().catch((err) => console.error('Error auto-syncing Firestore:', err));

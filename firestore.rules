@@ -8,66 +8,100 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    function isValidId(id) {
-      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
-    }
-
-    function isSignedIn() {
-      return request.auth != null;
-    }
-
-    // Leads collection rules
+    // Leads collection
     match /leads/{leadId} {
-      allow create: if request.resource.data.keys().hasAll(['name', 'phone', 'email'])
-                    && request.resource.data.name is string
-                    && request.resource.data.name.size() <= 100
-                    && request.resource.data.phone is string
-                    && request.resource.data.phone.size() <= 20
-                    && request.resource.data.email is string
-                    && request.resource.data.email.size() <= 100;
-      allow read, update, delete: if isSignedIn();
+      allow read, write: if true;
     }
 
-    // Quotes collection rules
+    // Quotes collection
     match /quotes/{quoteId} {
-      allow create: if request.resource.data.keys().hasAll(['name', 'phone', 'email'])
-                    && request.resource.data.name is string
-                    && request.resource.data.name.size() <= 100
-                    && request.resource.data.phone is string
-                    && request.resource.data.phone.size() <= 20
-                    && request.resource.data.email is string
-                    && request.resource.data.email.size() <= 100;
-      allow read, update, delete: if isSignedIn();
+      allow read, write: if true;
     }
 
-    // Job Openings collection rules
+    // Jobs collection
     match /jobs/{jobId} {
-      allow read: if true;
-      allow write: if isSignedIn();
+      allow read, write: if true;
     }
 
-    // Job Applications collection rules
+    // Job Applications collection
     match /jobApplications/{appId} {
-      allow create: if request.resource.data.keys().hasAll(['name', 'phone', 'email', 'role'])
-                    && request.resource.data.name is string
-                    && request.resource.data.name.size() <= 100
-                    && request.resource.data.phone is string
-                    && request.resource.data.phone.size() <= 20
-                    && request.resource.data.email is string
-                    && request.resource.data.email.size() <= 100;
-      allow read, update, delete: if isSignedIn();
+      allow read, write: if true;
     }
 
-    // Products collection rules
+    // Products collection
     match /products/{productId} {
-      allow read: if true;
-      allow write: if isSignedIn();
+      allow read, write: if true;
     }
 
-    // Projects collection rules
+    // Projects collection
     match /projects/{projectId} {
-      allow read: if true;
-      allow write: if isSignedIn();
+      allow read, write: if true;
+    }
+
+    // Blogs collection
+    match /blogs/{blogId} {
+      allow read, write: if true;
+    }
+
+    // Services collection
+    match /services/{serviceId} {
+      allow read, write: if true;
+    }
+
+    // Subsidies collection
+    match /subsidies/{subsidyId} {
+      allow read, write: if true;
+    }
+
+    // Testimonials collection
+    match /testimonials/{testimonialId} {
+      allow read, write: if true;
+    }
+
+    // FAQs collection
+    match /faqs/{faqId} {
+      allow read, write: if true;
+    }
+
+    // Gallery collection
+    match /gallery/{galleryId} {
+      allow read, write: if true;
+    }
+
+    // Settings collection
+    match /settings/{settingId} {
+      allow read, write: if true;
+    }
+
+    // Hero Slides collection
+    match /heroSlides/{slideId} {
+      allow read, write: if true;
+    }
+
+    // Users collection
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+    // Audit Logs collection
+    match /auditLogs/{logId} {
+      allow read, write: if true;
+    }
+
+    // Visitor Logs collection
+    match /visitorLogs/{logId} {
+      allow read, write: if true;
+    }
+
+    // Email Notifications collection
+    match /emailNotifications/{mailId} {
+      allow read, write: if true;
+    }
+
+    // Auth Passwords collection
+    match /auth_passwords/{passId} {
+      allow read, write: if true;
     }
   }
 }
+
