@@ -1087,6 +1087,25 @@ export class DataStore {
     return quote;
   }
 
+  public updateQuote(id: string, updates: Partial<QuoteRequest>): QuoteRequest | null {
+    const idx = this.db.quotes.findIndex((q) => q.id === id);
+    if (idx === -1) return null;
+    this.db.quotes[idx] = {
+      ...this.db.quotes[idx],
+      ...updates
+    };
+    this.saveDatabase();
+    return this.db.quotes[idx];
+  }
+
+  public deleteQuote(id: string): boolean {
+    const initialLen = this.db.quotes.length;
+    this.db.quotes = this.db.quotes.filter((q) => q.id !== id);
+    const deleted = this.db.quotes.length < initialLen;
+    if (deleted) this.saveDatabase();
+    return deleted;
+  }
+
   // Products
   public getProducts() {
     return this.db.products;
