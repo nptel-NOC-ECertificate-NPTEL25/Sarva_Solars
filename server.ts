@@ -1323,6 +1323,16 @@ app.get('/api/audit-logs', authenticateToken, requireRole(['Admin']), (req: Auth
   res.json(store.getDb().auditLogs);
 });
 
+app.post('/api/admin/reset-database', authenticateToken, requireRole(['Admin']), async (req: AuthRequest, res: Response) => {
+  try {
+    const newDb = await store.resetToFactoryDefaults();
+    store.logAudit(req.user?.email || 'Admin', 'RESET_DATABASE', 'Administrator performed complete full-stack database reset');
+    res.json({ success: true, message: 'Database successfully reset to initial clean defaults', db: newDb });
+  } catch (err: any) {
+    res.status(500).json({ error: 'Failed to reset database: ' + (err.message || String(err)) });
+  }
+});
+
 // ==================== VITE & PRODUCTION SERVING ====================
 async function startServer() {
   try {

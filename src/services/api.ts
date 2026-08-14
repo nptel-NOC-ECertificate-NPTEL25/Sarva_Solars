@@ -1244,3 +1244,38 @@ export async function deleteMediaFile(filename: string): Promise<{ success: bool
     () => ({ success: true, message: 'File deleted locally' })
   );
 }
+
+export async function resetFullStackDatabase(): Promise<{ success: boolean; message: string }> {
+  // Clear any client caches
+  const keysToRemove = [
+    'sarva_solar_leads',
+    'sarva_solar_quotes',
+    'sarva_solar_products',
+    'sarva_solar_projects',
+    'sarva_solar_blogs',
+    'sarva_solar_services',
+    'sarva_solar_subsidies',
+    'sarva_solar_testimonials',
+    'sarva_solar_faqs',
+    'sarva_solar_gallery',
+    'sarva_solar_jobs',
+    'sarva_solar_job_applications',
+    'sarva_solar_settings',
+    'sarva_solar_hero_slides',
+    'sarva_solar_visitor_logs',
+    'sarva_solar_email_notifications'
+  ];
+  keysToRemove.forEach(k => {
+    try { localStorage.removeItem(k); } catch (e) {}
+  });
+
+  return apiCall<{ success: boolean; message: string }>(
+    `${API_BASE}/admin/reset-database`,
+    { method: 'POST', headers: getAuthHeaders() },
+    () => {
+      notifyDataUpdated();
+      return { success: true, message: 'Database reset to initial clean defaults' };
+    }
+  );
+}
+

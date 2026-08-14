@@ -1052,6 +1052,82 @@ export class DataStore {
     }
   }
 
+  public async resetToFactoryDefaults(): Promise<DatabaseSchema> {
+    console.log('[DataStore Reset] Resetting database to factory default state...');
+    this.db = {
+      settings: JSON.parse(JSON.stringify(defaultSettings)),
+      users: JSON.parse(JSON.stringify(defaultUsers)),
+      passwords: {
+        'usr-0': bcrypt.hashSync('Sarva@1234', 10),
+        'usr-1': bcrypt.hashSync('Sarva@1234', 10),
+        'usr-2': bcrypt.hashSync('Sarva@1234', 10),
+        'usr-3': bcrypt.hashSync('Sarva@1234', 10)
+      },
+      leads: JSON.parse(JSON.stringify(defaultLeads)),
+      quotes: JSON.parse(JSON.stringify(defaultQuotes)),
+      products: JSON.parse(JSON.stringify(defaultProducts)),
+      projects: JSON.parse(JSON.stringify(defaultProjects)),
+      blogs: JSON.parse(JSON.stringify(defaultBlogs)),
+      services: JSON.parse(JSON.stringify(defaultServices)),
+      subsidies: JSON.parse(JSON.stringify(defaultSubsidies)),
+      testimonials: JSON.parse(JSON.stringify(defaultTestimonials)),
+      faqs: JSON.parse(JSON.stringify(defaultFaqs)),
+      gallery: JSON.parse(JSON.stringify(defaultGallery)),
+      jobs: [],
+      jobApplications: [],
+      heroSlides: JSON.parse(JSON.stringify(defaultHeroSlides)),
+      auditLogs: [{
+        id: `audit-${Date.now()}`,
+        userEmail: 'system@sarvasolar.com',
+        action: 'RESET_DATABASE',
+        details: 'Full-stack database reset to factory default state',
+        timestamp: new Date().toISOString()
+      }],
+      visitorLogs: [],
+      emailNotifications: []
+    };
+
+    this.saveDatabase();
+
+    try {
+      if (firestoreDb) {
+        await setDoc(doc(firestoreDb, 'settings', 'appSettings'), this.db.settings);
+        await setDoc(doc(firestoreDb, 'auth_passwords', 'all'), this.db.passwords);
+
+        const collectionsToSeed: Array<{ key: keyof DatabaseSchema }> = [
+          { key: 'users' },
+          { key: 'leads' },
+          { key: 'quotes' },
+          { key: 'products' },
+          { key: 'projects' },
+          { key: 'blogs' },
+          { key: 'services' },
+          { key: 'subsidies' },
+          { key: 'testimonials' },
+          { key: 'faqs' },
+          { key: 'gallery' },
+          { key: 'heroSlides' }
+        ];
+
+        for (const item of collectionsToSeed) {
+          const colName = item.key as string;
+          const items = (this.db as any)[colName] as any[];
+          if (Array.isArray(items)) {
+            for (const docItem of items) {
+              if (docItem && docItem.id) {
+                await setDoc(doc(firestoreDb, colName, String(docItem.id)), docItem);
+              }
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error('[Firestore Reset Sync Error]', err);
+    }
+
+    return this.db;
+  }
+
   public getDb(): DatabaseSchema {
     return this.db;
   }
