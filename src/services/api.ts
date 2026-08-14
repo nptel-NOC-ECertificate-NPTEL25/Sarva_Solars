@@ -962,15 +962,19 @@ export async function deleteJobApplication(id: string): Promise<void> {
 
 // HERO SLIDES
 export async function fetchHeroSlides(): Promise<HeroSlide[]> {
-  return apiCall<HeroSlide[]>(
+  const data = await apiCall<HeroSlide[]>(
     `${API_BASE}/hero-slides`,
     undefined,
     () => getStored<HeroSlide[]>('hero_slides', defaultHeroSlides)
   );
+  if (Array.isArray(data) && data.length > 0) {
+    setStored('hero_slides', data);
+  }
+  return data;
 }
 
 export async function createHeroSlide(data: Omit<HeroSlide, 'id'>): Promise<HeroSlide> {
-  return apiCall<HeroSlide>(
+  const result = await apiCall<HeroSlide>(
     `${API_BASE}/hero-slides`,
     {
       method: 'POST',
@@ -984,10 +988,19 @@ export async function createHeroSlide(data: Omit<HeroSlide, 'id'>): Promise<Hero
       return newItem;
     }
   );
+  const currentList = getStored<HeroSlide[]>('hero_slides', defaultHeroSlides);
+  const exists = currentList.some(s => s.id === result.id);
+  if (!exists) {
+    setStored('hero_slides', [...currentList, result]);
+  } else {
+    setStored('hero_slides', currentList.map(s => s.id === result.id ? result : s));
+  }
+  notifyDataUpdated();
+  return result;
 }
 
 export async function updateHeroSlide(id: string, updates: Partial<HeroSlide>): Promise<HeroSlide> {
-  return apiCall<HeroSlide>(
+  const result = await apiCall<HeroSlide>(
     `${API_BASE}/hero-slides/${id}`,
     {
       method: 'PUT',
@@ -1004,10 +1017,20 @@ export async function updateHeroSlide(id: string, updates: Partial<HeroSlide>): 
       return updated;
     }
   );
+  const currentList = getStored<HeroSlide[]>('hero_slides', defaultHeroSlides);
+  const idx = currentList.findIndex(s => s.id === id);
+  if (idx !== -1) {
+    currentList[idx] = { ...currentList[idx], ...result };
+    setStored('hero_slides', currentList);
+  } else {
+    setStored('hero_slides', [...currentList, result]);
+  }
+  notifyDataUpdated();
+  return result;
 }
 
 export async function deleteHeroSlide(id: string): Promise<{ message: string }> {
-  return apiCall<{ message: string }>(
+  const result = await apiCall<{ message: string }>(
     `${API_BASE}/hero-slides/${id}`,
     { method: 'DELETE', headers: getAuthHeaders() },
     () => {
@@ -1016,6 +1039,10 @@ export async function deleteHeroSlide(id: string): Promise<{ message: string }> 
       return { message: 'Slide deleted successfully' };
     }
   );
+  const currentList = getStored<HeroSlide[]>('hero_slides', defaultHeroSlides);
+  setStored('hero_slides', currentList.filter(s => s.id !== id));
+  notifyDataUpdated();
+  return result;
 }
 
 // STAFF USERS

@@ -2774,11 +2774,11 @@ export const AdminPage: React.FC<AdminPageProps> = ({ user, onLoginSuccess, onLo
               if (currentTab === 'heroSlides') {
                 if (editingItem) {
                   const updated = await updateHeroSlide(savedData.id, savedData);
-                  setHeroSlides(heroSlides.map((s) => (s.id === updated.id ? updated : s)));
+                  setHeroSlides(prev => prev.map((s) => (s.id === updated.id ? updated : s)).sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0)));
                   showToast('Hero slide updated successfully');
                 } else {
                   const created = await createHeroSlide(savedData);
-                  setHeroSlides([...heroSlides, created]);
+                  setHeroSlides(prev => [...prev, created].sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0)));
                   showToast('Hero slide created successfully');
                 }
               } else if (currentTab === 'services') {

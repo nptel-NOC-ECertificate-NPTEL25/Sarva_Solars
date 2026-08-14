@@ -106,6 +106,25 @@
         "review": { "type": "string", "maxLength": 1000 }
       },
       "required": ["title", "clientName", "capacityKw"]
+    },
+    "HeroSlide": {
+      "title": "HeroSlide",
+      "description": "Homepage hero carousel slide",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "badge": { "type": "string", "maxLength": 150 },
+        "title": { "type": "string", "maxLength": 200 },
+        "subtitle": { "type": "string", "maxLength": 500 },
+        "mediaType": { "type": "string", "enum": ["image", "video"] },
+        "mediaUrl": { "type": "string", "maxLength": 1000 },
+        "ctaPrimaryText": { "type": "string", "maxLength": 100 },
+        "ctaPrimaryAction": { "type": "string", "maxLength": 100 },
+        "ctaSecondaryText": { "type": "string", "maxLength": 100 },
+        "ctaSecondaryAction": { "type": "string", "maxLength": 100 },
+        "order": { "type": "number" }
+      },
+      "required": ["title", "mediaType", "mediaUrl"]
     }
   },
   "firestore": {
@@ -132,6 +151,10 @@
     "/projects/{projectId}": {
       "schema": { "$ref": "#/entities/Project" },
       "description": "Collection of completed portfolio projects"
+    },
+    "/heroSlides/{slideId}": {
+      "schema": { "$ref": "#/entities/HeroSlide" },
+      "description": "Collection of homepage hero carousel slides"
     }
   }
 }

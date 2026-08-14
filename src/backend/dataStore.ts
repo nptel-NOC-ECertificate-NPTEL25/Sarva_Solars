@@ -1032,7 +1032,10 @@ export class DataStore {
         const colRef = collection(firestoreDb, colName);
         const snap = await getDocs(colRef);
         if (!snap.empty) {
-          const loadedItems = snap.docs.map(d => d.data());
+          const loadedItems = snap.docs.map(d => {
+            const data = d.data() as any;
+            return { ...data, id: data.id || d.id };
+          });
           (this.db as any)[colName] = loadedItems;
         } else {
           // Seed Firestore with current in-memory items
@@ -1743,14 +1746,15 @@ export class DataStore {
   // Hero Slides Management
   public getHeroSlides(): HeroSlide[] {
     const slides = this.db.heroSlides || [];
-    return [...slides].sort((a, b) => a.order - b.order);
+    return [...slides].sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0));
   }
 
   public addHeroSlide(slideData: Omit<HeroSlide, 'id'>): HeroSlide {
     if (!this.db.heroSlides) this.db.heroSlides = [];
     const newSlide: HeroSlide = {
       ...slideData,
-      id: `slide-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`
+      id: `slide-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      order: Number(slideData.order) || (this.db.heroSlides.length + 1)
     };
     this.db.heroSlides.push(newSlide);
     this.saveDatabase();
@@ -1760,14 +1764,32 @@ export class DataStore {
 
   public updateHeroSlide(id: string, updates: Partial<HeroSlide>): HeroSlide {
     if (!this.db.heroSlides) this.db.heroSlides = [];
-    const index = this.db.heroSlides.findIndex((s) => s.id === id);
+    let index = this.db.heroSlides.findIndex((s) => s.id === id);
     if (index === -1) {
-      throw new Error('Hero slide not found');
+      // Upsert if not found in memory
+      const newSlide: HeroSlide = {
+        id,
+        badge: updates.badge || '',
+        title: updates.title || '',
+        subtitle: updates.subtitle || '',
+        mediaType: updates.mediaType || 'image',
+        mediaUrl: updates.mediaUrl || '',
+        ctaPrimaryText: updates.ctaPrimaryText || 'Get Free Instant Quote',
+        ctaPrimaryAction: updates.ctaPrimaryAction || 'quote',
+        ctaSecondaryText: updates.ctaSecondaryText || '',
+        ctaSecondaryAction: updates.ctaSecondaryAction || 'calculators',
+        order: Number(updates.order) || (this.db.heroSlides.length + 1)
+      };
+      this.db.heroSlides.push(newSlide);
+      index = this.db.heroSlides.length - 1;
+    } else {
+      this.db.heroSlides[index] = {
+        ...this.db.heroSlides[index],
+        ...updates,
+        id,
+        order: updates.order !== undefined ? (Number(updates.order) || 1) : this.db.heroSlides[index].order
+      };
     }
-    this.db.heroSlides[index] = {
-      ...this.db.heroSlides[index],
-      ...updates
-    };
     this.saveDatabase();
     this.syncToFirestoreDoc('heroSlides', id, this.db.heroSlides[index]);
     return this.db.heroSlides[index];

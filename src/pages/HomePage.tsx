@@ -126,6 +126,13 @@ export const HomePage: React.FC<HomePageProps> = ({
     setIsVideoPlaying(true);
   }, [currentSlideIndex]);
 
+  // Ensure slide index stays in bounds if slides are added or removed
+  useEffect(() => {
+    if (currentSlideIndex >= slides.length) {
+      setCurrentSlideIndex(0);
+    }
+  }, [slides.length, currentSlideIndex]);
+
   // Auto-advance slides every 7 seconds
   useEffect(() => {
     if (!isAutoPlaying || slides.length <= 1) return;
