@@ -1,216 +1,204 @@
 {
   "users": [
     {
-      "id": "usr-0",
-      "name": "Sarva Solar Admin",
+      "role": "Admin",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "phone": "+91 8985430100",
       "email": "sarvasolars@gmail.com",
-      "role": "Admin",
-      "phone": "+91 8985430100",
-      "createdAt": "2026-08-12T15:38:23.916Z"
-    },
-    {
-      "id": "usr-1",
-      "name": "Jupalli Venkatesh Kumar",
-      "email": "admin@sarvasolar.com",
-      "role": "Admin",
-      "phone": "+91 8985430100",
-      "createdAt": "2026-07-24T19:10:45.472Z"
+      "name": "Sarva Solar Admin",
+      "id": "usr-0"
     }
   ],
   "passwords": {
-    "usr-1": "$2b$10$ybzOjKlq.K8Lg0lQa6Y6B.DtmfGobA8l9l2rA3LYjptR9s8lc7rii",
     "usr-0": "$2b$10$tXl.ob4HVwCBGm.JP7emSOaM92CFn.cioQ4e0SVUGEzAeedoQzfjK"
   },
   "leads": [],
   "quotes": [
     {
-      "name": "Gangadhar Kurumalla",
-      "phone": "7036590780",
+      "proposedKw": 3.3,
+      "monthlyBill": 4000,
+      "netCost": 103500,
+      "createdAt": "2026-07-24T19:28:21.251Z",
+      "estimatedCost": 181500,
       "email": "20010.ee.059@gmail.com",
       "state": "Andhra Pradesh",
-      "city": "vijawada",
-      "propertyType": "Residential",
-      "monthlyBill": 4000,
-      "roofType": "Terrace (Concrete)",
-      "proposedKw": 3.3,
-      "estimatedCost": 181500,
-      "estimatedSubsidy": 78000,
-      "netCost": 103500,
-      "status": "Pending",
       "message": "",
       "id": "q-1784921301251",
-      "createdAt": "2026-07-24T19:28:21.251Z"
+      "phone": "7036590780",
+      "estimatedSubsidy": 78000,
+      "status": "Pending",
+      "city": "vijawada",
+      "name": "Gangadhar Kurumalla",
+      "roofType": "Terrace (Concrete)",
+      "propertyType": "Residential"
     },
     {
-      "id": "q-501",
       "name": "M. Sriman Narayana",
-      "phone": "+91 9440112233",
-      "email": "sriman.m@gmail.com",
-      "state": "Andhra Pradesh",
-      "city": "Guntur",
-      "propertyType": "Residential",
-      "monthlyBill": 4500,
-      "roofType": "Terrace",
-      "proposedKw": 3,
       "estimatedCost": 165000,
-      "estimatedSubsidy": 78000,
-      "netCost": 87000,
+      "id": "q-501",
       "status": "Pending",
       "message": "Interested in 3kW on-grid solar system under PM Surya Ghar scheme.",
-      "createdAt": "2026-07-24T17:10:45.473Z"
+      "city": "Guntur",
+      "monthlyBill": 4500,
+      "phone": "+91 9440112233",
+      "estimatedSubsidy": 78000,
+      "netCost": 87000,
+      "email": "sriman.m@gmail.com",
+      "state": "Andhra Pradesh",
+      "proposedKw": 3,
+      "createdAt": "2026-07-24T17:10:45.473Z",
+      "roofType": "Terrace",
+      "propertyType": "Residential"
     }
   ],
   "products": [
     {
-      "id": "prod-1",
-      "name": "Sarva Ultra BIFACIAL 550W Mono PERC Panel",
-      "category": "Solar Panels",
-      "brand": "Sarva Solar / Tier 1 OEM",
-      "price": 14500,
-      "rating": 4.9,
-      "specs": {
-        "Wattage": "550W",
-        "Cell Type": "N-Type Bifacial Mono PERC",
-        "Efficiency": "22.8%",
-        "Glass": "Dual Glass 2.0mm Tempered",
-        "Frame": "Anodized Aluminum Alloy 35mm"
-      },
       "description": "Generates up to 25% extra electricity from rear-side light reflections. Engineered for high performance in hot Indian weather conditions.",
+      "inventory": 250,
       "warranty": "12 Years Product Warranty, 30 Years Linear Power Output Warranty",
       "imageUrl": "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80",
+      "price": 14500,
       "isFeatured": true,
-      "inventory": 250
-    },
-    {
-      "id": "prod-3",
-      "name": "Sarva Hybrid Smart Inverter 5kVA MPPT",
-      "category": "Inverters",
-      "brand": "Sarva Solar / Havells OEM",
-      "price": 48500,
+      "category": "Solar Panels",
+      "id": "prod-1",
       "rating": 4.9,
       "specs": {
-        "Capacity": "5 kW / 5 kVA",
-        "Topology": "Transformerless High Frequency",
-        "MPPT Range": "120V - 450V DC",
-        "Efficiency": "98.2%",
-        "Connectivity": "WiFi / Bluetooth App Monitoring"
+        "Cell Type": "N-Type Bifacial Mono PERC",
+        "Glass": "Dual Glass 2.0mm Tempered",
+        "Wattage": "550W",
+        "Frame": "Anodized Aluminum Alloy 35mm",
+        "Efficiency": "22.8%"
       },
-      "description": "Dual MPPT hybrid string inverter capable of managing grid feed-in, battery storage charging, and essential home load backup.",
+      "name": "Sarva Ultra BIFACIAL 550W Mono PERC Panel",
+      "brand": "Sarva Solar / Tier 1 OEM"
+    },
+    {
+      "specs": {
+        "Capacity": "5 kW / 5 kVA",
+        "Connectivity": "WiFi / Bluetooth App Monitoring",
+        "MPPT Range": "120V - 450V DC",
+        "Topology": "Transformerless High Frequency",
+        "Efficiency": "98.2%"
+      },
+      "inventory": 65,
+      "brand": "Sarva Solar / Havells OEM",
       "warranty": "5 Years Manufacturer Warranty (Extendable to 10 Years)",
       "imageUrl": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
       "isFeatured": true,
-      "inventory": 65
+      "description": "Dual MPPT hybrid string inverter capable of managing grid feed-in, battery storage charging, and essential home load backup.",
+      "rating": 4.9,
+      "name": "Sarva Hybrid Smart Inverter 5kVA MPPT",
+      "id": "prod-3",
+      "category": "Inverters",
+      "price": 48500
     },
     {
       "id": "prod-4",
-      "name": "Sarva Smart Grid-Tied Inverter 10kW 3-Phase",
       "category": "Inverters",
-      "brand": "Sarva Solar / Sungrow OEM",
-      "price": 78000,
+      "inventory": 40,
       "rating": 4.9,
-      "specs": {
-        "Capacity": "10 kW",
-        "Phases": "Three Phase 415V",
-        "Efficiency": "98.6%",
-        "Protection": "Integrated Type II DC & AC Surge Protection"
-      },
-      "description": "Ideal for commercial & large residential installations with seamless DISCOM grid sync.",
-      "warranty": "10 Years Standard Warranty",
       "imageUrl": "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=800&q=80",
+      "warranty": "10 Years Standard Warranty",
+      "price": 78000,
+      "description": "Ideal for commercial & large residential installations with seamless DISCOM grid sync.",
       "isFeatured": false,
-      "inventory": 40
+      "specs": {
+        "Phases": "Three Phase 415V",
+        "Protection": "Integrated Type II DC & AC Surge Protection",
+        "Capacity": "10 kW",
+        "Efficiency": "98.6%"
+      },
+      "name": "Sarva Smart Grid-Tied Inverter 10kW 3-Phase",
+      "brand": "Sarva Solar / Sungrow OEM"
     }
   ],
   "projects": [
     {
-      "id": "proj-1",
-      "title": "15 kWp Luxury Residential Villa Solar Rooftop",
-      "category": "Residential",
-      "location": "Brodipet, Guntur",
       "state": "Andhra Pradesh",
-      "capacityKw": 15,
-      "annualSavingsRs": 185000,
-      "completionDate": "2026-03-15",
-      "status": "Completed",
       "images": [
         "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=1000&q=80",
         "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=1000&q=80"
       ],
-      "description": "Custom elevated structural design allowing full rooftop usage below the panels. Installed with Sarva N-Type Bifacial panels and 5.12kWh lithium storage.",
+      "id": "proj-1",
+      "category": "Residential",
       "clientReview": {
+        "rating": 5,
         "author": "Dr. K. S. Rao",
-        "comment": "Sarva Solar team completed the installation in just 2 days. My monthly electricity bill dropped from ₹18,000 to almost zero!",
-        "rating": 5
-      }
+        "comment": "Sarva Solar team completed the installation in just 2 days. My monthly electricity bill dropped from ₹18,000 to almost zero!"
+      },
+      "completionDate": "2026-03-15",
+      "location": "Brodipet, Guntur",
+      "annualSavingsRs": 185000,
+      "description": "Custom elevated structural design allowing full rooftop usage below the panels. Installed with Sarva N-Type Bifacial panels and 5.12kWh lithium storage.",
+      "capacityKw": 15,
+      "status": "Completed",
+      "title": "15 kWp Luxury Residential Villa Solar Rooftop"
     },
     {
-      "id": "proj-2",
-      "title": "120 kWp Commercial Spinning Mill Rooftop",
-      "category": "Commercial",
-      "location": "Vijayawada Highway",
-      "state": "Andhra Pradesh",
-      "capacityKw": 120,
-      "annualSavingsRs": 1420000,
-      "completionDate": "2026-01-20",
-      "status": "Completed",
       "images": [
         "https://images.unsplash.com/photo-1613665813446-82a78c468a1d?auto=format&fit=crop&w=1000&q=80"
       ],
-      "description": "Turnkey industrial EPC on standing seam metal roof. Integrated with live IoT power logging and net metering.",
+      "capacityKw": 120,
+      "state": "Andhra Pradesh",
+      "location": "Vijayawada Highway",
+      "title": "120 kWp Commercial Spinning Mill Rooftop",
+      "annualSavingsRs": 1420000,
+      "completionDate": "2026-01-20",
+      "status": "Completed",
+      "id": "proj-2",
       "clientReview": {
         "author": "P. V. Ramana (MD, Sri Lakshmi Textiles)",
         "comment": "Top-class engineering! The accelerated depreciation savings alone paid off a huge chunk in year one.",
         "rating": 5
-      }
+      },
+      "category": "Commercial",
+      "description": "Turnkey industrial EPC on standing seam metal roof. Integrated with live IoT power logging and net metering."
     },
     {
-      "id": "proj-3",
       "title": "50 kWp Educational Institute Solar Plant",
-      "category": "Commercial",
-      "location": "Warangal Urban",
-      "state": "Telangana",
       "capacityKw": 50,
       "annualSavingsRs": 580000,
-      "completionDate": "2025-11-10",
       "status": "Completed",
+      "category": "Commercial",
+      "description": "On-grid rooftop solar array meeting 85% of total campus energy requirements.",
+      "clientReview": {
+        "comment": "Very professional execution by Sarva Solar. Highly recommended for commercial institutes.",
+        "author": "S. N. Murthy (Director)",
+        "rating": 5
+      },
+      "location": "Warangal Urban",
       "images": [
         "https://images.unsplash.com/photo-1548611716-300481845110?auto=format&fit=crop&w=1000&q=80"
       ],
-      "description": "On-grid rooftop solar array meeting 85% of total campus energy requirements.",
-      "clientReview": {
-        "author": "S. N. Murthy (Director)",
-        "comment": "Very professional execution by Sarva Solar. Highly recommended for commercial institutes.",
-        "rating": 5
-      }
+      "id": "proj-3",
+      "state": "Telangana",
+      "completionDate": "2025-11-10"
     },
     {
-      "id": "proj-4",
       "title": "250 kWp Industrial Cold Storage Solar Facility",
-      "category": "Industrial",
-      "location": "Kolkata Industrial Zone",
-      "state": "West Bengal",
       "capacityKw": 250,
-      "annualSavingsRs": 2950000,
-      "completionDate": "2026-05-12",
-      "status": "Ongoing",
+      "id": "proj-4",
+      "location": "Kolkata Industrial Zone",
       "images": [
         "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=1000&q=80"
       ],
-      "description": "High-voltage MW-class setup currently undergoing final DISCOM grid synchronization testing."
+      "status": "Ongoing",
+      "category": "Industrial",
+      "annualSavingsRs": 2950000,
+      "description": "High-voltage MW-class setup currently undergoing final DISCOM grid synchronization testing.",
+      "state": "West Bengal",
+      "completionDate": "2026-05-12"
     }
   ],
   "blogs": [
     {
-      "id": "blog-1",
-      "title": "How to Claim Up to ₹78,000 Subsidy Under PM Surya Ghar Muft Bijli Yojana in 2026",
-      "slug": "claim-pm-surya-ghar-subsidy-2026",
       "category": "Government Subsidy",
+      "title": "How to Claim Up to ₹78,000 Subsidy Under PM Surya Ghar Muft Bijli Yojana in 2026",
       "author": "Sarva Solar Technical Team",
-      "publishedAt": "2026-06-15",
-      "readTime": "5 min read",
-      "excerpt": "A comprehensive step-by-step guide on eligibility, required documents, and applying for Central Govt solar rooftop subsidies.",
-      "content": "\n### Understanding PM Surya Ghar Scheme\nThe Central Government's flagship PM Surya Ghar Muft Bijli Yojana aims to power 1 crore households across India with clean solar energy while providing up to 300 units of free electricity per month.\n\n#### Subsidy Structure Breakdown:\n- **1 kW System**: ₹30,000 direct subsidy\n- **2 kW System**: ₹60,000 direct subsidy\n- **3 kW to 10 kW Systems**: ₹78,000 maximum direct subsidy\n\n#### Steps to Register with Sarva Solar Assistance:\n1. Visit the national solar portal or register directly with **Sarva Solar** for end-to-end documentation.\n2. Submit Aadhaar, recent electricity DISCOM bill, and bank passbook details.\n3. Sarva Solar's certified engineers execute site inspection and submit technical feasibility.\n4. Post-installation and net-meter commissioning, the subsidy amount is credited directly to your bank account via DBT.\n    ",
+      "isPublished": true,
       "imageUrl": "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80",
+      "content": "\n### Understanding PM Surya Ghar Scheme\nThe Central Government's flagship PM Surya Ghar Muft Bijli Yojana aims to power 1 crore households across India with clean solar energy while providing up to 300 units of free electricity per month.\n\n#### Subsidy Structure Breakdown:\n- **1 kW System**: ₹30,000 direct subsidy\n- **2 kW System**: ₹60,000 direct subsidy\n- **3 kW to 10 kW Systems**: ₹78,000 maximum direct subsidy\n\n#### Steps to Register with Sarva Solar Assistance:\n1. Visit the national solar portal or register directly with **Sarva Solar** for end-to-end documentation.\n2. Submit Aadhaar, recent electricity DISCOM bill, and bank passbook details.\n3. Sarva Solar's certified engineers execute site inspection and submit technical feasibility.\n4. Post-installation and net-meter commissioning, the subsidy amount is credited directly to your bank account via DBT.\n    ",
+      "slug": "claim-pm-surya-ghar-subsidy-2026",
       "tags": [
         "PM Surya Ghar",
         "Solar Subsidy",
@@ -218,174 +206,167 @@
         "Andhra Pradesh",
         "Telangana"
       ],
-      "isPublished": true
+      "publishedAt": "2026-06-15",
+      "excerpt": "A comprehensive step-by-step guide on eligibility, required documents, and applying for Central Govt solar rooftop subsidies.",
+      "id": "blog-1",
+      "readTime": "5 min read"
     },
     {
+      "publishedAt": "2026-05-28",
+      "content": "\nChoosing the right solar system architecture is critical to maximizing return on investment.\n\n### 1. On-Grid Solar Systems\n- **Best for**: Cities with stable grid power.\n- **Pros**: Lowest cost per kW, qualifies for Govt subsidies, zero battery maintenance.\n- **Cons**: Shuts down during grid outages for safety.\n\n### 2. Hybrid Solar Systems\n- **Best for**: Areas experiencing frequent power cuts.\n- **Pros**: Combines net-meter grid savings with Lithium LFP battery power backup.\n- **Cons**: Slightly higher upfront cost due to battery storage.\n    ",
+      "isPublished": true,
+      "readTime": "6 min read",
+      "category": "Solar Buying Guide",
       "id": "blog-2",
       "title": "On-Grid vs Off-Grid vs Hybrid Solar Systems: Which One Should You Choose?",
       "slug": "on-grid-vs-off-grid-vs-hybrid-solar",
-      "category": "Solar Buying Guide",
-      "author": "Jupalli Venkatesh Kumar",
-      "publishedAt": "2026-05-28",
-      "readTime": "6 min read",
       "excerpt": "Compare initial costs, battery backup requirements, net metering benefits, and payback periods across solar plant types.",
-      "content": "\nChoosing the right solar system architecture is critical to maximizing return on investment.\n\n### 1. On-Grid Solar Systems\n- **Best for**: Cities with stable grid power.\n- **Pros**: Lowest cost per kW, qualifies for Govt subsidies, zero battery maintenance.\n- **Cons**: Shuts down during grid outages for safety.\n\n### 2. Hybrid Solar Systems\n- **Best for**: Areas experiencing frequent power cuts.\n- **Pros**: Combines net-meter grid savings with Lithium LFP battery power backup.\n- **Cons**: Slightly higher upfront cost due to battery storage.\n    ",
-      "imageUrl": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
+      "author": "Jupalli Venkatesh Kumar",
       "tags": [
         "Hybrid Solar",
         "Inverters",
         "Lithium Battery",
         "Net Metering"
       ],
-      "isPublished": true
+      "imageUrl": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80"
     }
   ],
   "services": [
     {
-      "id": "srv-1",
-      "title": "Residential Solar Solutions",
-      "slug": "residential-solar",
-      "shortDesc": "Cut electricity bills by up to 90% with custom rooftop solar plants and government subsidy assistance.",
       "fullDesc": "Transform your home into an independent clean energy generator with Sarva Solar residential rooftop systems. We offer complete EPC (Engineering, Procurement & Construction) solutions, handling everything from structural engineering to net metering approval and PM Surya Ghar subsidy claims.",
+      "shortDesc": "Cut electricity bills by up to 90% with custom rooftop solar plants and government subsidy assistance.",
+      "imageUrl": "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=1200&q=80",
+      "slug": "residential-solar",
+      "id": "srv-1",
+      "faqs": [
+        {
+          "answer": "A 3kW system requires approximately 240-300 sq. ft. of shadow-free rooftop space.",
+          "question": "How much roof space is required for a 3kW residential solar plant?"
+        },
+        {
+          "answer": "On-grid plants shut down during grid outages for lineman safety. If you install an Hybrid system with LFP battery backup, your home powers seamlessly during grid failures.",
+          "question": "Will my solar plant work during power outages?"
+        }
+      ],
       "iconName": "Home",
+      "title": "Residential Solar Solutions",
       "benefits": [
         "Save up to ₹60,000 to ₹1,20,000 annually on electricity bills",
         "Up to ₹78,000 direct central government subsidy",
         "25-year linear performance warranty on bifacial / mono PERC panels",
         "Payback period as short as 3 to 4 years",
         "Zero upfront hassle with custom EMI & bank financing support"
-      ],
-      "imageUrl": "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=1200&q=80",
-      "faqs": [
-        {
-          "question": "How much roof space is required for a 3kW residential solar plant?",
-          "answer": "A 3kW system requires approximately 240-300 sq. ft. of shadow-free rooftop space."
-        },
-        {
-          "question": "Will my solar plant work during power outages?",
-          "answer": "On-grid plants shut down during grid outages for lineman safety. If you install an Hybrid system with LFP battery backup, your home powers seamlessly during grid failures."
-        }
       ]
     },
     {
       "id": "srv-2",
-      "title": "Commercial & Corporate Solar",
-      "slug": "commercial-solar",
-      "shortDesc": "Optimize operational expenses for offices, hospitals, schools, and retail with high-ROI solar power.",
       "fullDesc": "Commercial power tariffs in India are among the highest. Sarva Solar commercial EPC projects reduce corporate energy costs dramatically, qualify for 40% Accelerated Depreciation tax benefits, and boost ESG compliance scores.",
-      "iconName": "Building2",
+      "imageUrl": "https://images.unsplash.com/photo-1613665813446-82a78c468a1d?auto=format&fit=crop&w=1200&q=80",
       "benefits": [
         "Drastically reduce commercial grid power tariff costs",
         "Avail 40% Accelerated Depreciation tax savings in Year 1",
         "24/7 Remote IoT monitoring of power yield and panel performance",
         "Custom solar carport and elevated structure options for usable roof space"
       ],
-      "imageUrl": "https://images.unsplash.com/photo-1613665813446-82a78c468a1d?auto=format&fit=crop&w=1200&q=80",
       "faqs": [
         {
           "question": "What is the average ROI for commercial solar plants?",
           "answer": "Commercial solar plants generally deliver full payback within 2.5 to 3.5 years due to higher commercial electricity tariffs."
         }
-      ]
+      ],
+      "shortDesc": "Optimize operational expenses for offices, hospitals, schools, and retail with high-ROI solar power.",
+      "iconName": "Building2",
+      "title": "Commercial & Corporate Solar",
+      "slug": "commercial-solar"
     },
     {
       "id": "srv-3",
-      "title": "Industrial Mega Solar Plants",
       "slug": "industrial-solar",
-      "shortDesc": "High-capacity solar infrastructure for factories, textile mills, cold storages, and manufacturing units.",
+      "title": "Industrial Mega Solar Plants",
+      "imageUrl": "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=1200&q=80",
+      "faqs": [
+        {
+          "answer": "Yes! We use specialized non-penetrating aluminum standing seam clamps and elevated HDG structural mounts tailored for tin shed roofs.",
+          "question": "Can Sarva Solar install solar on tin or metallic factory roofs?"
+        }
+      ],
       "fullDesc": "Heavy manufacturing and processing industries require dependable high-capacity continuous energy. We design and deploy high-voltage grid-tied solar systems up to 5 MWp with automated thermal imaging monitoring and high-tensile hot-dip galvanized mounting structures.",
-      "iconName": "Factory",
+      "shortDesc": "High-capacity solar infrastructure for factories, textile mills, cold storages, and manufacturing units.",
       "benefits": [
         "MW-scale turnkey EPC execution with utility-scale inverters",
         "High thermal endurance modules designed for industrial dust & heat",
         "Custom PPA (Power Purchase Agreement) & OPEX/CAPEX business models"
       ],
-      "imageUrl": "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=1200&q=80",
-      "faqs": [
-        {
-          "question": "Can Sarva Solar install solar on tin or metallic factory roofs?",
-          "answer": "Yes! We use specialized non-penetrating aluminum standing seam clamps and elevated HDG structural mounts tailored for tin shed roofs."
-        }
-      ]
+      "iconName": "Factory"
     },
     {
-      "id": "srv-4",
-      "title": "Agriculture Solar Pumps",
       "slug": "agriculture-solar",
-      "shortDesc": "Reliable daytime irrigation for farmers using high-torque solar water pumps and PM KUSUM assistance.",
-      "fullDesc": "Empowering farmers in Andhra Pradesh, Telangana, and West Bengal with daytime uninterrupted irrigation. Sarva Solar agricultural pump systems eliminate dependence on erratic grid power and diesel generator expenses.",
+      "title": "Agriculture Solar Pumps",
       "iconName": "Tractor",
+      "id": "srv-4",
       "benefits": [
         "Consistent daytime crop irrigation without power cut interruptions",
         "Zero recurring fuel cost compared to diesel pump sets",
         "Durable stainless steel submersible pumps with MPPT solar controllers"
       ],
-      "imageUrl": "https://images.unsplash.com/photo-1592833159057-651427233215?auto=format&fit=crop&w=1200&q=80",
       "faqs": [
         {
-          "question": "What hp solar pump is recommended for 5 acres of agriculture?",
-          "answer": "A 5 HP to 7.5 HP solar submersible pump set is usually recommended depending on water table depth."
+          "answer": "A 5 HP to 7.5 HP solar submersible pump set is usually recommended depending on water table depth.",
+          "question": "What hp solar pump is recommended for 5 acres of agriculture?"
         }
-      ]
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1592833159057-651427233215?auto=format&fit=crop&w=1200&q=80",
+      "fullDesc": "Empowering farmers in Andhra Pradesh, Telangana, and West Bengal with daytime uninterrupted irrigation. Sarva Solar agricultural pump systems eliminate dependence on erratic grid power and diesel generator expenses.",
+      "shortDesc": "Reliable daytime irrigation for farmers using high-torque solar water pumps and PM KUSUM assistance."
     },
     {
-      "id": "srv-5",
-      "title": "Battery Energy Storage (BESS)",
-      "slug": "battery-storage",
-      "shortDesc": "Advanced Lithium Iron Phosphate (LiFePO4) storage for 24/7 backup and peak load shifting.",
-      "fullDesc": "Pair solar energy with modular, ultra-safe Lithium LFP battery banks. Store excess solar power generated during midday sunshine to power your lights, refrigerators, and heavy loads through the night or grid outages.",
-      "iconName": "Zap",
       "benefits": [
         "6,000+ deep discharge cycle life (15+ year lifespan)",
         "Modular expandable capacity from 5kWh to 100kWh+",
         "Instant microsecond backup switchover for sensitive appliances"
       ],
-      "imageUrl": "https://images.unsplash.com/photo-1558441719-6705167e33ae?auto=format&fit=crop&w=1200&q=80",
+      "slug": "battery-storage",
+      "title": "Battery Energy Storage (BESS)",
       "faqs": [
         {
-          "question": "What is the battery life of LiFePO4 vs lead acid?",
-          "answer": "LiFePO4 batteries last 10-15 years (over 6000 cycles) compared to lead-acid batteries which fail in 2-3 years."
+          "answer": "LiFePO4 batteries last 10-15 years (over 6000 cycles) compared to lead-acid batteries which fail in 2-3 years.",
+          "question": "What is the battery life of LiFePO4 vs lead acid?"
         }
-      ]
+      ],
+      "iconName": "Zap",
+      "shortDesc": "Advanced Lithium Iron Phosphate (LiFePO4) storage for 24/7 backup and peak load shifting.",
+      "fullDesc": "Pair solar energy with modular, ultra-safe Lithium LFP battery banks. Store excess solar power generated during midday sunshine to power your lights, refrigerators, and heavy loads through the night or grid outages.",
+      "id": "srv-5",
+      "imageUrl": "https://images.unsplash.com/photo-1558441719-6705167e33ae?auto=format&fit=crop&w=1200&q=80"
     },
     {
-      "id": "srv-6",
+      "faqs": [
+        {
+          "answer": "In dry or high-dust areas, cleaning every 15-20 days restores full power generation efficiency.",
+          "question": "How often should solar panels be cleaned in India?"
+        }
+      ],
       "title": "Solar Maintenance & AMC Services",
-      "slug": "solar-maintenance",
       "shortDesc": "Automated panel cleaning, thermal inspection, inverter calibration, and health checks.",
-      "fullDesc": "Dust, bird drop stains, and loose cable contacts can drop solar output by 15-25%. Sarva Solar offers annual maintenance contracts (AMC), robotic/sprinkler cleaning solutions, and infrared thermal imaging to guarantee peak yield.",
-      "iconName": "Wrench",
       "benefits": [
         "Preventive biannual structural and electrical audit",
         "High-pressure pure water deionized panel cleaning service",
         "Rapid 24-hour technician response for troubleshooting"
       ],
+      "slug": "solar-maintenance",
+      "iconName": "Wrench",
+      "id": "srv-6",
       "imageUrl": "https://images.unsplash.com/photo-1548611716-300481845110?auto=format&fit=crop&w=1200&q=80",
-      "faqs": [
-        {
-          "question": "How often should solar panels be cleaned in India?",
-          "answer": "In dry or high-dust areas, cleaning every 15-20 days restores full power generation efficiency."
-        }
-      ]
+      "fullDesc": "Dust, bird drop stains, and loose cable contacts can drop solar output by 15-25%. Sarva Solar offers annual maintenance contracts (AMC), robotic/sprinkler cleaning solutions, and infrared thermal imaging to guarantee peak yield."
     }
   ],
   "subsidies": [
     {
-      "id": "sub-1",
-      "schemeName": "PM Surya Ghar: Muft Bijli Yojana (1 kW System)",
       "capacityRange": "1 kWp",
-      "centralSubsidyAmount": 30000,
-      "stateBonusAmount": 0,
       "eligibility": [
         "Must be an Indian residential household with valid electricity connection",
         "Roof space must be suitable for solar installation (min 80-100 sq ft shadow-free)",
         "Electricity consumer account registered in applicant name"
-      ],
-      "documents": [
-        "Aadhaar Card copy",
-        "Recent Electricity Bill (last 3 months)",
-        "Roof Ownership Proof / House Tax Receipt",
-        "Bank Account passbook / Cancelled Cheque for Direct Benefit Transfer"
       ],
       "processSteps": [
         "Register on National Portal for Rooftop Solar (PM Surya Ghar)",
@@ -394,14 +375,31 @@
         "DISCOM inspection & Net Metering approval",
         "Direct Subsidy Credit into customer bank account within 30 days"
       ],
-      "updatedDate": "2026-06-01"
+      "updatedDate": "2026-06-01",
+      "documents": [
+        "Aadhaar Card copy",
+        "Recent Electricity Bill (last 3 months)",
+        "Roof Ownership Proof / House Tax Receipt",
+        "Bank Account passbook / Cancelled Cheque for Direct Benefit Transfer"
+      ],
+      "centralSubsidyAmount": 30000,
+      "id": "sub-1",
+      "schemeName": "PM Surya Ghar: Muft Bijli Yojana (1 kW System)",
+      "stateBonusAmount": 0
     },
     {
-      "id": "sub-2",
-      "schemeName": "PM Surya Ghar: Muft Bijli Yojana (2 kW System)",
-      "capacityRange": "2 kWp",
       "centralSubsidyAmount": 60000,
-      "stateBonusAmount": 0,
+      "capacityRange": "2 kWp",
+      "schemeName": "PM Surya Ghar: Muft Bijli Yojana (2 kW System)",
+      "updatedDate": "2026-06-01",
+      "id": "sub-2",
+      "processSteps": [
+        "Online application on PM Surya Ghar portal",
+        "Sarva Solar technical team feasibility report",
+        "Turnkey installation & safety inspection",
+        "Net Meter commissioning by DISCOM",
+        "Direct Subsidy Disbursement ₹60,000 to bank account"
+      ],
       "eligibility": [
         "Residential house with monthly power consumption 150 - 300 units",
         "Shadow-free rooftop area of minimum 160-200 sq ft"
@@ -411,121 +409,114 @@
         "Latest DISCOM Electricity Bill",
         "Bank Account Passbook / Cancelled Cheque"
       ],
-      "processSteps": [
-        "Online application on PM Surya Ghar portal",
-        "Sarva Solar technical team feasibility report",
-        "Turnkey installation & safety inspection",
-        "Net Meter commissioning by DISCOM",
-        "Direct Subsidy Disbursement ₹60,000 to bank account"
-      ],
-      "updatedDate": "2026-06-01"
+      "stateBonusAmount": 0
     },
     {
-      "id": "sub-3",
-      "schemeName": "PM Surya Ghar: Muft Bijli Yojana (3 kW to 10 kW)",
-      "capacityRange": "3 kWp - 10 kWp",
-      "centralSubsidyAmount": 78000,
-      "stateBonusAmount": 10000,
       "eligibility": [
         "Residential homeowners with higher power bill (> 300 units/month)",
         "Min 300 sq ft shadow-free roof area"
       ],
-      "documents": [
-        "Aadhaar Card & PAN Card",
-        "Electricity Bill with Service Connection Number",
-        "Rooftop clearance certificate"
-      ],
+      "capacityRange": "3 kWp - 10 kWp",
       "processSteps": [
         "Portal registration & DISCOM approval",
         "EPC execution by Sarva Solar certified installers",
         "Bi-directional Net Metering setup",
         "Subsidy claim generation & Direct Benefit Transfer of ₹78,000"
       ],
-      "updatedDate": "2026-06-01"
+      "updatedDate": "2026-06-01",
+      "centralSubsidyAmount": 78000,
+      "documents": [
+        "Aadhaar Card & PAN Card",
+        "Electricity Bill with Service Connection Number",
+        "Rooftop clearance certificate"
+      ],
+      "schemeName": "PM Surya Ghar: Muft Bijli Yojana (3 kW to 10 kW)",
+      "stateBonusAmount": 10000,
+      "id": "sub-3"
     }
   ],
   "testimonials": [
     {
       "id": "t-1",
-      "customerName": "K. Srinivasa Rao",
+      "savedPerYear": "₹72,000 / year",
       "location": "Guntur, Andhra Pradesh",
       "systemSizeKw": 5,
-      "rating": 5,
       "comment": "Sarva Solar installed a 5kW system on my home rooftop. The entire team was professional, clean, and guided us through the PM Surya Ghar subsidy effortlessly. Electricity bill is down from ₹6,500 to zero!",
       "photoUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
-      "savedPerYear": "₹72,000 / year"
-    },
-    {
-      "id": "t-2",
-      "customerName": "M. Anand Varma",
-      "location": "Hyderabad, Telangana",
-      "systemSizeKw": 10,
       "rating": 5,
-      "comment": "We opted for a 10kW Hybrid system with lithium battery storage for our commercial office. Sarva Solar delivered on time with top-quality N-type bifacial panels. Incredible service!",
-      "photoUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
-      "savedPerYear": "₹1,35,000 / year"
+      "customerName": "K. Srinivasa Rao"
     },
     {
+      "location": "Hyderabad, Telangana",
+      "savedPerYear": "₹1,35,000 / year",
+      "systemSizeKw": 10,
+      "id": "t-2",
+      "photoUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+      "customerName": "M. Anand Varma",
+      "rating": 5,
+      "comment": "We opted for a 10kW Hybrid system with lithium battery storage for our commercial office. Sarva Solar delivered on time with top-quality N-type bifacial panels. Incredible service!"
+    },
+    {
+      "photoUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+      "savedPerYear": "₹42,000 / year",
       "id": "t-3",
-      "customerName": "Sujata Banerjee",
       "location": "Kolkata, West Bengal",
       "systemSizeKw": 3,
-      "rating": 5,
       "comment": "Very happy with Sarva Solar. Their solar savings calculator was 100% accurate. Subsidy amount arrived straight into my account.",
-      "photoUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
-      "savedPerYear": "₹42,000 / year"
+      "customerName": "Sujata Banerjee",
+      "rating": 5
     }
   ],
   "faqs": [
     {
-      "id": "faq-1",
       "category": "General",
+      "id": "faq-1",
       "question": "How long do Sarva Solar panels last?",
       "answer": "Tier-1 solar panels provided by Sarva Solar come with a 25-30 year linear performance warranty, ensuring 80%+ efficiency generation even after 25 years."
     },
     {
       "id": "faq-2",
-      "category": "Subsidy",
       "question": "How do I receive the PM Surya Ghar government subsidy?",
-      "answer": "Sarva Solar handles all application filings on the National Solar Portal. Once the net meter is installed by your DISCOM, the central government transfers up to ₹78,000 directly into your linked bank account via DBT within 30 days."
+      "answer": "Sarva Solar handles all application filings on the National Solar Portal. Once the net meter is installed by your DISCOM, the central government transfers up to ₹78,000 directly into your linked bank account via DBT within 30 days.",
+      "category": "Subsidy"
     },
     {
-      "id": "faq-3",
       "category": "Technical",
+      "id": "faq-3",
       "question": "What happens to solar generation during cloudy or rainy days?",
       "answer": "Solar panels still generate electricity on overcast days using diffuse sunlight (around 20% - 40% of peak capacity). On-grid systems draw remaining balance power seamlessly from the DISCOM grid."
     },
     {
-      "id": "faq-4",
-      "category": "Billing",
       "question": "What is Net Metering?",
-      "answer": "Net Metering is a bi-directional billing mechanism that credits solar energy system owners for the electricity they export to the grid. At the end of the month, you pay only for net units consumed."
+      "answer": "Net Metering is a bi-directional billing mechanism that credits solar energy system owners for the electricity they export to the grid. At the end of the month, you pay only for net units consumed.",
+      "category": "Billing",
+      "id": "faq-4"
     }
   ],
   "gallery": [
     {
-      "id": "g-1",
-      "title": "5kW Villa Rooftop in Guntur",
-      "category": "Residential",
-      "type": "image",
       "mediaUrl": "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=1000&q=80",
-      "caption": "Elevated HDG structure custom-built for full terrace space access."
+      "category": "Residential",
+      "title": "5kW Villa Rooftop in Guntur",
+      "caption": "Elevated HDG structure custom-built for full terrace space access.",
+      "type": "image",
+      "id": "g-1"
     },
     {
-      "id": "g-2",
+      "type": "image",
+      "caption": "Standing seam non-penetrating solar installation in Vijayawada.",
       "title": "120kW Commercial Textile Mill Array",
       "category": "Commercial",
-      "type": "image",
       "mediaUrl": "https://images.unsplash.com/photo-1613665813446-82a78c468a1d?auto=format&fit=crop&w=1000&q=80",
-      "caption": "Standing seam non-penetrating solar installation in Vijayawada."
+      "id": "g-2"
     },
     {
-      "id": "g-3",
       "title": "Drone Inspection View - 250kW Factory",
-      "category": "Drone Views",
       "type": "image",
+      "category": "Drone Views",
       "mediaUrl": "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=1000&q=80",
-      "caption": "Aerial perspective of precision aligned high-efficiency solar modules."
+      "caption": "Aerial perspective of precision aligned high-efficiency solar modules.",
+      "id": "g-3"
     }
   ],
   "settings": {
@@ -545,1176 +536,1176 @@
   },
   "auditLogs": [
     {
-      "id": "log-1784933129273",
-      "timestamp": "2026-07-24T22:45:29.273Z",
-      "userEmail": "admin@sarvasolar.com",
+      "id": "log-1",
+      "timestamp": "2026-07-24T19:10:45.745Z",
+      "details": "Sarva Solar Database initialized with seed data",
+      "userEmail": "system",
+      "action": "INIT"
+    },
+    {
+      "details": "User successfully logged in",
       "action": "LOGIN",
+      "timestamp": "2026-07-24T19:23:00.573Z",
+      "id": "log-1784920980573",
+      "userEmail": "admin@sarvasolar.com"
+    },
+    {
+      "action": "LOGIN",
+      "timestamp": "2026-07-24T19:26:17.561Z",
+      "id": "log-1784921177561",
+      "userEmail": "manager@sarvasolar.com",
       "details": "User successfully logged in"
     },
     {
-      "id": "log-1784932389670",
-      "timestamp": "2026-07-24T22:33:09.670Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "UPDATE_HERO_SLIDE",
-      "details": "Updated hero slide slide-1"
+      "userEmail": "manager@sarvasolar.com",
+      "timestamp": "2026-07-24T19:29:18.268Z",
+      "action": "UPDATE_LEAD",
+      "details": "Updated lead status/notes for Gangadhar Kurumalla",
+      "id": "log-1784921358268"
     },
     {
-      "id": "log-1784932375003",
-      "timestamp": "2026-07-24T22:32:55.003Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "UPDATE_HERO_SLIDE",
-      "details": "Updated hero slide slide-2"
+      "id": "log-1784921362923",
+      "details": "Updated lead status/notes for Gangadhar Kurumalla",
+      "timestamp": "2026-07-24T19:29:22.923Z",
+      "action": "UPDATE_LEAD",
+      "userEmail": "manager@sarvasolar.com"
     },
     {
-      "id": "log-1784931777212",
-      "timestamp": "2026-07-24T22:22:57.212Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "UPDATE_HERO_SLIDE",
-      "details": "Updated hero slide slide-2"
+      "details": "User successfully logged in",
+      "action": "LOGIN",
+      "timestamp": "2026-07-24T19:29:54.067Z",
+      "id": "log-1784921394067",
+      "userEmail": "admin@sarvasolar.com"
     },
     {
-      "id": "log-1784931092109",
-      "timestamp": "2026-07-24T22:11:32.109Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "DELETE_PRODUCT",
-      "details": "Deleted product prod-5"
+      "details": "Updated lead status/notes for Gangadhar Kurumalla",
+      "id": "log-1784921416592",
+      "timestamp": "2026-07-24T19:30:16.592Z",
+      "action": "UPDATE_LEAD",
+      "userEmail": "admin@sarvasolar.com"
     },
     {
-      "id": "log-1784931089602",
-      "timestamp": "2026-07-24T22:11:29.602Z",
+      "timestamp": "2026-07-24T19:30:22.530Z",
+      "details": "Updated lead status/notes for Rajesh Sharma",
+      "id": "log-1784921422530",
       "userEmail": "admin@sarvasolar.com",
-      "action": "DELETE_PRODUCT",
-      "details": "Deleted product prod-6"
+      "action": "UPDATE_LEAD"
     },
     {
-      "id": "log-1784931086612",
-      "timestamp": "2026-07-24T22:11:26.612Z",
+      "action": "UPDATE_LEAD",
+      "details": "Updated lead status/notes for Rajesh Sharma",
       "userEmail": "admin@sarvasolar.com",
-      "action": "DELETE_PRODUCT",
-      "details": "Deleted product prod-2"
+      "id": "log-1784921423962",
+      "timestamp": "2026-07-24T19:30:23.962Z"
     },
     {
-      "id": "log-1784931071249",
+      "id": "log-1784921442081",
+      "action": "UPDATE_LEAD",
+      "userEmail": "admin@sarvasolar.com",
+      "details": "Updated lead status/notes for P. Venkat Rao",
+      "timestamp": "2026-07-24T19:30:42.081Z"
+    },
+    {
+      "details": "User successfully logged in",
+      "id": "log-1784921558966",
+      "timestamp": "2026-07-24T19:32:38.966Z",
+      "action": "LOGIN",
+      "userEmail": "admin@sarvasolar.com"
+    },
+    {
+      "timestamp": "2026-07-24T19:39:25.912Z",
+      "details": "User successfully logged in",
+      "action": "LOGIN",
+      "userEmail": "admin@sarvasolar.com",
+      "id": "log-1784921965912"
+    },
+    {
+      "id": "log-1784922014430",
+      "timestamp": "2026-07-24T19:40:14.430Z",
+      "action": "UPDATE_SETTINGS",
+      "details": "Updated company settings & metadata",
+      "userEmail": "admin@sarvasolar.com"
+    },
+    {
+      "details": "Updated company settings & metadata",
+      "action": "UPDATE_SETTINGS",
+      "id": "log-1784922019987",
+      "timestamp": "2026-07-24T19:40:19.987Z",
+      "userEmail": "admin@sarvasolar.com"
+    },
+    {
+      "userEmail": "admin@sarvasolar.com",
+      "details": "User successfully logged in",
+      "timestamp": "2026-07-24T19:52:49.813Z",
+      "action": "LOGIN",
+      "id": "log-1784922769813"
+    },
+    {
+      "details": "Updated job opening job-1",
+      "userEmail": "admin@sarvasolar.com",
+      "action": "UPDATE_JOB",
+      "timestamp": "2026-07-24T19:53:03.188Z",
+      "id": "log-1784922783188"
+    },
+    {
+      "timestamp": "2026-07-24T19:53:18.707Z",
+      "userEmail": "admin@sarvasolar.com",
+      "action": "UPDATE_JOB_APP_STATUS",
+      "id": "log-1784922798707",
+      "details": "Updated application app-1 to Rejected"
+    },
+    {
+      "id": "log-1784924513240",
+      "details": "User successfully logged in",
+      "action": "LOGIN",
+      "userEmail": "admin@sarvasolar.com",
+      "timestamp": "2026-07-24T20:21:53.240Z"
+    },
+    {
+      "id": "log-1784925487222",
+      "details": "User successfully logged in",
+      "action": "LOGIN",
+      "timestamp": "2026-07-24T20:38:07.222Z",
+      "userEmail": "admin@sarvasolar.com"
+    },
+    {
+      "details": "Requested OTP for mobile 7036590780",
+      "id": "log-1784929115830",
+      "timestamp": "2026-07-24T21:38:35.830Z",
+      "action": "REQUEST_OTP",
+      "userEmail": "admin@sarvasolar.com"
+    },
+    {
+      "details": "User successfully logged in via Mobile OTP (7036590780)",
+      "id": "log-1784929148203",
+      "timestamp": "2026-07-24T21:39:08.203Z",
+      "action": "LOGIN_OTP",
+      "userEmail": "admin@sarvasolar.com"
+    },
+    {
+      "timestamp": "2026-07-24T21:41:30.434Z",
+      "userEmail": "admin@sarvasolar.com",
+      "details": "Updated lead status/notes for Gangadhar Kurumalla",
+      "id": "log-1784929290434",
+      "action": "UPDATE_LEAD"
+    },
+    {
+      "id": "log-1784930078265",
+      "timestamp": "2026-07-24T21:54:38.265Z",
+      "details": "User successfully logged in",
+      "userEmail": "admin@sarvasolar.com",
+      "action": "LOGIN"
+    },
+    {
+      "action": "UPDATE_PROFILE",
+      "details": "User updated profile details (Jupalli Venkatesh Kumar, admin@sarvasolar.com)",
+      "timestamp": "2026-07-24T21:55:26.511Z",
+      "id": "log-1784930126511",
+      "userEmail": "admin@sarvasolar.com"
+    },
+    {
+      "userEmail": "admin@sarvasolar.com",
+      "action": "DELETE_STAFF",
+      "timestamp": "2026-07-24T22:10:33.870Z",
+      "details": "Deleted staff account for Anil Kumar (employee@sarvasolar.com)",
+      "id": "log-1784931033870"
+    },
+    {
+      "userEmail": "admin@sarvasolar.com",
+      "timestamp": "2026-07-24T22:10:36.823Z",
+      "action": "DELETE_STAFF",
+      "details": "Deleted staff account for Ramesh Verma (manager@sarvasolar.com)",
+      "id": "log-1784931036823"
+    },
+    {
+      "userEmail": "admin@sarvasolar.com",
+      "details": "Deleted lead lead-102",
+      "timestamp": "2026-07-24T22:10:51.082Z",
+      "id": "log-1784931051082",
+      "action": "DELETE_LEAD"
+    },
+    {
+      "timestamp": "2026-07-24T22:10:53.610Z",
+      "action": "DELETE_LEAD",
+      "userEmail": "admin@sarvasolar.com",
+      "details": "Deleted lead lead-101",
+      "id": "log-1784931053610"
+    },
+    {
+      "userEmail": "admin@sarvasolar.com",
+      "id": "log-1784931055968",
+      "timestamp": "2026-07-24T22:10:55.968Z",
+      "details": "Deleted lead lead-1784921301482",
+      "action": "DELETE_LEAD"
+    },
+    {
       "timestamp": "2026-07-24T22:11:11.249Z",
+      "id": "log-1784931071249",
       "userEmail": "admin@sarvasolar.com",
       "action": "DELETE_JOB_APP",
       "details": "Deleted job application app-1"
     },
     {
-      "id": "log-1784931055968",
-      "timestamp": "2026-07-24T22:10:55.968Z",
       "userEmail": "admin@sarvasolar.com",
-      "action": "DELETE_LEAD",
-      "details": "Deleted lead lead-1784921301482"
+      "timestamp": "2026-07-24T22:11:26.612Z",
+      "action": "DELETE_PRODUCT",
+      "details": "Deleted product prod-2",
+      "id": "log-1784931086612"
     },
     {
-      "id": "log-1784931053610",
-      "timestamp": "2026-07-24T22:10:53.610Z",
+      "id": "log-1784931089602",
+      "timestamp": "2026-07-24T22:11:29.602Z",
+      "details": "Deleted product prod-6",
       "userEmail": "admin@sarvasolar.com",
-      "action": "DELETE_LEAD",
-      "details": "Deleted lead lead-101"
+      "action": "DELETE_PRODUCT"
     },
     {
-      "id": "log-1784931051082",
-      "timestamp": "2026-07-24T22:10:51.082Z",
+      "action": "DELETE_PRODUCT",
       "userEmail": "admin@sarvasolar.com",
-      "action": "DELETE_LEAD",
-      "details": "Deleted lead lead-102"
+      "details": "Deleted product prod-5",
+      "timestamp": "2026-07-24T22:11:32.109Z",
+      "id": "log-1784931092109"
     },
     {
-      "id": "log-1784931036823",
-      "timestamp": "2026-07-24T22:10:36.823Z",
+      "id": "log-1784931777212",
+      "action": "UPDATE_HERO_SLIDE",
       "userEmail": "admin@sarvasolar.com",
-      "action": "DELETE_STAFF",
-      "details": "Deleted staff account for Ramesh Verma (manager@sarvasolar.com)"
+      "timestamp": "2026-07-24T22:22:57.212Z",
+      "details": "Updated hero slide slide-2"
     },
     {
-      "id": "log-1784931033870",
-      "timestamp": "2026-07-24T22:10:33.870Z",
+      "timestamp": "2026-07-24T22:32:55.003Z",
+      "id": "log-1784932375003",
       "userEmail": "admin@sarvasolar.com",
-      "action": "DELETE_STAFF",
-      "details": "Deleted staff account for Anil Kumar (employee@sarvasolar.com)"
+      "action": "UPDATE_HERO_SLIDE",
+      "details": "Updated hero slide slide-2"
     },
     {
-      "id": "log-1784930126511",
-      "timestamp": "2026-07-24T21:55:26.511Z",
+      "action": "UPDATE_HERO_SLIDE",
+      "id": "log-1784932389670",
       "userEmail": "admin@sarvasolar.com",
-      "action": "UPDATE_PROFILE",
-      "details": "User updated profile details (Jupalli Venkatesh Kumar, admin@sarvasolar.com)"
+      "timestamp": "2026-07-24T22:33:09.670Z",
+      "details": "Updated hero slide slide-1"
     },
     {
-      "id": "log-1784930078265",
-      "timestamp": "2026-07-24T21:54:38.265Z",
-      "userEmail": "admin@sarvasolar.com",
+      "details": "User successfully logged in",
+      "id": "log-1784933129273",
       "action": "LOGIN",
-      "details": "User successfully logged in"
-    },
-    {
-      "id": "log-1784929290434",
-      "timestamp": "2026-07-24T21:41:30.434Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "UPDATE_LEAD",
-      "details": "Updated lead status/notes for Gangadhar Kurumalla"
-    },
-    {
-      "id": "log-1784929148203",
-      "timestamp": "2026-07-24T21:39:08.203Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "LOGIN_OTP",
-      "details": "User successfully logged in via Mobile OTP (7036590780)"
-    },
-    {
-      "id": "log-1784929115830",
-      "timestamp": "2026-07-24T21:38:35.830Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "REQUEST_OTP",
-      "details": "Requested OTP for mobile 7036590780"
-    },
-    {
-      "id": "log-1784925487222",
-      "timestamp": "2026-07-24T20:38:07.222Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "LOGIN",
-      "details": "User successfully logged in"
-    },
-    {
-      "id": "log-1784924513240",
-      "timestamp": "2026-07-24T20:21:53.240Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "LOGIN",
-      "details": "User successfully logged in"
-    },
-    {
-      "id": "log-1784922798707",
-      "timestamp": "2026-07-24T19:53:18.707Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "UPDATE_JOB_APP_STATUS",
-      "details": "Updated application app-1 to Rejected"
-    },
-    {
-      "id": "log-1784922783188",
-      "timestamp": "2026-07-24T19:53:03.188Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "UPDATE_JOB",
-      "details": "Updated job opening job-1"
-    },
-    {
-      "id": "log-1784922769813",
-      "timestamp": "2026-07-24T19:52:49.813Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "LOGIN",
-      "details": "User successfully logged in"
-    },
-    {
-      "id": "log-1784922019987",
-      "timestamp": "2026-07-24T19:40:19.987Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "UPDATE_SETTINGS",
-      "details": "Updated company settings & metadata"
-    },
-    {
-      "id": "log-1784922014430",
-      "timestamp": "2026-07-24T19:40:14.430Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "UPDATE_SETTINGS",
-      "details": "Updated company settings & metadata"
-    },
-    {
-      "id": "log-1784921965912",
-      "timestamp": "2026-07-24T19:39:25.912Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "LOGIN",
-      "details": "User successfully logged in"
-    },
-    {
-      "id": "log-1784921558966",
-      "timestamp": "2026-07-24T19:32:38.966Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "LOGIN",
-      "details": "User successfully logged in"
-    },
-    {
-      "id": "log-1784921442081",
-      "timestamp": "2026-07-24T19:30:42.081Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "UPDATE_LEAD",
-      "details": "Updated lead status/notes for P. Venkat Rao"
-    },
-    {
-      "id": "log-1784921423962",
-      "timestamp": "2026-07-24T19:30:23.962Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "UPDATE_LEAD",
-      "details": "Updated lead status/notes for Rajesh Sharma"
-    },
-    {
-      "id": "log-1784921422530",
-      "timestamp": "2026-07-24T19:30:22.530Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "UPDATE_LEAD",
-      "details": "Updated lead status/notes for Rajesh Sharma"
-    },
-    {
-      "id": "log-1784921416592",
-      "timestamp": "2026-07-24T19:30:16.592Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "UPDATE_LEAD",
-      "details": "Updated lead status/notes for Gangadhar Kurumalla"
-    },
-    {
-      "id": "log-1784921394067",
-      "timestamp": "2026-07-24T19:29:54.067Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "LOGIN",
-      "details": "User successfully logged in"
-    },
-    {
-      "id": "log-1784921362923",
-      "timestamp": "2026-07-24T19:29:22.923Z",
-      "userEmail": "manager@sarvasolar.com",
-      "action": "UPDATE_LEAD",
-      "details": "Updated lead status/notes for Gangadhar Kurumalla"
-    },
-    {
-      "id": "log-1784921358268",
-      "timestamp": "2026-07-24T19:29:18.268Z",
-      "userEmail": "manager@sarvasolar.com",
-      "action": "UPDATE_LEAD",
-      "details": "Updated lead status/notes for Gangadhar Kurumalla"
-    },
-    {
-      "id": "log-1784921177561",
-      "timestamp": "2026-07-24T19:26:17.561Z",
-      "userEmail": "manager@sarvasolar.com",
-      "action": "LOGIN",
-      "details": "User successfully logged in"
-    },
-    {
-      "id": "log-1784920980573",
-      "timestamp": "2026-07-24T19:23:00.573Z",
-      "userEmail": "admin@sarvasolar.com",
-      "action": "LOGIN",
-      "details": "User successfully logged in"
-    },
-    {
-      "id": "log-1",
-      "timestamp": "2026-07-24T19:10:45.745Z",
-      "userEmail": "system",
-      "action": "INIT",
-      "details": "Sarva Solar Database initialized with seed data"
+      "timestamp": "2026-07-24T22:45:29.273Z",
+      "userEmail": "admin@sarvasolar.com"
     }
   ],
   "jobs": [
     {
       "id": "job-1",
-      "title": "Solar Sales & Business Development Manager",
-      "location": "Guntur / Vijayawada / Hyderabad",
-      "type": "Full-time",
-      "exp": "2+ Years in Solar EPC / Electrical Sales",
-      "desc": "Responsible for lead conversion, commercial client consultations, and site survey coordination.",
       "department": "Sales & Business",
+      "title": "Solar Sales & Business Development Manager",
+      "exp": "2+ Years in Solar EPC / Electrical Sales",
       "isActive": false,
-      "postedDate": "2026-07-01"
+      "type": "Full-time",
+      "postedDate": "2026-07-01",
+      "desc": "Responsible for lead conversion, commercial client consultations, and site survey coordination.",
+      "location": "Guntur / Vijayawada / Hyderabad"
     },
     {
-      "id": "job-2",
       "title": "Senior Rooftop Solar Design Engineer",
-      "location": "Guntur HQ",
-      "type": "Full-time",
-      "exp": "2+ Years in Helioscope / AutoCAD / PVSyst",
-      "desc": "Creating 3D shading simulations, electrical single line diagrams (SLD), and structural BOM calculations.",
-      "department": "Engineering",
       "isActive": true,
-      "postedDate": "2026-07-05"
+      "postedDate": "2026-07-05",
+      "desc": "Creating 3D shading simulations, electrical single line diagrams (SLD), and structural BOM calculations.",
+      "type": "Full-time",
+      "id": "job-2",
+      "location": "Guntur HQ",
+      "exp": "2+ Years in Helioscope / AutoCAD / PVSyst",
+      "department": "Engineering"
     },
     {
       "id": "job-3",
-      "title": "Rooftop Site Installation Supervisor",
-      "location": "Andhra Pradesh & Telangana Regions",
-      "type": "Full-time",
-      "exp": "1+ Year in Solar Rooftop Mounting",
-      "desc": "On-site supervisory execution of structural mounting, DC cabling, inverter sync, and DISCOM testing.",
-      "department": "Operations",
       "isActive": true,
-      "postedDate": "2026-07-10"
+      "department": "Operations",
+      "type": "Full-time",
+      "location": "Andhra Pradesh & Telangana Regions",
+      "postedDate": "2026-07-10",
+      "desc": "On-site supervisory execution of structural mounting, DC cabling, inverter sync, and DISCOM testing.",
+      "title": "Rooftop Site Installation Supervisor",
+      "exp": "1+ Year in Solar Rooftop Mounting"
     }
   ],
   "jobApplications": [],
   "visitorLogs": [
     {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "about",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
       "deviceType": "Desktop",
-      "id": "vlog-1784933850789-rdzh",
-      "timestamp": "2026-07-24T22:57:30.789Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "id": "vlog-1784925103417-o0wi",
+      "timestamp": "2026-07-24T20:31:43.417Z",
       "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784933837979-dzzz",
-      "timestamp": "2026-07-24T22:57:17.979Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784933837916-5etl",
-      "timestamp": "2026-07-24T22:57:17.916Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "about",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784933820691-ux26",
-      "timestamp": "2026-07-24T22:57:00.691Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "about",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784933594354-6hfa",
-      "timestamp": "2026-07-24T22:53:14.354Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784933576338-fuep",
-      "timestamp": "2026-07-24T22:52:56.338Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784933576324-al05",
-      "timestamp": "2026-07-24T22:52:56.324Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784933563076-0vq6",
-      "timestamp": "2026-07-24T22:52:43.076Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784933563055-fvdc",
-      "timestamp": "2026-07-24T22:52:43.055Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784933459241-4a0w",
-      "timestamp": "2026-07-24T22:50:59.241Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "about",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784933438526-cxum",
-      "timestamp": "2026-07-24T22:50:38.526Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784933163171-l2yy",
-      "timestamp": "2026-07-24T22:46:03.171Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "admin",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784933099353-u6sb",
-      "timestamp": "2026-07-24T22:44:59.353Z"
-    },
-    {
-      "ip": "49.15.200.45, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784933036901-iw06",
-      "timestamp": "2026-07-24T22:43:56.901Z"
-    },
-    {
-      "ip": "49.15.200.45, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784933036889-2l5o",
-      "timestamp": "2026-07-24T22:43:56.889Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784932814055-s1w0",
-      "timestamp": "2026-07-24T22:40:14.055Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784932814027-f29r",
-      "timestamp": "2026-07-24T22:40:14.027Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "careers",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784932663559-64j5",
-      "timestamp": "2026-07-24T22:37:43.559Z"
-    },
-    {
-      "ip": "49.15.200.45, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784932558168-vho0",
-      "timestamp": "2026-07-24T22:35:58.168Z"
-    },
-    {
-      "ip": "49.15.200.45, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784932557390-1cdk",
-      "timestamp": "2026-07-24T22:35:57.390Z"
-    },
-    {
-      "ip": "49.15.200.45, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784932428398-28s5",
-      "timestamp": "2026-07-24T22:33:48.398Z"
-    },
-    {
-      "ip": "49.15.200.45, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784932428363-jokh",
-      "timestamp": "2026-07-24T22:33:48.363Z"
-    },
-    {
-      "ip": "49.15.200.45, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784932411079-jr61",
-      "timestamp": "2026-07-24T22:33:31.079Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "admin",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784932339669-5zbr",
-      "timestamp": "2026-07-24T22:32:19.669Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784932302380-zmlr",
-      "timestamp": "2026-07-24T22:31:42.381Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784932302356-ofmd",
-      "timestamp": "2026-07-24T22:31:42.356Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784932092562-8pob",
-      "timestamp": "2026-07-24T22:28:12.562Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784932092541-52gf",
-      "timestamp": "2026-07-24T22:28:12.541Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "admin",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784931817724-h24b",
-      "timestamp": "2026-07-24T22:23:37.724Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784931799023-z4tg",
-      "timestamp": "2026-07-24T22:23:19.023Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784931798974-95uu",
-      "timestamp": "2026-07-24T22:23:18.974Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784931783609-fph5",
-      "timestamp": "2026-07-24T22:23:03.609Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "admin",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784931721781-r5mz",
-      "timestamp": "2026-07-24T22:22:01.781Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784931714641-963c",
-      "timestamp": "2026-07-24T22:21:54.641Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "products",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784931706980-2u8y",
-      "timestamp": "2026-07-24T22:21:46.980Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784931692576-14j3",
-      "timestamp": "2026-07-24T22:21:32.576Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784931692557-rb7b",
-      "timestamp": "2026-07-24T22:21:32.557Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784931112925-kfrf",
-      "timestamp": "2026-07-24T22:11:52.925Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "admin",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784931028381-kdit",
-      "timestamp": "2026-07-24T22:10:28.381Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784931016518-sz8j",
-      "timestamp": "2026-07-24T22:10:16.518Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784931016509-5qip",
-      "timestamp": "2026-07-24T22:10:16.509Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784931008617-1v8b",
-      "timestamp": "2026-07-24T22:10:08.617Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784931008595-9mia",
-      "timestamp": "2026-07-24T22:10:08.595Z"
-    },
-    {
-      "ip": "49.15.200.45, 169.254.169.126",
-      "path": "admin",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784930580934-0n3g",
-      "timestamp": "2026-07-24T22:03:00.934Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784930544997-pj4y",
-      "timestamp": "2026-07-24T22:02:24.997Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784930544992-9jhy",
-      "timestamp": "2026-07-24T22:02:24.992Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784930544715-w8uo",
-      "timestamp": "2026-07-24T22:02:24.715Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784930544688-m90x",
-      "timestamp": "2026-07-24T22:02:24.688Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "admin",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784930336493-papw",
-      "timestamp": "2026-07-24T21:58:56.493Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784930259810-sdb0",
-      "timestamp": "2026-07-24T21:57:39.810Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "admin",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784930047530-bm4n",
-      "timestamp": "2026-07-24T21:54:07.530Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784930004002-69v7",
-      "timestamp": "2026-07-24T21:53:24.002Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784930003976-va5s",
-      "timestamp": "2026-07-24T21:53:23.976Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "admin",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784929858249-ae4p",
-      "timestamp": "2026-07-24T21:50:58.249Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784929837858-u9v2",
-      "timestamp": "2026-07-24T21:50:37.858Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784929837830-jwyi",
-      "timestamp": "2026-07-24T21:50:37.830Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "admin",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784929428483-c72r",
-      "timestamp": "2026-07-24T21:43:48.483Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784929405977-i4n5",
-      "timestamp": "2026-07-24T21:43:25.978Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784929405972-k9i2",
-      "timestamp": "2026-07-24T21:43:25.972Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "admin",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784929107193-u8ov",
-      "timestamp": "2026-07-24T21:38:27.193Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784929102326-mifn",
-      "timestamp": "2026-07-24T21:38:22.326Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784929102322-7ueg",
-      "timestamp": "2026-07-24T21:38:22.322Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "admin",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784928878784-h4r6",
-      "timestamp": "2026-07-24T21:34:38.784Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784928874577-9bwb",
-      "timestamp": "2026-07-24T21:34:34.577Z"
-    },
-    {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784928874572-vp45",
-      "timestamp": "2026-07-24T21:34:34.572Z"
+      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
+      "referrer": "https://aistudio.google.com/"
     },
     {
-      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
-      "path": "admin",
+      "id": "vlog-1784925103435-c697",
+      "timestamp": "2026-07-24T20:31:43.435Z",
       "referrer": "https://aistudio.google.com/",
       "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784928653290-9iot",
-      "timestamp": "2026-07-24T21:30:53.290Z"
-    },
-    {
       "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
       "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784928543357-gn5j",
-      "timestamp": "2026-07-24T21:29:03.357Z"
+      "deviceType": "Desktop"
     },
     {
-      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
-      "path": "home",
+      "id": "vlog-1784925486172-68ib",
       "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784928543333-e958",
-      "timestamp": "2026-07-24T21:29:03.333Z"
-    },
-    {
-      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
-      "path": "subsidy",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784928519724-e0vh",
-      "timestamp": "2026-07-24T21:28:39.724Z"
-    },
-    {
-      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784928492640-gpjh",
-      "timestamp": "2026-07-24T21:28:12.640Z"
-    },
-    {
-      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
       "path": "admin",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
+      "timestamp": "2026-07-24T20:38:06.172Z",
       "deviceType": "Desktop",
-      "id": "vlog-1784928298904-fn7s",
-      "timestamp": "2026-07-24T21:24:58.904Z"
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
     },
     {
+      "deviceType": "Desktop",
       "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
       "path": "home",
-      "referrer": "https://aistudio.google.com/",
       "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784928280633-vze9",
-      "timestamp": "2026-07-24T21:24:40.633Z"
-    },
-    {
-      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
-      "path": "home",
       "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784928280617-kw04",
-      "timestamp": "2026-07-24T21:24:40.617Z"
-    },
-    {
-      "ip": "49.15.211.188, 169.254.169.126",
-      "path": "admin",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784928080698-9ghy",
-      "timestamp": "2026-07-24T21:21:20.698Z"
-    },
-    {
-      "ip": "49.15.211.188, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784928018779-b2y7",
-      "timestamp": "2026-07-24T21:20:18.779Z"
-    },
-    {
-      "ip": "49.15.211.188, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784928018773-0du7",
-      "timestamp": "2026-07-24T21:20:18.773Z"
-    },
-    {
-      "ip": "49.15.211.188, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784927975768-m5e3",
-      "timestamp": "2026-07-24T21:19:35.768Z"
-    },
-    {
-      "ip": "49.15.211.188, 169.254.169.126",
-      "path": "admin",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784927951768-5xam",
-      "timestamp": "2026-07-24T21:19:11.768Z"
-    },
-    {
-      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
-      "path": "about",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784927873073-xl6i",
-      "timestamp": "2026-07-24T21:17:53.073Z"
-    },
-    {
-      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784927642066-e0c6",
-      "timestamp": "2026-07-24T21:14:02.066Z"
-    },
-    {
-      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784927642050-hpa0",
-      "timestamp": "2026-07-24T21:14:02.050Z"
-    },
-    {
-      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784927452496-e4u9",
-      "timestamp": "2026-07-24T21:10:52.496Z"
-    },
-    {
-      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784927452464-4ryf",
-      "timestamp": "2026-07-24T21:10:52.464Z"
-    },
-    {
-      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784926366071-n0oi",
-      "timestamp": "2026-07-24T20:52:46.071Z"
-    },
-    {
-      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
-      "path": "about",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784926364714-o08h",
-      "timestamp": "2026-07-24T20:52:44.714Z"
-    },
-    {
-      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
-      "path": "admin",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784926308841-tfc5",
-      "timestamp": "2026-07-24T20:51:48.841Z"
-    },
-    {
-      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
-      "id": "vlog-1784925854460-pxwq",
-      "timestamp": "2026-07-24T20:44:14.460Z"
-    },
-    {
-      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
-      "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceType": "Desktop",
       "id": "vlog-1784925854422-9igl",
       "timestamp": "2026-07-24T20:44:14.422Z"
     },
     {
+      "id": "vlog-1784925854460-pxwq",
+      "path": "home",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
+      "timestamp": "2026-07-24T20:44:14.460Z",
+      "deviceType": "Desktop",
+      "referrer": "https://aistudio.google.com/"
+    },
+    {
       "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
       "path": "admin",
-      "referrer": "https://aistudio.google.com/",
+      "id": "vlog-1784926308841-tfc5",
       "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/",
       "deviceType": "Desktop",
-      "id": "vlog-1784925486172-68ib",
-      "timestamp": "2026-07-24T20:38:06.172Z"
+      "timestamp": "2026-07-24T20:51:48.841Z"
+    },
+    {
+      "deviceType": "Desktop",
+      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "id": "vlog-1784926364714-o08h",
+      "timestamp": "2026-07-24T20:52:44.714Z",
+      "path": "about",
+      "referrer": "https://aistudio.google.com/"
+    },
+    {
+      "id": "vlog-1784926366071-n0oi",
+      "path": "home",
+      "deviceType": "Desktop",
+      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
+      "timestamp": "2026-07-24T20:52:46.071Z",
+      "referrer": "https://aistudio.google.com/",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+    },
+    {
+      "referrer": "https://aistudio.google.com/",
+      "deviceType": "Desktop",
+      "timestamp": "2026-07-24T21:10:52.464Z",
+      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
+      "path": "home",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "id": "vlog-1784927452464-4ryf"
+    },
+    {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/",
+      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
+      "id": "vlog-1784927452496-e4u9",
+      "deviceType": "Desktop",
+      "timestamp": "2026-07-24T21:10:52.496Z",
+      "path": "home"
+    },
+    {
+      "deviceType": "Desktop",
+      "referrer": "https://aistudio.google.com/",
+      "id": "vlog-1784927642050-hpa0",
+      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "timestamp": "2026-07-24T21:14:02.050Z",
+      "path": "home"
+    },
+    {
+      "path": "home",
+      "id": "vlog-1784927642066-e0c6",
+      "referrer": "https://aistudio.google.com/",
+      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "timestamp": "2026-07-24T21:14:02.066Z"
+    },
+    {
+      "referrer": "https://aistudio.google.com/",
+      "timestamp": "2026-07-24T21:17:53.073Z",
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "path": "about",
+      "id": "vlog-1784927873073-xl6i",
+      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126"
+    },
+    {
+      "ip": "49.15.211.188, 169.254.169.126",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "id": "vlog-1784927951768-5xam",
+      "timestamp": "2026-07-24T21:19:11.768Z",
+      "path": "admin",
+      "deviceType": "Desktop",
+      "referrer": "https://aistudio.google.com/"
+    },
+    {
+      "timestamp": "2026-07-24T21:19:35.768Z",
+      "deviceType": "Desktop",
+      "ip": "49.15.211.188, 169.254.169.126",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "path": "home",
+      "id": "vlog-1784927975768-m5e3",
+      "referrer": "https://aistudio.google.com/"
+    },
+    {
+      "deviceType": "Desktop",
+      "id": "vlog-1784928018773-0du7",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/",
+      "ip": "49.15.211.188, 169.254.169.126",
+      "path": "home",
+      "timestamp": "2026-07-24T21:20:18.773Z"
+    },
+    {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "ip": "49.15.211.188, 169.254.169.126",
+      "deviceType": "Desktop",
+      "path": "home",
+      "referrer": "https://aistudio.google.com/",
+      "timestamp": "2026-07-24T21:20:18.779Z",
+      "id": "vlog-1784928018779-b2y7"
+    },
+    {
+      "path": "admin",
+      "deviceType": "Desktop",
+      "ip": "49.15.211.188, 169.254.169.126",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/",
+      "id": "vlog-1784928080698-9ghy",
+      "timestamp": "2026-07-24T21:21:20.698Z"
+    },
+    {
+      "deviceType": "Desktop",
+      "id": "vlog-1784928280617-kw04",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/",
+      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
+      "timestamp": "2026-07-24T21:24:40.617Z",
+      "path": "home"
+    },
+    {
+      "referrer": "https://aistudio.google.com/",
+      "timestamp": "2026-07-24T21:24:40.633Z",
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "path": "home",
+      "id": "vlog-1784928280633-vze9",
+      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126"
+    },
+    {
+      "deviceType": "Desktop",
+      "id": "vlog-1784928298904-fn7s",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/",
+      "path": "admin",
+      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
+      "timestamp": "2026-07-24T21:24:58.904Z"
+    },
+    {
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "path": "home",
+      "timestamp": "2026-07-24T21:28:12.640Z",
+      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
+      "id": "vlog-1784928492640-gpjh",
+      "referrer": "https://aistudio.google.com/"
+    },
+    {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
+      "timestamp": "2026-07-24T21:28:39.724Z",
+      "id": "vlog-1784928519724-e0vh",
+      "deviceType": "Desktop",
+      "path": "subsidy",
+      "referrer": "https://aistudio.google.com/"
+    },
+    {
+      "path": "home",
+      "id": "vlog-1784928543333-e958",
+      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
+      "referrer": "https://aistudio.google.com/",
+      "timestamp": "2026-07-24T21:29:03.333Z",
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
     },
     {
       "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
       "path": "home",
-      "referrer": "https://aistudio.google.com/",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "id": "vlog-1784928543357-gn5j",
+      "timestamp": "2026-07-24T21:29:03.357Z",
       "deviceType": "Desktop",
-      "id": "vlog-1784925103435-c697",
-      "timestamp": "2026-07-24T20:31:43.435Z"
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/"
     },
     {
-      "ip": "2402:8100:2476:9eb7:c4bd:5464:58ed:b252, 169.254.169.126",
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "id": "vlog-1784928653290-9iot",
+      "path": "admin",
+      "referrer": "https://aistudio.google.com/",
+      "timestamp": "2026-07-24T21:30:53.290Z",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126"
+    },
+    {
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "id": "vlog-1784928874572-vp45",
+      "referrer": "https://aistudio.google.com/",
+      "deviceType": "Desktop",
       "path": "home",
+      "timestamp": "2026-07-24T21:34:34.572Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+    },
+    {
+      "timestamp": "2026-07-24T21:34:34.577Z",
       "referrer": "https://aistudio.google.com/",
       "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "path": "home",
+      "id": "vlog-1784928874577-9bwb",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "deviceType": "Desktop"
+    },
+    {
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
       "deviceType": "Desktop",
-      "id": "vlog-1784925103417-o0wi",
-      "timestamp": "2026-07-24T20:31:43.417Z"
+      "id": "vlog-1784928878784-h4r6",
+      "path": "admin",
+      "timestamp": "2026-07-24T21:34:38.784Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/"
+    },
+    {
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "timestamp": "2026-07-24T21:38:22.322Z",
+      "referrer": "https://aistudio.google.com/",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "path": "home",
+      "id": "vlog-1784929102322-7ueg"
+    },
+    {
+      "id": "vlog-1784929102326-mifn",
+      "path": "home",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "deviceType": "Desktop",
+      "referrer": "https://aistudio.google.com/",
+      "timestamp": "2026-07-24T21:38:22.326Z"
+    },
+    {
+      "referrer": "https://aistudio.google.com/",
+      "timestamp": "2026-07-24T21:38:27.193Z",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "path": "admin",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "id": "vlog-1784929107193-u8ov",
+      "deviceType": "Desktop"
+    },
+    {
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "id": "vlog-1784929405972-k9i2",
+      "path": "home",
+      "referrer": "https://aistudio.google.com/",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "timestamp": "2026-07-24T21:43:25.972Z"
+    },
+    {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "timestamp": "2026-07-24T21:43:25.978Z",
+      "id": "vlog-1784929405977-i4n5",
+      "deviceType": "Desktop",
+      "path": "home",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "referrer": "https://aistudio.google.com/"
+    },
+    {
+      "deviceType": "Desktop",
+      "path": "admin",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "referrer": "https://aistudio.google.com/",
+      "timestamp": "2026-07-24T21:43:48.483Z",
+      "id": "vlog-1784929428483-c72r"
+    },
+    {
+      "id": "vlog-1784929837830-jwyi",
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "timestamp": "2026-07-24T21:50:37.830Z",
+      "referrer": "https://aistudio.google.com/",
+      "path": "home"
+    },
+    {
+      "deviceType": "Desktop",
+      "referrer": "https://aistudio.google.com/",
+      "id": "vlog-1784929837858-u9v2",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "timestamp": "2026-07-24T21:50:37.858Z",
+      "path": "home"
+    },
+    {
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "id": "vlog-1784929858249-ae4p",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/",
+      "deviceType": "Desktop",
+      "timestamp": "2026-07-24T21:50:58.249Z",
+      "path": "admin"
+    },
+    {
+      "id": "vlog-1784930003976-va5s",
+      "referrer": "https://aistudio.google.com/",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "deviceType": "Desktop",
+      "timestamp": "2026-07-24T21:53:23.976Z",
+      "path": "home",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+    },
+    {
+      "path": "home",
+      "referrer": "https://aistudio.google.com/",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "timestamp": "2026-07-24T21:53:24.002Z",
+      "id": "vlog-1784930004002-69v7",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "deviceType": "Desktop"
+    },
+    {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "timestamp": "2026-07-24T21:54:07.530Z",
+      "deviceType": "Desktop",
+      "referrer": "https://aistudio.google.com/",
+      "path": "admin",
+      "id": "vlog-1784930047530-bm4n",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126"
+    },
+    {
+      "path": "home",
+      "id": "vlog-1784930259810-sdb0",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "deviceType": "Desktop",
+      "referrer": "https://aistudio.google.com/",
+      "timestamp": "2026-07-24T21:57:39.810Z"
+    },
+    {
+      "path": "admin",
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "referrer": "https://aistudio.google.com/",
+      "timestamp": "2026-07-24T21:58:56.493Z",
+      "id": "vlog-1784930336493-papw"
+    },
+    {
+      "id": "vlog-1784930544688-m90x",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/",
+      "deviceType": "Desktop",
+      "timestamp": "2026-07-24T22:02:24.688Z",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "path": "home"
+    },
+    {
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/",
+      "id": "vlog-1784930544715-w8uo",
+      "timestamp": "2026-07-24T22:02:24.715Z",
+      "path": "home",
+      "deviceType": "Desktop"
+    },
+    {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "deviceType": "Desktop",
+      "path": "home",
+      "timestamp": "2026-07-24T22:02:24.992Z",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "referrer": "https://aistudio.google.com/",
+      "id": "vlog-1784930544992-9jhy"
+    },
+    {
+      "path": "home",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/",
+      "id": "vlog-1784930544997-pj4y",
+      "timestamp": "2026-07-24T22:02:24.997Z",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "deviceType": "Desktop"
+    },
+    {
+      "timestamp": "2026-07-24T22:03:00.934Z",
+      "referrer": "https://aistudio.google.com/",
+      "path": "admin",
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "id": "vlog-1784930580934-0n3g",
+      "ip": "49.15.200.45, 169.254.169.126"
+    },
+    {
+      "referrer": "https://aistudio.google.com/",
+      "id": "vlog-1784931008595-9mia",
+      "deviceType": "Desktop",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "timestamp": "2026-07-24T22:10:08.595Z",
+      "path": "home",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+    },
+    {
+      "path": "home",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "id": "vlog-1784931008617-1v8b",
+      "referrer": "https://aistudio.google.com/",
+      "timestamp": "2026-07-24T22:10:08.617Z",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "deviceType": "Desktop"
+    },
+    {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "timestamp": "2026-07-24T22:10:16.509Z",
+      "id": "vlog-1784931016509-5qip",
+      "path": "home",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "deviceType": "Desktop",
+      "referrer": "https://aistudio.google.com/"
+    },
+    {
+      "id": "vlog-1784931016518-sz8j",
+      "path": "home",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "deviceType": "Desktop",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "timestamp": "2026-07-24T22:10:16.518Z",
+      "referrer": "https://aistudio.google.com/"
+    },
+    {
+      "deviceType": "Desktop",
+      "id": "vlog-1784931028381-kdit",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "path": "admin",
+      "referrer": "https://aistudio.google.com/",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "timestamp": "2026-07-24T22:10:28.381Z"
+    },
+    {
+      "id": "vlog-1784931112925-kfrf",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "deviceType": "Desktop",
+      "referrer": "https://aistudio.google.com/",
+      "timestamp": "2026-07-24T22:11:52.925Z",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "path": "home"
+    },
+    {
+      "path": "home",
+      "timestamp": "2026-07-24T22:21:32.557Z",
+      "id": "vlog-1784931692557-rb7b",
+      "referrer": "https://aistudio.google.com/",
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126"
+    },
+    {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "deviceType": "Desktop",
+      "timestamp": "2026-07-24T22:21:32.576Z",
+      "path": "home",
+      "referrer": "https://aistudio.google.com/",
+      "id": "vlog-1784931692576-14j3",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126"
+    },
+    {
+      "referrer": "https://aistudio.google.com/",
+      "path": "products",
+      "deviceType": "Desktop",
+      "timestamp": "2026-07-24T22:21:46.980Z",
+      "id": "vlog-1784931706980-2u8y",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+    },
+    {
+      "referrer": "https://aistudio.google.com/",
+      "timestamp": "2026-07-24T22:21:54.641Z",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "path": "home",
+      "id": "vlog-1784931714641-963c",
+      "deviceType": "Desktop"
+    },
+    {
+      "timestamp": "2026-07-24T22:22:01.781Z",
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/",
+      "path": "admin",
+      "id": "vlog-1784931721781-r5mz",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126"
+    },
+    {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "deviceType": "Desktop",
+      "id": "vlog-1784931783609-fph5",
+      "timestamp": "2026-07-24T22:23:03.609Z",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "path": "home",
+      "referrer": "https://aistudio.google.com/"
+    },
+    {
+      "id": "vlog-1784931798974-95uu",
+      "deviceType": "Desktop",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/",
+      "timestamp": "2026-07-24T22:23:18.974Z",
+      "path": "home"
+    },
+    {
+      "deviceType": "Desktop",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "id": "vlog-1784931799023-z4tg",
+      "referrer": "https://aistudio.google.com/",
+      "timestamp": "2026-07-24T22:23:19.023Z",
+      "path": "home"
+    },
+    {
+      "timestamp": "2026-07-24T22:23:37.724Z",
+      "referrer": "https://aistudio.google.com/",
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "id": "vlog-1784931817724-h24b",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "path": "admin"
+    },
+    {
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/",
+      "id": "vlog-1784932092541-52gf",
+      "timestamp": "2026-07-24T22:28:12.541Z",
+      "path": "home",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126"
+    },
+    {
+      "path": "home",
+      "id": "vlog-1784932092562-8pob",
+      "deviceType": "Desktop",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "timestamp": "2026-07-24T22:28:12.562Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/"
+    },
+    {
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "timestamp": "2026-07-24T22:31:42.356Z",
+      "referrer": "https://aistudio.google.com/",
+      "path": "home",
+      "id": "vlog-1784932302356-ofmd",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "deviceType": "Desktop"
+    },
+    {
+      "deviceType": "Desktop",
+      "referrer": "https://aistudio.google.com/",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "path": "home",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "timestamp": "2026-07-24T22:31:42.381Z",
+      "id": "vlog-1784932302380-zmlr"
+    },
+    {
+      "id": "vlog-1784932339669-5zbr",
+      "deviceType": "Desktop",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/",
+      "path": "admin",
+      "timestamp": "2026-07-24T22:32:19.669Z"
+    },
+    {
+      "id": "vlog-1784932411079-jr61",
+      "path": "home",
+      "deviceType": "Desktop",
+      "ip": "49.15.200.45, 169.254.169.126",
+      "timestamp": "2026-07-24T22:33:31.079Z",
+      "referrer": "https://aistudio.google.com/",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+    },
+    {
+      "ip": "49.15.200.45, 169.254.169.126",
+      "path": "home",
+      "deviceType": "Desktop",
+      "id": "vlog-1784932428363-jokh",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/",
+      "timestamp": "2026-07-24T22:33:48.363Z"
+    },
+    {
+      "referrer": "https://aistudio.google.com/",
+      "path": "home",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "timestamp": "2026-07-24T22:33:48.398Z",
+      "deviceType": "Desktop",
+      "ip": "49.15.200.45, 169.254.169.126",
+      "id": "vlog-1784932428398-28s5"
+    },
+    {
+      "ip": "49.15.200.45, 169.254.169.126",
+      "referrer": "https://aistudio.google.com/",
+      "id": "vlog-1784932557390-1cdk",
+      "deviceType": "Desktop",
+      "timestamp": "2026-07-24T22:35:57.390Z",
+      "path": "home",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+    },
+    {
+      "referrer": "https://aistudio.google.com/",
+      "timestamp": "2026-07-24T22:35:58.168Z",
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "path": "home",
+      "ip": "49.15.200.45, 169.254.169.126",
+      "id": "vlog-1784932558168-vho0"
+    },
+    {
+      "path": "careers",
+      "timestamp": "2026-07-24T22:37:43.559Z",
+      "id": "vlog-1784932663559-64j5",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "deviceType": "Desktop",
+      "referrer": "https://aistudio.google.com/"
+    },
+    {
+      "deviceType": "Desktop",
+      "path": "home",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/",
+      "timestamp": "2026-07-24T22:40:14.027Z",
+      "id": "vlog-1784932814027-f29r"
+    },
+    {
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "id": "vlog-1784932814055-s1w0",
+      "referrer": "https://aistudio.google.com/",
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "path": "home",
+      "timestamp": "2026-07-24T22:40:14.055Z"
+    },
+    {
+      "deviceType": "Desktop",
+      "timestamp": "2026-07-24T22:43:56.889Z",
+      "path": "home",
+      "ip": "49.15.200.45, 169.254.169.126",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/",
+      "id": "vlog-1784933036889-2l5o"
+    },
+    {
+      "referrer": "https://aistudio.google.com/",
+      "deviceType": "Desktop",
+      "id": "vlog-1784933036901-iw06",
+      "timestamp": "2026-07-24T22:43:56.901Z",
+      "ip": "49.15.200.45, 169.254.169.126",
+      "path": "home",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+    },
+    {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "id": "vlog-1784933099353-u6sb",
+      "timestamp": "2026-07-24T22:44:59.353Z",
+      "deviceType": "Desktop",
+      "path": "admin",
+      "referrer": "https://aistudio.google.com/"
+    },
+    {
+      "referrer": "https://aistudio.google.com/",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "id": "vlog-1784933163171-l2yy",
+      "timestamp": "2026-07-24T22:46:03.171Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "path": "home",
+      "deviceType": "Desktop"
+    },
+    {
+      "id": "vlog-1784933438526-cxum",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "referrer": "https://aistudio.google.com/",
+      "timestamp": "2026-07-24T22:50:38.526Z",
+      "path": "about",
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+    },
+    {
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "timestamp": "2026-07-24T22:50:59.241Z",
+      "referrer": "https://aistudio.google.com/",
+      "id": "vlog-1784933459241-4a0w",
+      "path": "home",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "deviceType": "Desktop"
+    },
+    {
+      "referrer": "https://aistudio.google.com/",
+      "path": "home",
+      "id": "vlog-1784933563055-fvdc",
+      "timestamp": "2026-07-24T22:52:43.055Z",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+    },
+    {
+      "referrer": "https://aistudio.google.com/",
+      "path": "home",
+      "deviceType": "Desktop",
+      "id": "vlog-1784933563076-0vq6",
+      "timestamp": "2026-07-24T22:52:43.076Z",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+    },
+    {
+      "referrer": "https://aistudio.google.com/",
+      "path": "home",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "id": "vlog-1784933576324-al05",
+      "timestamp": "2026-07-24T22:52:56.324Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "deviceType": "Desktop"
+    },
+    {
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "timestamp": "2026-07-24T22:52:56.338Z",
+      "deviceType": "Desktop",
+      "id": "vlog-1784933576338-fuep",
+      "referrer": "https://aistudio.google.com/",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "path": "home"
+    },
+    {
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "id": "vlog-1784933594354-6hfa",
+      "path": "about",
+      "timestamp": "2026-07-24T22:53:14.354Z",
+      "referrer": "https://aistudio.google.com/"
+    },
+    {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "referrer": "https://aistudio.google.com/",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "path": "about",
+      "timestamp": "2026-07-24T22:57:00.691Z",
+      "id": "vlog-1784933820691-ux26",
+      "deviceType": "Desktop"
+    },
+    {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "timestamp": "2026-07-24T22:57:17.916Z",
+      "deviceType": "Desktop",
+      "referrer": "https://aistudio.google.com/",
+      "id": "vlog-1784933837916-5etl",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "path": "home"
+    },
+    {
+      "deviceType": "Desktop",
+      "timestamp": "2026-07-24T22:57:17.979Z",
+      "referrer": "https://aistudio.google.com/",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126",
+      "id": "vlog-1784933837979-dzzz",
+      "path": "home"
+    },
+    {
+      "timestamp": "2026-07-24T22:57:30.789Z",
+      "referrer": "https://aistudio.google.com/",
+      "deviceType": "Desktop",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "path": "about",
+      "id": "vlog-1784933850789-rdzh",
+      "ip": "2402:8100:2a2e:b488:5597:8c5b:6546:1954, 169.254.169.126"
     }
   ],
   "emailNotifications": [
     {
-      "to": "sarvasolars@gmail.com",
-      "subject": "[Sarva Solar Alert] New Lead Submission from System Test Customer",
+      "id": "mail-1784926316150-60re",
+      "customerPhone": "+91 9876543210",
+      "sentAt": "2026-07-24T20:51:56.150Z",
+      "deliveryMethod": "Sent via Ethereal Test Server (Preview: https://ethereal.email/message/amPQbXkibTVgChtgamPQciLBEfRi2VChAAAAARxsMT9Y1RsEY1KxVYL-1c4). Configure SMTP_PASS in secrets for live Gmail delivery.",
       "formType": "Lead",
       "customerName": "System Test Customer",
-      "customerEmail": "test.customer@example.com",
-      "customerPhone": "+91 9876543210",
-      "details": "This is a test notification generated by the Admin Email Verification Tool.",
       "status": "Delivered",
-      "id": "mail-1784926316150-60re",
-      "sentAt": "2026-07-24T20:51:56.150Z",
-      "deliveryMethod": "Sent via Ethereal Test Server (Preview: https://ethereal.email/message/amPQbXkibTVgChtgamPQciLBEfRi2VChAAAAARxsMT9Y1RsEY1KxVYL-1c4). Configure SMTP_PASS in secrets for live Gmail delivery."
+      "customerEmail": "test.customer@example.com",
+      "to": "sarvasolars@gmail.com",
+      "subject": "[Sarva Solar Alert] New Lead Submission from System Test Customer",
+      "details": "This is a test notification generated by the Admin Email Verification Tool."
     }
   ],
   "heroSlides": [
     {
-      "id": "slide-1",
-      "badge": "PM Surya Ghar Govt Subsidy Assistance up to ₹78,000",
-      "title": "Green Power, Bright Future. Clean Solar Energy for Every Roof.",
       "subtitle": "Sarva Solar is a premier EPC solar partner across Andhra Pradesh, Telangana & West Bengal. Eliminate electricity bills with Tier-1 bifacial modules & DISCOM net-metering.",
-      "mediaType": "image",
       "mediaUrl": "/src/assets/images/regenerated_image_1784933875727.jpg",
-      "ctaPrimaryText": "Get Free Instant Quote",
+      "title": "Green Power, Bright Future. Clean Solar Energy for Every Roof.",
       "ctaPrimaryAction": "quote",
-      "ctaSecondaryText": "Calculate Solar Savings",
       "ctaSecondaryAction": "calculators",
-      "order": 2
+      "ctaPrimaryText": "Get Free Instant Quote",
+      "ctaSecondaryText": "Calculate Solar Savings",
+      "order": 2,
+      "badge": "PM Surya Ghar Govt Subsidy Assistance up to ₹78,000",
+      "mediaType": "image",
+      "id": "slide-1"
     },
     {
-      "id": "slide-2",
+      "order": 1,
       "badge": "Industrial & Commercial Rooftop Solar EPC",
-      "title": "Slash Commercial Electricity Overhead by up to 80%",
-      "subtitle": "High-capacity 50kWp to 1MWp solar installations for factories, cold storages, and commercial complexes with accelerated depreciation tax benefits.",
-      "mediaType": "video",
-      "mediaUrl": "https://youtu.be/Byqo3ab7TAE?si=igsbk1Fm5CtB6HsO",
       "ctaPrimaryText": "Request Commercial Audit",
-      "ctaPrimaryAction": "quote",
       "ctaSecondaryText": "Explore Commercial Projects",
+      "mediaType": "video",
+      "id": "slide-2",
+      "title": "Slash Commercial Electricity Overhead by up to 80%",
+      "mediaUrl": "https://youtu.be/Byqo3ab7TAE?si=igsbk1Fm5CtB6HsO",
       "ctaSecondaryAction": "projects",
-      "order": 1
+      "subtitle": "High-capacity 50kWp to 1MWp solar installations for factories, cold storages, and commercial complexes with accelerated depreciation tax benefits.",
+      "ctaPrimaryAction": "quote"
     },
     {
+      "ctaSecondaryText": "Talk to Solar Engineer",
       "id": "slide-3",
-      "badge": "Smart Off-Grid & Hybrid Solar Storage",
+      "ctaPrimaryText": "View Solar Packages",
       "title": "Uninterrupted Power 24/7 with Hybrid Solar Storage",
       "subtitle": "Intelligent lithium battery back-up solutions ensuring continuous zero-interruption solar power for farms, villas, and sensitive medical/IT setups.",
-      "mediaType": "image",
-      "mediaUrl": "https://images.unsplash.com/photo-1542336391-ae2936d8eff4?auto=format&fit=crop&w=2000&q=80",
-      "ctaPrimaryText": "View Solar Packages",
+      "order": 3,
+      "badge": "Smart Off-Grid & Hybrid Solar Storage",
       "ctaPrimaryAction": "products",
-      "ctaSecondaryText": "Talk to Solar Engineer",
       "ctaSecondaryAction": "contact",
-      "order": 3
+      "mediaUrl": "https://images.unsplash.com/photo-1542336391-ae2936d8eff4?auto=format&fit=crop&w=2000&q=80",
+      "mediaType": "image"
     }
   ]
 }

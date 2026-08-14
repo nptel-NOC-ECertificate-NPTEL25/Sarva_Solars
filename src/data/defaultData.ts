@@ -353,14 +353,6 @@ export const defaultUsers: User[] = [
     email: 'sarvasolars@gmail.com',
     role: 'Admin',
     phone: '+91 8985430100',
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: 'usr-1',
-    name: 'Jupalli Venkatesh Kumar',
-    email: 'admin@sarvasolar.com',
-    role: 'Admin',
-    phone: '+91 7036590780',
-    createdAt: new Date().toISOString()
+    createdAt: '2026-01-01T00:00:00.000Z'
   }
 ];

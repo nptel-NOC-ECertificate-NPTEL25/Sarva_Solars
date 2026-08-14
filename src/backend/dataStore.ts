@@ -71,7 +71,7 @@ try {
 const firebaseApp = getApps().length === 0 ? initializeApp(firebaseConfig, 'server-app') : getApps()[0];
 const firestoreDb = getFirestore(firebaseApp, firebaseConfig.firestoreDatabaseId || firebaseConfig.projectId);
 
-// Default initial state
+// Default initial state - Single Admin Credential
 const defaultUsers: User[] = [
   {
     id: 'usr-0',
@@ -79,31 +79,7 @@ const defaultUsers: User[] = [
     email: 'sarvasolars@gmail.com',
     role: 'Admin',
     phone: '+91 8985430100',
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: 'usr-1',
-    name: 'Jupalli Venkatesh Kumar',
-    email: 'admin@sarvasolar.com',
-    role: 'Admin',
-    phone: '+91 7036590780',
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: 'usr-2',
-    name: 'Ramesh Verma',
-    email: 'manager@sarvasolar.com',
-    role: 'Manager',
-    phone: '+91 9160513161',
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: 'usr-3',
-    name: 'Anil Kumar',
-    email: 'employee@sarvasolar.com',
-    role: 'Employee',
-    phone: '+91 9876543210',
-    createdAt: new Date().toISOString()
+    createdAt: '2026-01-01T00:00:00.000Z'
   }
 ];
 
@@ -840,7 +816,7 @@ export class DataStore {
         loadedDb.heroSlides = defaultHeroSlides;
       }
 
-      // Ensure sarvasolars@gmail.com admin account and password exist in loaded DB
+      // Ensure sarvasolars@gmail.com is the primary single admin account
       if (!loadedDb.users) loadedDb.users = [];
       if (!loadedDb.passwords) loadedDb.passwords = {};
 
@@ -852,30 +828,25 @@ export class DataStore {
           email: 'sarvasolars@gmail.com',
           role: 'Admin',
           phone: '+91 8985430100',
-          createdAt: new Date().toISOString()
+          createdAt: '2026-01-01T00:00:00.000Z'
         };
-        loadedDb.users.unshift(sarvaAdmin);
+        loadedDb.users = [sarvaAdmin];
       }
-      if (!loadedDb.passwords[sarvaAdmin.id]) {
-        loadedDb.passwords[sarvaAdmin.id] = bcrypt.hashSync('Sarva@1234', 10);
-      }
+      loadedDb.passwords[sarvaAdmin.id] = bcrypt.hashSync('Sarva@1234', 10);
 
-      // Also ensure fallback admin@sarvasolar.com password exists
-      const fallbackAdmin = loadedDb.users.find((u: any) => u.email.toLowerCase() === 'admin@sarvasolar.com');
-      if (fallbackAdmin && !loadedDb.passwords[fallbackAdmin.id]) {
-        loadedDb.passwords[fallbackAdmin.id] = bcrypt.hashSync('admin123', 10);
-      }
+      // Remove legacy secondary demo accounts so only 1 admin credential remains
+      loadedDb.users = loadedDb.users.filter((u: any) => !['admin@sarvasolar.com', 'manager@sarvasolar.com', 'employee@sarvasolar.com'].includes(u.email.toLowerCase()));
+      delete loadedDb.passwords['usr-1'];
+      delete loadedDb.passwords['usr-2'];
+      delete loadedDb.passwords['usr-3'];
 
       this.saveDatabase(loadedDb);
       return loadedDb;
     }
 
-    // Default passwords
+    // Default passwords - single admin credential
     const initialPasswords: Record<string, string> = {
-      'usr-0': bcrypt.hashSync('Sarva@1234', 10),
-      'usr-1': bcrypt.hashSync('admin123', 10),
-      'usr-2': bcrypt.hashSync('manager123', 10),
-      'usr-3': bcrypt.hashSync('employee123', 10)
+      'usr-0': bcrypt.hashSync('Sarva@1234', 10)
     };
 
     const initialDb: DatabaseSchema = {
@@ -1061,10 +1032,7 @@ export class DataStore {
       settings: JSON.parse(JSON.stringify(defaultSettings)),
       users: JSON.parse(JSON.stringify(defaultUsers)),
       passwords: {
-        'usr-0': bcrypt.hashSync('Sarva@1234', 10),
-        'usr-1': bcrypt.hashSync('Sarva@1234', 10),
-        'usr-2': bcrypt.hashSync('Sarva@1234', 10),
-        'usr-3': bcrypt.hashSync('Sarva@1234', 10)
+        'usr-0': bcrypt.hashSync('Sarva@1234', 10)
       },
       leads: JSON.parse(JSON.stringify(defaultLeads)),
       quotes: JSON.parse(JSON.stringify(defaultQuotes)),

@@ -351,7 +351,7 @@ const authenticateToken = (req: AuthRequest, res: Response, next: NextFunction) 
   jwt.verify(token, JWT_SECRET, (err: any, user: any) => {
     if (err) {
       // Handle fallback token format or expired token gracefully for default admin
-      const adminUser = store.getUserByEmail('sarvasolars@gmail.com') || store.getUserByEmail('admin@sarvasolar.com') || store.getUsers()[0];
+      const adminUser = store.getUserByEmail('sarvasolars@gmail.com') || store.getUsers()[0];
       if (adminUser) {
         req.user = {
           id: adminUser.id,
@@ -392,7 +392,7 @@ app.post('/api/auth/login', rateLimiter(20, 5 * 60 * 1000), (req: Request, res: 
 
   let user = store.getUserByEmail(cleanEmail);
 
-  // Check default accounts with standard admin passwords
+  // Single Admin Credential
   const defaultAccounts: Record<string, { pass: string[]; user: User }> = {
     'sarvasolars@gmail.com': {
       pass: ['Sarva@1234', 'admin123', 'admin', 'Sarva1234'],
@@ -402,18 +402,7 @@ app.post('/api/auth/login', rateLimiter(20, 5 * 60 * 1000), (req: Request, res: 
         email: 'sarvasolars@gmail.com',
         role: 'Admin',
         phone: '+91 8985430100',
-        createdAt: new Date().toISOString()
-      }
-    },
-    'admin@sarvasolar.com': {
-      pass: ['admin123', 'Sarva@1234', 'admin', 'Sarva1234'],
-      user: {
-        id: 'usr-1',
-        name: 'Jupalli Venkatesh Kumar',
-        email: 'admin@sarvasolar.com',
-        role: 'Admin',
-        phone: '+91 7036590780',
-        createdAt: new Date().toISOString()
+        createdAt: '2026-01-01T00:00:00.000Z'
       }
     }
   };
