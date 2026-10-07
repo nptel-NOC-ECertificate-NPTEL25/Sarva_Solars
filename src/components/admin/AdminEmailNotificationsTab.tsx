@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, Send, CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react';
-import { triggerTestEmail, fetchEmailNotifications } from '../../services/api';
+import { Mail, CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react';
+import { fetchEmailNotifications } from '../../services/api';
 import { EmailNotification } from '../../types';
 
 interface AdminEmailNotificationsTabProps {
@@ -9,8 +9,6 @@ interface AdminEmailNotificationsTabProps {
 
 export const AdminEmailNotificationsTab: React.FC<AdminEmailNotificationsTabProps> = ({ showToast }) => {
   const [logs, setLogs] = useState<EmailNotification[]>([]);
-  const [sending, setSending] = useState<boolean>(false);
-  const [testEmail, setTestEmail] = useState<string>('sarvasolar.group@gmail.com');
 
   useEffect(() => {
     loadLogs();
@@ -22,23 +20,6 @@ export const AdminEmailNotificationsTab: React.FC<AdminEmailNotificationsTabProp
       setLogs(data);
     } catch (err: any) {
       showToast(err.message || 'Failed to fetch email logs', 'error');
-    }
-  };
-
-  const handleSendTest = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!window.confirm(`CONFIRMATION: Are you sure you want to send a test email notification to "${testEmail}"?`)) {
-      return;
-    }
-    setSending(true);
-    try {
-      await triggerTestEmail();
-      showToast(`Test email notification dispatched successfully!`);
-      loadLogs();
-    } catch (err: any) {
-      showToast(err.message || 'Failed to dispatch test email', 'error');
-    } finally {
-      setSending(false);
     }
   };
 
@@ -63,31 +44,6 @@ export const AdminEmailNotificationsTab: React.FC<AdminEmailNotificationsTabProp
           <RefreshCw className="w-4 h-4" />
         </button>
       </div>
-
-      {/* Test Email Dispatch Form */}
-      <form onSubmit={handleSendTest} className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
-        <h4 className="font-bold text-sm text-slate-900 font-poppins">
-          Dispatch Instant Test Admin Alert Email
-        </h4>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <input
-            type="email"
-            required
-            value={testEmail}
-            onChange={(e) => setTestEmail(e.target.value)}
-            placeholder="Recipient email address..."
-            className="flex-1 bg-white border border-slate-200 p-2.5 rounded-xl text-xs font-mono text-slate-900"
-          />
-          <button
-            type="submit"
-            disabled={sending}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow transition-all flex items-center justify-center gap-2"
-          >
-            <Send className="w-3.5 h-3.5" />
-            <span>{sending ? 'Sending Alert...' : 'Send Test Alert'}</span>
-          </button>
-        </div>
-      </form>
 
       {/* Email Dispatch History Table */}
       <div className="overflow-x-auto rounded-2xl border border-slate-200">

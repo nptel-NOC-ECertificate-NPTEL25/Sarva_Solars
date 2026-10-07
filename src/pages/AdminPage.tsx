@@ -71,7 +71,6 @@ import {
   fetchAuditLogs,
   fetchVisitorLogs,
   fetchEmailNotifications,
-  triggerTestEmail,
   changeUserPassword,
   updateUserProfile,
   fetchUsers,
@@ -85,7 +84,6 @@ import {
   uploadMediaFile,
   fetchMediaList,
   deleteMediaFile,
-  resetFullStackDatabase,
   notifyDataUpdated
 } from '../services/api';
 import {
@@ -450,7 +448,6 @@ export const AdminPage: React.FC<AdminPageProps> = ({ user, onLoginSuccess, onLo
     setLoggingIn(true);
     try {
       const res = await loginUser(loginEmail, loginPassword);
-      localStorage.setItem('sarva_solar_token', res.token);
       onLoginSuccess(res.user);
     } catch (err: any) {
       setLoginError(err.message || 'Invalid email or password');
@@ -1005,38 +1002,6 @@ export const AdminPage: React.FC<AdminPageProps> = ({ user, onLoginSuccess, onLo
             </div>
           </div>
 
-          {/* DANGER ZONE: FULL-STACK FACTORY RESET */}
-          {user.role === 'Admin' && (
-            <div className="pt-6 border-t border-red-200 space-y-3 bg-red-50/60 p-5 rounded-2xl border">
-              <div className="flex items-center gap-2 text-red-700">
-                <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
-                <h4 className="font-extrabold text-sm text-red-900">Database & Package Reset (Danger Zone)</h4>
-              </div>
-              <p className="text-xs text-red-700 leading-relaxed">
-                Need to reset all sample data, test leads, quote logs, and custom settings back to clean initial factory defaults? This resets both the active full-stack server state and the cloud database.
-              </p>
-              <button
-                type="button"
-                onClick={async () => {
-                  const confirmed = window.confirm(
-                    "WARNING: FULL DATABASE RESET\n\nAre you sure you want to reset the database to clean factory defaults?\n\nThis will reinitialize all products, services, hero slides, subsidies, and default settings. This action cannot be undone."
-                  );
-                  if (!confirmed) return;
-                  try {
-                    await resetFullStackDatabase();
-                    await loadData();
-                    showToast("Full-stack database successfully reset to clean defaults!");
-                  } catch (err: any) {
-                    alert("Failed to reset database: " + (err.message || String(err)));
-                  }
-                }}
-                className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl transition-all shadow-sm active:scale-95 flex items-center gap-2"
-              >
-                <Trash2 className="w-4 h-4" />
-                <span>Reset Entire Package & Database to Factory Defaults</span>
-              </button>
-            </div>
-          )}
         </div>
       )}
 
@@ -2205,22 +2170,6 @@ export const AdminPage: React.FC<AdminPageProps> = ({ user, onLoginSuccess, onLo
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <button
-                onClick={async () => {
-                  try {
-                    await triggerTestEmail();
-                    const eMails = await fetchEmailNotifications();
-                    setEmailNotifications(eMails);
-                    alert('Test email alert triggered to sarvasolars@gmail.com!');
-                  } catch (err: any) {
-                    alert('Failed to trigger test email: ' + err.message);
-                  }
-                }}
-                className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs px-4 py-2 rounded-xl transition-all shadow flex items-center gap-1.5"
-              >
-                <Mail className="w-3.5 h-3.5" />
-                Send Test Email
-              </button>
               <div className="bg-amber-100 text-amber-900 text-xs font-black px-4 py-2 rounded-2xl border border-amber-300">
                 Destination: sarvasolars@gmail.com
               </div>
@@ -2904,7 +2853,6 @@ export const AdminPage: React.FC<AdminPageProps> = ({ user, onLoginSuccess, onLo
                       email: credEmail,
                       phone: credPhone
                     });
-                    localStorage.setItem('sarva_solar_token', profRes.token);
                     onLoginSuccess(profRes.user);
                   }
 

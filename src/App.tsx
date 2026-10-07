@@ -43,6 +43,7 @@ import {
   fetchHeroSlides,
   logVisitor
 } from './services/api';
+import { signOut } from './services/supabaseAuth';
 
 const defaultFallbackSettings: AppSettings = {
   companyName: 'Sarva Solar',
@@ -92,7 +93,7 @@ export function App() {
   const loadAll = async () => {
     try {
       const [set, serv, proj, prod, b, sub, f, t, g, usr, hs] = await Promise.all([
-        fetchSettings().catch(() => null),
+        fetchSettings().catch((error) => { console.error('[Supabase Settings]', error); return null; }),
         fetchServices().catch(() => []),
         fetchProjects().catch(() => []),
         fetchProducts().catch(() => []),
@@ -274,9 +275,12 @@ export function App() {
           <AdminPage
             user={currentUser}
             onLoginSuccess={(u) => setCurrentUser(u)}
-            onLogout={() => {
-              localStorage.removeItem('sarva_solar_token');
-              setCurrentUser(null);
+            onLogout={async () => {
+              try {
+                await signOut();
+              } finally {
+                setCurrentUser(null);
+              }
             }}
           />
         )}

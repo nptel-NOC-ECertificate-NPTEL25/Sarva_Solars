@@ -1,6 +1,7 @@
 import {
   AuthResponse,
   User,
+  UserRole,
   Lead,
   QuoteRequest,
   Product,
@@ -20,44 +21,8 @@ import {
   EmailNotification
 } from '../types';
 
-import {
-  defaultSettings,
-  defaultHeroSlides,
-  defaultSubsidies,
-  defaultServices,
-  defaultProducts,
-  defaultProjects,
-  defaultBlogs,
-  defaultTestimonials,
-  defaultFaqs,
-  defaultGallery,
-  defaultJobs,
-  defaultUsers
-} from '../data/defaultData';
-
-const API_BASE = '/api';
-
-function getAuthHeaders() {
-  const token = localStorage.getItem('sarva_solar_token') || 'sarva-token-usr-0-admin';
-  return {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`
-  };
-}
-
-// Storage helpers for Vercel/Static hosting fallbacks
-function getStored<T>(key: string, defaultValue: T): T {
-  try {
-    const raw = localStorage.getItem(`sarva_solar_${key}`);
-    if (!raw) {
-      localStorage.setItem(`sarva_solar_${key}`, JSON.stringify(defaultValue));
-      return defaultValue;
-    }
-    return JSON.parse(raw);
-  } catch {
-    return defaultValue;
-  }
-}
+import { getCurrentSupabaseUser, signInWithPassword, signOut } from './supabaseAuth';
+import { supabase } from '../lib/supabase';
 
 export function notifyDataUpdated(): void {
   if (typeof window === 'undefined') return;
@@ -83,1247 +48,1780 @@ export function notifyDataUpdated(): void {
   } catch (e) {}
 }
 
-function setStored<T>(key: string, value: T): void {
-  try {
-    localStorage.setItem(`sarva_solar_${key}`, JSON.stringify(value));
-    notifyDataUpdated();
-  } catch {
-    // Ignore storage quota limits
-  }
-}
-
-// Generic safe API caller that tries backend API first, and falls back to LocalStorage if API fails or returns non-JSON (e.g. Vercel static hosting)
-async function apiCall<T>(url: string, options: RequestInit | undefined, fallbackFn: () => T | Promise<T>): Promise<T> {
-  const isMutation = options && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(options.method?.toUpperCase() || '');
-
-  try {
-    const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-    const timeoutId = controller ? setTimeout(() => controller.abort(), 4000) : null;
-    const res = await fetch(url, {
-      ...(options || {}),
-      signal: controller ? controller.signal : undefined
-    });
-    if (timeoutId) clearTimeout(timeoutId);
-
-    const contentType = res.headers.get('content-type') || '';
-
-    if (res.ok) {
-      if (contentType.includes('application/json')) {
-        const text = await res.text();
-        if (text && text.trim().length > 0) {
-          const data = JSON.parse(text) as T;
-          if (isMutation) {
-            notifyDataUpdated();
-          }
-          return data;
-        }
-      }
-      if (isMutation) {
-        notifyDataUpdated();
-      }
-      return await fallbackFn();
-    } else {
-      console.warn(`[API Server Warning] ${options?.method || 'GET'} ${url} returned status ${res.status}`);
-      if (res.status === 401 || res.status === 400) {
-        if (contentType.includes('application/json')) {
-          try {
-            const errJson = await res.json();
-            if (errJson && errJson.error) {
-              // Try fallback function before throwing
-              try {
-                return await fallbackFn();
-              } catch {
-                throw new Error(errJson.error);
-              }
-            }
-          } catch (e: any) {
-            if (e.message && !e.message.includes('JSON')) throw e;
-          }
-        }
-      }
-    }
-  } catch (err: any) {
-    if (err.name === 'AbortError') {
-      console.warn(`[API Timeout] ${url} timed out, falling back to local store.`);
-    } else if (err.message && (err.message.includes('Invalid') || err.message.includes('Unauthorized') || err.message.includes('Permission'))) {
-      throw err;
-    } else {
-      console.warn(`[API Network Call Error] ${url}:`, err);
-    }
-  }
-
-  const fallbackData = await fallbackFn();
-  if (isMutation) {
-    notifyDataUpdated();
-  }
-  return fallbackData;
-}
-
-// AUTH
 export async function loginUser(email: string, password: string): Promise<AuthResponse> {
-  const cleanEmail = email.trim().toLowerCase();
-  const cleanPassword = password.trim();
-
-  const acceptedPasswords = ['Sarva@1234', 'admin123', 'admin', 'Sarva1234', 'sarva@1234', 'sarva1234', 'Sarva@123'];
-
-  const result = await apiCall<AuthResponse>(
-    `${API_BASE}/auth/login`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: cleanEmail, password: cleanPassword })
-    },
-    () => {
-      const defaultAccounts: Record<string, { pass: string[]; user: User }> = {
-        'sarvasolars@gmail.com': {
-          pass: acceptedPasswords,
-          user: {
-            id: 'usr-0',
-            name: 'Sarva Solar Admin',
-            email: 'sarvasolars@gmail.com',
-            role: 'Admin',
-            phone: '+91 8985430100',
-            createdAt: '2026-01-01T00:00:00.000Z'
-          }
-        }
-      };
-
-      const account = defaultAccounts[cleanEmail];
-      if (account && (account.pass.includes(cleanPassword) || cleanPassword.toLowerCase() === 'sarva@1234')) {
-        const token = `sarva-token-${account.user.id}-${Date.now()}`;
-        return { token, user: account.user };
-      }
-
-      const users = getStored<User[]>('users', defaultUsers);
-      const found = users.find(u => u.email.toLowerCase() === cleanEmail);
-      if (found && (acceptedPasswords.includes(cleanPassword) || cleanPassword.toLowerCase() === 'sarva@1234')) {
-        const token = `sarva-token-${found.id}-${Date.now()}`;
-        return { token, user: found };
-      }
-
-      throw new Error('Invalid email or password. Please verify your credentials.');
-    }
-  );
-
-  if (result && result.token) {
-    localStorage.setItem('sarva_solar_token', result.token);
-    localStorage.setItem('sarva_solar_user', JSON.stringify(result.user));
-  }
-
-  return result;
+  return signInWithPassword(email, password);
 }
 
 export async function getCurrentUser(): Promise<User | null> {
-  const token = localStorage.getItem('sarva_solar_token');
-  if (!token) return null;
-
-  return apiCall<User | null>(
-    `${API_BASE}/auth/me`,
-    { headers: getAuthHeaders() },
-    () => {
-      const cached = localStorage.getItem('sarva_solar_user');
-      return cached ? JSON.parse(cached) : null;
-    }
-  );
+  return getCurrentSupabaseUser();
 }
 
 export const fetchCurrentUser = getCurrentUser;
 
+// STAFF / USERS
+export async function fetchUsers(): Promise<User[]> {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('id, name, email, role, phone, created_at')
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+
+  return (data ?? []).map((profile) => ({
+    id: profile.id,
+    name: profile.name,
+    email: profile.email,
+    role: profile.role as User['role'],
+    phone: profile.phone ?? undefined,
+    createdAt: profile.created_at
+  }));
+}
+
 // SETTINGS
 export async function fetchSettings(): Promise<AppSettings> {
-  return apiCall<AppSettings>(
-    `${API_BASE}/settings`,
-    undefined,
-    () => getStored<AppSettings>('settings', defaultSettings)
-  );
+  const { data, error } = await supabase
+    .from('settings')
+    .select('*')
+    .eq('id', 1)
+    .single();
+
+  if (error) throw error;
+
+  return {
+    companyName: data.company_name,
+    tagline: data.tagline,
+    phone1: data.phone1,
+    phone2: data.phone2,
+    email: data.email,
+    address: data.address,
+    whatsappNumber: data.whatsapp_number,
+    workingHours: data.working_hours,
+    announcementBarText: data.announcement_bar_text,
+    showAnnouncementBar: data.show_announcement_bar,
+    metaTitle: data.meta_title,
+    metaDescription: data.meta_description,
+    googleMapsEmbedUrl: data.google_maps_embed_url
+  };
 }
 
 export async function updateSettings(updates: Partial<AppSettings>): Promise<AppSettings> {
-  return apiCall<AppSettings>(
-    `${API_BASE}/settings`,
-    {
-      method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(updates)
-    },
-    () => {
-      const current = getStored<AppSettings>('settings', defaultSettings);
-      const updated = { ...current, ...updates };
-      setStored('settings', updated);
-      return updated;
+  const payload = {
+    company_name: updates.companyName,
+    tagline: updates.tagline,
+    phone1: updates.phone1,
+    phone2: updates.phone2,
+    email: updates.email,
+    address: updates.address,
+    whatsapp_number: updates.whatsappNumber,
+    working_hours: updates.workingHours,
+    announcement_bar_text: updates.announcementBarText,
+    show_announcement_bar: updates.showAnnouncementBar,
+    meta_title: updates.metaTitle,
+    meta_description: updates.metaDescription,
+    google_maps_embed_url: updates.googleMapsEmbedUrl
+  };
+
+  Object.keys(payload).forEach((key) => {
+    const typedKey = key as keyof typeof payload;
+    if (payload[typedKey] === undefined) {
+      delete payload[typedKey];
     }
-  );
+  });
+
+  const { data, error } = await supabase
+    .from('settings')
+    .update(payload)
+    .eq('id', 1)
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    companyName: data.company_name,
+    tagline: data.tagline,
+    phone1: data.phone1,
+    phone2: data.phone2,
+    email: data.email,
+    address: data.address,
+    whatsappNumber: data.whatsapp_number,
+    workingHours: data.working_hours,
+    announcementBarText: data.announcement_bar_text,
+    showAnnouncementBar: data.show_announcement_bar,
+    metaTitle: data.meta_title,
+    metaDescription: data.meta_description,
+    googleMapsEmbedUrl: data.google_maps_embed_url
+  };
 }
 
 // SERVICES
 export async function fetchServices(): Promise<ServiceItem[]> {
-  return apiCall<ServiceItem[]>(
-    `${API_BASE}/services`,
-    undefined,
-    () => getStored<ServiceItem[]>('services', defaultServices)
-  );
+  const { data, error } = await supabase
+    .from('services')
+    .select('*')
+    .order('id', { ascending: true });
+
+  if (error) throw error;
+
+  return (data ?? []).map((service) => ({
+    id: service.id,
+    title: service.title,
+    slug: service.slug,
+    shortDesc: service.short_desc,
+    fullDesc: service.full_desc,
+    iconName: service.icon_name,
+    benefits: service.benefits ?? [],
+    imageUrl: service.image_url,
+    faqs: service.faqs ?? []
+  }));
 }
 
 export async function createService(svc: Omit<ServiceItem, 'id'>): Promise<ServiceItem> {
-  return apiCall<ServiceItem>(
-    `${API_BASE}/services`,
-    {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(svc)
-    },
-    () => {
-      const list = getStored<ServiceItem[]>('services', defaultServices);
-      const newItem: ServiceItem = { ...svc, id: `srv-${Date.now()}` };
-      setStored('services', [...list, newItem]);
-      return newItem;
-    }
-  );
+  const id = `srv-${Date.now()}`;
+
+  const { data, error } = await supabase
+    .from('services')
+    .insert({
+      id,
+      title: svc.title,
+      slug: svc.slug,
+      short_desc: svc.shortDesc,
+      full_desc: svc.fullDesc,
+      icon_name: svc.iconName,
+      benefits: svc.benefits,
+      image_url: svc.imageUrl,
+      faqs: svc.faqs
+    })
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    title: data.title,
+    slug: data.slug,
+    shortDesc: data.short_desc,
+    fullDesc: data.full_desc,
+    iconName: data.icon_name,
+    benefits: data.benefits ?? [],
+    imageUrl: data.image_url,
+    faqs: data.faqs ?? []
+  };
 }
 
 export async function updateService(id: string, updates: Partial<ServiceItem>): Promise<ServiceItem> {
-  return apiCall<ServiceItem>(
-    `${API_BASE}/services/${id}`,
-    {
-      method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(updates)
-    },
-    () => {
-      const list = getStored<ServiceItem[]>('services', defaultServices);
-      const idx = list.findIndex(i => i.id === id);
-      const updated = idx !== -1 ? { ...list[idx], ...updates } : ({ ...updates, id } as ServiceItem);
-      if (idx !== -1) list[idx] = updated;
-      else list.push(updated);
-      setStored('services', list);
-      return updated;
-    }
-  );
+  const payload: Record<string, unknown> = {};
+
+  if (updates.title !== undefined) payload.title = updates.title;
+  if (updates.slug !== undefined) payload.slug = updates.slug;
+  if (updates.shortDesc !== undefined) payload.short_desc = updates.shortDesc;
+  if (updates.fullDesc !== undefined) payload.full_desc = updates.fullDesc;
+  if (updates.iconName !== undefined) payload.icon_name = updates.iconName;
+  if (updates.benefits !== undefined) payload.benefits = updates.benefits;
+  if (updates.imageUrl !== undefined) payload.image_url = updates.imageUrl;
+  if (updates.faqs !== undefined) payload.faqs = updates.faqs;
+
+  const { data, error } = await supabase
+    .from('services')
+    .update(payload)
+    .eq('id', id)
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    title: data.title,
+    slug: data.slug,
+    shortDesc: data.short_desc,
+    fullDesc: data.full_desc,
+    iconName: data.icon_name,
+    benefits: data.benefits ?? [],
+    imageUrl: data.image_url,
+    faqs: data.faqs ?? []
+  };
 }
 
 export async function deleteService(id: string): Promise<void> {
-  return apiCall<void>(
-    `${API_BASE}/services/${id}`,
-    { method: 'DELETE', headers: getAuthHeaders() },
-    () => {
-      const list = getStored<ServiceItem[]>('services', defaultServices);
-      setStored('services', list.filter(i => i.id !== id));
-    }
-  );
+  const { error } = await supabase
+    .from('services')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
 }
 
 // SUBSIDIES
 export async function fetchSubsidies(): Promise<SubsidyDetail[]> {
-  return apiCall<SubsidyDetail[]>(
-    `${API_BASE}/subsidies`,
-    undefined,
-    () => getStored<SubsidyDetail[]>('subsidies', defaultSubsidies)
-  );
+  const { data, error } = await supabase
+    .from('subsidies')
+    .select('*')
+    .order('id', { ascending: true });
+
+  if (error) throw error;
+
+  return (data ?? []).map((subsidy) => ({
+    id: subsidy.id,
+    schemeName: subsidy.scheme_name,
+    capacityRange: subsidy.capacity_range,
+    centralSubsidyAmount: Number(subsidy.central_subsidy_amount),
+    stateBonusAmount: Number(subsidy.state_bonus_amount),
+    eligibility: subsidy.eligibility ?? [],
+    documents: subsidy.documents ?? [],
+    processSteps: subsidy.process_steps ?? [],
+    updatedDate: subsidy.updated_date
+  }));
 }
 
 export async function createSubsidy(sub: Omit<SubsidyDetail, 'id' | 'updatedDate'>): Promise<SubsidyDetail> {
-  return apiCall<SubsidyDetail>(
-    `${API_BASE}/subsidies`,
-    {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(sub)
-    },
-    () => {
-      const list = getStored<SubsidyDetail[]>('subsidies', defaultSubsidies);
-      const newItem: SubsidyDetail = {
-        ...sub,
-        id: `sub-${Date.now()}`,
-        updatedDate: new Date().toISOString().split('T')[0]
-      };
-      setStored('subsidies', [...list, newItem]);
-      return newItem;
-    }
-  );
+  const id = `sub-${Date.now()}`;
+  const updatedDate = new Date().toISOString().split('T')[0];
+
+  const { data, error } = await supabase
+    .from('subsidies')
+    .insert({
+      id,
+      scheme_name: sub.schemeName,
+      capacity_range: sub.capacityRange,
+      central_subsidy_amount: sub.centralSubsidyAmount,
+      state_bonus_amount: sub.stateBonusAmount,
+      eligibility: sub.eligibility,
+      documents: sub.documents,
+      process_steps: sub.processSteps,
+      updated_date: updatedDate
+    })
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    schemeName: data.scheme_name,
+    capacityRange: data.capacity_range,
+    centralSubsidyAmount: Number(data.central_subsidy_amount),
+    stateBonusAmount: Number(data.state_bonus_amount),
+    eligibility: data.eligibility ?? [],
+    documents: data.documents ?? [],
+    processSteps: data.process_steps ?? [],
+    updatedDate: data.updated_date
+  };
 }
 
 export async function updateSubsidy(id: string, updates: Partial<SubsidyDetail>): Promise<SubsidyDetail> {
-  return apiCall<SubsidyDetail>(
-    `${API_BASE}/subsidies/${id}`,
-    {
-      method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(updates)
-    },
-    () => {
-      const list = getStored<SubsidyDetail[]>('subsidies', defaultSubsidies);
-      const idx = list.findIndex(i => i.id === id);
-      const updated = idx !== -1 ? { ...list[idx], ...updates } : ({ ...updates, id } as SubsidyDetail);
-      if (idx !== -1) list[idx] = updated;
-      else list.push(updated);
-      setStored('subsidies', list);
-      return updated;
-    }
-  );
+  const payload: Record<string, unknown> = {};
+
+  if (updates.schemeName !== undefined) payload.scheme_name = updates.schemeName;
+  if (updates.capacityRange !== undefined) payload.capacity_range = updates.capacityRange;
+  if (updates.centralSubsidyAmount !== undefined) payload.central_subsidy_amount = updates.centralSubsidyAmount;
+  if (updates.stateBonusAmount !== undefined) payload.state_bonus_amount = updates.stateBonusAmount;
+  if (updates.eligibility !== undefined) payload.eligibility = updates.eligibility;
+  if (updates.documents !== undefined) payload.documents = updates.documents;
+  if (updates.processSteps !== undefined) payload.process_steps = updates.processSteps;
+  if (updates.updatedDate !== undefined) payload.updated_date = updates.updatedDate;
+
+  const { data, error } = await supabase
+    .from('subsidies')
+    .update(payload)
+    .eq('id', id)
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    schemeName: data.scheme_name,
+    capacityRange: data.capacity_range,
+    centralSubsidyAmount: Number(data.central_subsidy_amount),
+    stateBonusAmount: Number(data.state_bonus_amount),
+    eligibility: data.eligibility ?? [],
+    documents: data.documents ?? [],
+    processSteps: data.process_steps ?? [],
+    updatedDate: data.updated_date
+  };
 }
 
 export async function deleteSubsidy(id: string): Promise<void> {
-  return apiCall<void>(
-    `${API_BASE}/subsidies/${id}`,
-    { method: 'DELETE', headers: getAuthHeaders() },
-    () => {
-      const list = getStored<SubsidyDetail[]>('subsidies', defaultSubsidies);
-      setStored('subsidies', list.filter(i => i.id !== id));
-    }
-  );
+  const { error } = await supabase
+    .from('subsidies')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
 }
 
 // PRODUCTS
 export async function fetchProducts(): Promise<Product[]> {
-  return apiCall<Product[]>(
-    `${API_BASE}/products`,
-    undefined,
-    () => getStored<Product[]>('products', defaultProducts)
-  );
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .order('id', { ascending: true });
+
+  if (error) throw error;
+
+  return (data ?? []).map((product) => ({
+    id: product.id,
+    name: product.name,
+    category: product.category,
+    brand: product.brand,
+    price: Number(product.price),
+    rating: Number(product.rating),
+    specs: product.specs ?? {},
+    description: product.description,
+    warranty: product.warranty,
+    imageUrl: product.image_url,
+    isFeatured: product.is_featured,
+    inventory: product.inventory
+  }));
 }
 
 export async function createProduct(prod: Omit<Product, 'id'>): Promise<Product> {
-  return apiCall<Product>(
-    `${API_BASE}/products`,
-    {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(prod)
-    },
-    () => {
-      const list = getStored<Product[]>('products', defaultProducts);
-      const newItem: Product = { ...prod, id: `prod-${Date.now()}` };
-      setStored('products', [...list, newItem]);
-      return newItem;
-    }
-  );
+  const id = `prod-${Date.now()}`;
+
+  const { data, error } = await supabase
+    .from('products')
+    .insert({
+      id,
+      name: prod.name,
+      category: prod.category,
+      brand: prod.brand,
+      price: prod.price,
+      rating: prod.rating,
+      specs: prod.specs,
+      description: prod.description,
+      warranty: prod.warranty,
+      image_url: prod.imageUrl,
+      is_featured: prod.isFeatured,
+      inventory: prod.inventory
+    })
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    name: data.name,
+    category: data.category,
+    brand: data.brand,
+    price: Number(data.price),
+    rating: Number(data.rating),
+    specs: data.specs ?? {},
+    description: data.description,
+    warranty: data.warranty,
+    imageUrl: data.image_url,
+    isFeatured: data.is_featured,
+    inventory: data.inventory
+  };
 }
 
 export async function updateProduct(id: string, updates: Partial<Product>): Promise<Product> {
-  return apiCall<Product>(
-    `${API_BASE}/products/${id}`,
-    {
-      method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(updates)
-    },
-    () => {
-      const list = getStored<Product[]>('products', defaultProducts);
-      const idx = list.findIndex(i => i.id === id);
-      const updated = idx !== -1 ? { ...list[idx], ...updates } : ({ ...updates, id } as Product);
-      if (idx !== -1) list[idx] = updated;
-      else list.push(updated);
-      setStored('products', list);
-      return updated;
-    }
-  );
+  const payload: Record<string, unknown> = {};
+
+  if (updates.name !== undefined) payload.name = updates.name;
+  if (updates.category !== undefined) payload.category = updates.category;
+  if (updates.brand !== undefined) payload.brand = updates.brand;
+  if (updates.price !== undefined) payload.price = updates.price;
+  if (updates.rating !== undefined) payload.rating = updates.rating;
+  if (updates.specs !== undefined) payload.specs = updates.specs;
+  if (updates.description !== undefined) payload.description = updates.description;
+  if (updates.warranty !== undefined) payload.warranty = updates.warranty;
+  if (updates.imageUrl !== undefined) payload.image_url = updates.imageUrl;
+  if (updates.isFeatured !== undefined) payload.is_featured = updates.isFeatured;
+  if (updates.inventory !== undefined) payload.inventory = updates.inventory;
+
+  const { data, error } = await supabase
+    .from('products')
+    .update(payload)
+    .eq('id', id)
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    name: data.name,
+    category: data.category,
+    brand: data.brand,
+    price: Number(data.price),
+    rating: Number(data.rating),
+    specs: data.specs ?? {},
+    description: data.description,
+    warranty: data.warranty,
+    imageUrl: data.image_url,
+    isFeatured: data.is_featured,
+    inventory: data.inventory
+  };
 }
 
 export async function deleteProduct(id: string): Promise<void> {
-  return apiCall<void>(
-    `${API_BASE}/products/${id}`,
-    { method: 'DELETE', headers: getAuthHeaders() },
-    () => {
-      const list = getStored<Product[]>('products', defaultProducts);
-      setStored('products', list.filter(i => i.id !== id));
-    }
-  );
+  const { error } = await supabase
+    .from('products')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
 }
 
 // PROJECTS
 export async function fetchProjects(): Promise<Project[]> {
-  return apiCall<Project[]>(
-    `${API_BASE}/projects`,
-    undefined,
-    () => getStored<Project[]>('projects', defaultProjects)
-  );
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+    .order('id', { ascending: true });
+
+  if (error) throw error;
+
+  return (data ?? []).map((project) => ({
+    id: project.id,
+    title: project.title,
+    category: project.category,
+    location: project.location,
+    state: project.state,
+    capacityKw: Number(project.capacity_kw),
+    annualSavingsRs: Number(project.annual_savings_rs),
+    completionDate: project.completion_date,
+    status: project.status,
+    images: project.images ?? [],
+    description: project.description,
+    clientReview: project.client_review ?? undefined
+  }));
 }
 
 export async function createProject(proj: Omit<Project, 'id'>): Promise<Project> {
-  return apiCall<Project>(
-    `${API_BASE}/projects`,
-    {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(proj)
-    },
-    () => {
-      const list = getStored<Project[]>('projects', defaultProjects);
-      const newItem: Project = { ...proj, id: `proj-${Date.now()}` };
-      setStored('projects', [...list, newItem]);
-      return newItem;
-    }
-  );
+  const id = `proj-${Date.now()}`;
+
+  const { data, error } = await supabase
+    .from('projects')
+    .insert({
+      id,
+      title: proj.title,
+      category: proj.category,
+      location: proj.location,
+      state: proj.state,
+      capacity_kw: proj.capacityKw,
+      annual_savings_rs: proj.annualSavingsRs,
+      completion_date: proj.completionDate,
+      status: proj.status,
+      images: proj.images,
+      description: proj.description,
+      client_review: proj.clientReview
+    })
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    title: data.title,
+    category: data.category,
+    location: data.location,
+    state: data.state,
+    capacityKw: Number(data.capacity_kw),
+    annualSavingsRs: Number(data.annual_savings_rs),
+    completionDate: data.completion_date,
+    status: data.status,
+    images: data.images ?? [],
+    description: data.description,
+    clientReview: data.client_review
+  };
 }
 
 export async function updateProject(id: string, updates: Partial<Project>): Promise<Project> {
-  return apiCall<Project>(
-    `${API_BASE}/projects/${id}`,
-    {
-      method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(updates)
-    },
-    () => {
-      const list = getStored<Project[]>('projects', defaultProjects);
-      const idx = list.findIndex(i => i.id === id);
-      const updated = idx !== -1 ? { ...list[idx], ...updates } : ({ ...updates, id } as Project);
-      if (idx !== -1) list[idx] = updated;
-      else list.push(updated);
-      setStored('projects', list);
-      return updated;
-    }
-  );
+  const payload: Record<string, unknown> = {};
+
+  if (updates.title !== undefined) payload.title = updates.title;
+  if (updates.category !== undefined) payload.category = updates.category;
+  if (updates.location !== undefined) payload.location = updates.location;
+  if (updates.state !== undefined) payload.state = updates.state;
+  if (updates.capacityKw !== undefined) payload.capacity_kw = updates.capacityKw;
+  if (updates.annualSavingsRs !== undefined) payload.annual_savings_rs = updates.annualSavingsRs;
+  if (updates.completionDate !== undefined) payload.completion_date = updates.completionDate;
+  if (updates.status !== undefined) payload.status = updates.status;
+  if (updates.images !== undefined) payload.images = updates.images;
+  if (updates.description !== undefined) payload.description = updates.description;
+  if (updates.clientReview !== undefined) payload.client_review = updates.clientReview;
+
+  const { data, error } = await supabase
+    .from('projects')
+    .update(payload)
+    .eq('id', id)
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    title: data.title,
+    category: data.category,
+    location: data.location,
+    state: data.state,
+    capacityKw: Number(data.capacity_kw),
+    annualSavingsRs: Number(data.annual_savings_rs),
+    completionDate: data.completion_date,
+    status: data.status,
+    images: data.images ?? [],
+    description: data.description,
+    clientReview: data.client_review
+  };
 }
 
 export async function deleteProject(id: string): Promise<void> {
-  return apiCall<void>(
-    `${API_BASE}/projects/${id}`,
-    { method: 'DELETE', headers: getAuthHeaders() },
-    () => {
-      const list = getStored<Project[]>('projects', defaultProjects);
-      setStored('projects', list.filter(i => i.id !== id));
-    }
-  );
+  const { error } = await supabase
+    .from('projects')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
 }
 
 // BLOGS
 export async function fetchBlogs(): Promise<BlogArticle[]> {
-  return apiCall<BlogArticle[]>(
-    `${API_BASE}/blogs`,
-    undefined,
-    () => getStored<BlogArticle[]>('blogs', defaultBlogs)
-  );
+  const { data, error } = await supabase
+    .from('blogs')
+    .select('*')
+    .order('published_at', { ascending: false });
+
+  if (error) throw error;
+
+  return (data ?? []).map((blog) => ({
+    id: blog.id,
+    title: blog.title,
+    slug: blog.slug,
+    category: blog.category,
+    author: blog.author,
+    publishedAt: blog.published_at,
+    readTime: blog.read_time,
+    excerpt: blog.excerpt,
+    content: blog.content,
+    imageUrl: blog.image_url,
+    tags: blog.tags ?? [],
+    isPublished: blog.is_published
+  }));
 }
 
 export async function createBlog(blog: Omit<BlogArticle, 'id'>): Promise<BlogArticle> {
-  return apiCall<BlogArticle>(
-    `${API_BASE}/blogs`,
-    {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(blog)
-    },
-    () => {
-      const list = getStored<BlogArticle[]>('blogs', defaultBlogs);
-      const newItem: BlogArticle = { ...blog, id: `blog-${Date.now()}` };
-      setStored('blogs', [...list, newItem]);
-      return newItem;
-    }
-  );
+  const id = `blog-${Date.now()}`;
+
+  const { data, error } = await supabase
+    .from('blogs')
+    .insert({
+      id,
+      title: blog.title,
+      slug: blog.slug,
+      category: blog.category,
+      author: blog.author,
+      published_at: blog.publishedAt,
+      read_time: blog.readTime,
+      excerpt: blog.excerpt,
+      content: blog.content,
+      image_url: blog.imageUrl,
+      tags: blog.tags,
+      is_published: blog.isPublished
+    })
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    title: data.title,
+    slug: data.slug,
+    category: data.category,
+    author: data.author,
+    publishedAt: data.published_at,
+    readTime: data.read_time,
+    excerpt: data.excerpt,
+    content: data.content,
+    imageUrl: data.image_url,
+    tags: data.tags ?? [],
+    isPublished: data.is_published
+  };
 }
 
 export async function updateBlog(id: string, updates: Partial<BlogArticle>): Promise<BlogArticle> {
-  return apiCall<BlogArticle>(
-    `${API_BASE}/blogs/${id}`,
-    {
-      method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(updates)
-    },
-    () => {
-      const list = getStored<BlogArticle[]>('blogs', defaultBlogs);
-      const idx = list.findIndex(i => i.id === id);
-      const updated = idx !== -1 ? { ...list[idx], ...updates } : ({ ...updates, id } as BlogArticle);
-      if (idx !== -1) list[idx] = updated;
-      else list.push(updated);
-      setStored('blogs', list);
-      return updated;
-    }
-  );
+  const payload: Record<string, unknown> = {};
+
+  if (updates.title !== undefined) payload.title = updates.title;
+  if (updates.slug !== undefined) payload.slug = updates.slug;
+  if (updates.category !== undefined) payload.category = updates.category;
+  if (updates.author !== undefined) payload.author = updates.author;
+  if (updates.publishedAt !== undefined) payload.published_at = updates.publishedAt;
+  if (updates.readTime !== undefined) payload.read_time = updates.readTime;
+  if (updates.excerpt !== undefined) payload.excerpt = updates.excerpt;
+  if (updates.content !== undefined) payload.content = updates.content;
+  if (updates.imageUrl !== undefined) payload.image_url = updates.imageUrl;
+  if (updates.tags !== undefined) payload.tags = updates.tags;
+  if (updates.isPublished !== undefined) payload.is_published = updates.isPublished;
+
+  const { data, error } = await supabase
+    .from('blogs')
+    .update(payload)
+    .eq('id', id)
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    title: data.title,
+    slug: data.slug,
+    category: data.category,
+    author: data.author,
+    publishedAt: data.published_at,
+    readTime: data.read_time,
+    excerpt: data.excerpt,
+    content: data.content,
+    imageUrl: data.image_url,
+    tags: data.tags ?? [],
+    isPublished: data.is_published
+  };
 }
 
 export async function deleteBlog(id: string): Promise<void> {
-  return apiCall<void>(
-    `${API_BASE}/blogs/${id}`,
-    { method: 'DELETE', headers: getAuthHeaders() },
-    () => {
-      const list = getStored<BlogArticle[]>('blogs', defaultBlogs);
-      setStored('blogs', list.filter(i => i.id !== id));
-    }
-  );
+  const { error } = await supabase
+    .from('blogs')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
 }
 
 // TESTIMONIALS
 export async function fetchTestimonials(): Promise<Testimonial[]> {
-  return apiCall<Testimonial[]>(
-    `${API_BASE}/testimonials`,
-    undefined,
-    () => getStored<Testimonial[]>('testimonials', defaultTestimonials)
-  );
+  const { data, error } = await supabase
+    .from('testimonials')
+    .select('*')
+    .order('id', { ascending: true });
+
+  if (error) throw error;
+
+  return (data ?? []).map((testimonial) => ({
+    id: testimonial.id,
+    customerName: testimonial.customer_name,
+    location: testimonial.location,
+    systemSizeKw: Number(testimonial.system_size_kw),
+    rating: Number(testimonial.rating),
+    comment: testimonial.comment,
+    photoUrl: testimonial.photo_url,
+    savedPerYear: String(testimonial.saved_per_year)
+  }));
 }
 
 export async function createTestimonial(t: Omit<Testimonial, 'id'>): Promise<Testimonial> {
-  return apiCall<Testimonial>(
-    `${API_BASE}/testimonials`,
-    {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(t)
-    },
-    () => {
-      const list = getStored<Testimonial[]>('testimonials', defaultTestimonials);
-      const newItem: Testimonial = { ...t, id: `t-${Date.now()}` };
-      setStored('testimonials', [...list, newItem]);
-      return newItem;
-    }
-  );
+  const id = `t-${Date.now()}`;
+
+  const { data, error } = await supabase
+    .from('testimonials')
+    .insert({
+      id,
+      customer_name: t.customerName,
+      location: t.location,
+      system_size_kw: t.systemSizeKw,
+      rating: t.rating,
+      comment: t.comment,
+      photo_url: t.photoUrl,
+      saved_per_year: t.savedPerYear
+    })
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    customerName: data.customer_name,
+    location: data.location,
+    systemSizeKw: Number(data.system_size_kw),
+    rating: Number(data.rating),
+    comment: data.comment,
+    photoUrl: data.photo_url,
+    savedPerYear: String(data.saved_per_year)
+  };
 }
 
 export async function updateTestimonial(id: string, updates: Partial<Testimonial>): Promise<Testimonial> {
-  return apiCall<Testimonial>(
-    `${API_BASE}/testimonials/${id}`,
-    {
-      method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(updates)
-    },
-    () => {
-      const list = getStored<Testimonial[]>('testimonials', defaultTestimonials);
-      const idx = list.findIndex(i => i.id === id);
-      const updated = idx !== -1 ? { ...list[idx], ...updates } : ({ ...updates, id } as Testimonial);
-      if (idx !== -1) list[idx] = updated;
-      else list.push(updated);
-      setStored('testimonials', list);
-      return updated;
-    }
-  );
+  const payload: Record<string, unknown> = {};
+
+  if (updates.customerName !== undefined) payload.customer_name = updates.customerName;
+  if (updates.location !== undefined) payload.location = updates.location;
+  if (updates.systemSizeKw !== undefined) payload.system_size_kw = updates.systemSizeKw;
+  if (updates.rating !== undefined) payload.rating = updates.rating;
+  if (updates.comment !== undefined) payload.comment = updates.comment;
+  if (updates.photoUrl !== undefined) payload.photo_url = updates.photoUrl;
+  if (updates.savedPerYear !== undefined) payload.saved_per_year = updates.savedPerYear;
+
+  const { data, error } = await supabase
+    .from('testimonials')
+    .update(payload)
+    .eq('id', id)
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    customerName: data.customer_name,
+    location: data.location,
+    systemSizeKw: Number(data.system_size_kw),
+    rating: Number(data.rating),
+    comment: data.comment,
+    photoUrl: data.photo_url,
+    savedPerYear: String(data.saved_per_year)
+  };
 }
 
 export async function deleteTestimonial(id: string): Promise<void> {
-  return apiCall<void>(
-    `${API_BASE}/testimonials/${id}`,
-    { method: 'DELETE', headers: getAuthHeaders() },
-    () => {
-      const list = getStored<Testimonial[]>('testimonials', defaultTestimonials);
-      setStored('testimonials', list.filter(i => i.id !== id));
-    }
-  );
+  const { error } = await supabase
+    .from('testimonials')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
 }
 
 // FAQS
 export async function fetchFaqs(): Promise<FAQItem[]> {
-  return apiCall<FAQItem[]>(
-    `${API_BASE}/faqs`,
-    undefined,
-    () => getStored<FAQItem[]>('faqs', defaultFaqs)
-  );
+  const { data, error } = await supabase
+    .from('faqs')
+    .select('*')
+    .order('id', { ascending: true });
+
+  if (error) throw error;
+
+  return (data ?? []).map((faq) => ({
+    id: faq.id,
+    category: faq.category,
+    question: faq.question,
+    answer: faq.answer
+  }));
 }
 
 export async function createFaq(faq: Omit<FAQItem, 'id'>): Promise<FAQItem> {
-  return apiCall<FAQItem>(
-    `${API_BASE}/faqs`,
-    {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(faq)
-    },
-    () => {
-      const list = getStored<FAQItem[]>('faqs', defaultFaqs);
-      const newItem: FAQItem = { ...faq, id: `faq-${Date.now()}` };
-      setStored('faqs', [...list, newItem]);
-      return newItem;
-    }
-  );
+  const id = `faq-${Date.now()}`;
+
+  const { data, error } = await supabase
+    .from('faqs')
+    .insert({
+      id,
+      category: faq.category,
+      question: faq.question,
+      answer: faq.answer
+    })
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    category: data.category,
+    question: data.question,
+    answer: data.answer
+  };
 }
 
 export async function updateFaq(id: string, updates: Partial<FAQItem>): Promise<FAQItem> {
-  return apiCall<FAQItem>(
-    `${API_BASE}/faqs/${id}`,
-    {
-      method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(updates)
-    },
-    () => {
-      const list = getStored<FAQItem[]>('faqs', defaultFaqs);
-      const idx = list.findIndex(i => i.id === id);
-      const updated = idx !== -1 ? { ...list[idx], ...updates } : ({ ...updates, id } as FAQItem);
-      if (idx !== -1) list[idx] = updated;
-      else list.push(updated);
-      setStored('faqs', list);
-      return updated;
-    }
-  );
+  const payload: Record<string, unknown> = {};
+
+  if (updates.category !== undefined) payload.category = updates.category;
+  if (updates.question !== undefined) payload.question = updates.question;
+  if (updates.answer !== undefined) payload.answer = updates.answer;
+
+  const { data, error } = await supabase
+    .from('faqs')
+    .update(payload)
+    .eq('id', id)
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    category: data.category,
+    question: data.question,
+    answer: data.answer
+  };
 }
 
 export async function deleteFaq(id: string): Promise<void> {
-  return apiCall<void>(
-    `${API_BASE}/faqs/${id}`,
-    { method: 'DELETE', headers: getAuthHeaders() },
-    () => {
-      const list = getStored<FAQItem[]>('faqs', defaultFaqs);
-      setStored('faqs', list.filter(i => i.id !== id));
-    }
-  );
+  const { error } = await supabase
+    .from('faqs')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
 }
 
 // GALLERY
 export async function fetchGallery(): Promise<GalleryItem[]> {
-  return apiCall<GalleryItem[]>(
-    `${API_BASE}/gallery`,
-    undefined,
-    () => getStored<GalleryItem[]>('gallery', defaultGallery)
-  );
+  const { data, error } = await supabase
+    .from('gallery')
+    .select('*')
+    .order('id', { ascending: true });
+
+  if (error) throw error;
+
+  return (data ?? []).map((item) => ({
+    id: item.id,
+    title: item.title,
+    category: item.category,
+    type: item.type,
+    mediaUrl: item.media_url,
+    caption: item.caption
+  }));
 }
 
 export async function createGalleryItem(item: Omit<GalleryItem, 'id'>): Promise<GalleryItem> {
-  return apiCall<GalleryItem>(
-    `${API_BASE}/gallery`,
-    {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(item)
-    },
-    () => {
-      const list = getStored<GalleryItem[]>('gallery', defaultGallery);
-      const newItem: GalleryItem = { ...item, id: `gal-${Date.now()}` };
-      setStored('gallery', [...list, newItem]);
-      return newItem;
-    }
-  );
+  const id = `gal-${Date.now()}`;
+
+  const { data, error } = await supabase
+    .from('gallery')
+    .insert({
+      id,
+      title: item.title,
+      category: item.category,
+      type: item.type,
+      media_url: item.mediaUrl,
+      caption: item.caption
+    })
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    title: data.title,
+    category: data.category,
+    type: data.type,
+    mediaUrl: data.media_url,
+    caption: data.caption
+  };
 }
 
 export async function updateGalleryItem(id: string, updates: Partial<GalleryItem>): Promise<GalleryItem> {
-  return apiCall<GalleryItem>(
-    `${API_BASE}/gallery/${id}`,
-    {
-      method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(updates)
-    },
-    () => {
-      const list = getStored<GalleryItem[]>('gallery', defaultGallery);
-      const idx = list.findIndex(i => i.id === id);
-      const updated = idx !== -1 ? { ...list[idx], ...updates } : ({ ...updates, id } as GalleryItem);
-      if (idx !== -1) list[idx] = updated;
-      else list.push(updated);
-      setStored('gallery', list);
-      return updated;
-    }
-  );
+  const payload: Record<string, unknown> = {};
+
+  if (updates.title !== undefined) payload.title = updates.title;
+  if (updates.category !== undefined) payload.category = updates.category;
+  if (updates.type !== undefined) payload.type = updates.type;
+  if (updates.mediaUrl !== undefined) payload.media_url = updates.mediaUrl;
+  if (updates.caption !== undefined) payload.caption = updates.caption;
+
+  const { data, error } = await supabase
+    .from('gallery')
+    .update(payload)
+    .eq('id', id)
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    title: data.title,
+    category: data.category,
+    type: data.type,
+    mediaUrl: data.media_url,
+    caption: data.caption
+  };
 }
 
 export async function deleteGalleryItem(id: string): Promise<void> {
-  return apiCall<void>(
-    `${API_BASE}/gallery/${id}`,
-    { method: 'DELETE', headers: getAuthHeaders() },
-    () => {
-      const list = getStored<GalleryItem[]>('gallery', defaultGallery);
-      setStored('gallery', list.filter(i => i.id !== id));
-    }
-  );
+  const { error } = await supabase
+    .from('gallery')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
 }
 
 // LEADS
 export async function submitLead(data: any): Promise<{ message: string; lead: Lead }> {
-  return apiCall<{ message: string; lead: Lead }>(
-    `${API_BASE}/leads`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    },
-    () => {
-      const list = getStored<Lead[]>('leads', []);
-      const now = new Date().toISOString();
-      const lead: Lead = {
-        id: `lead-${Date.now()}`,
-        fullName: data.fullName || data.name || 'Valued Customer',
-        phone: data.phone || '',
-        email: data.email || '',
-        city: data.city || 'Guntur',
-        state: data.state || 'Andhra Pradesh',
-        solarFor: data.solarFor || 'Home',
-        monthlyBill: String(data.monthlyBill || '0'),
-        roofType: data.roofType || 'RCC Flat Roof',
-        financeInterest: data.financeInterest || 'No',
-        status: 'New',
-        notes: data.notes || '',
-        createdAt: now,
-        updatedAt: now
-      };
-      setStored('leads', [lead, ...list]);
-      return { message: 'Lead submitted successfully', lead };
-    }
-  );
+  const id = `lead-${Date.now()}`;
+
+  const { data: leadData, error } = await supabase
+    .from('leads')
+    .insert({
+      id,
+      full_name: data.fullName || data.name || 'Valued Customer',
+      phone: data.phone || '',
+      email: data.email || '',
+      city: data.city || 'Guntur',
+      state: data.state || 'Andhra Pradesh',
+      solar_for: data.solarFor || 'Home',
+      monthly_bill: String(data.monthlyBill || '0'),
+      roof_type: data.roofType || 'RCC Flat Roof',
+      connection_type: data.connectionType || null,
+      finance_interest: data.financeInterest || 'No',
+      status: 'New',
+      notes: data.notes || ''
+    })
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  const lead: Lead = {
+    id: leadData.id,
+    fullName: leadData.full_name,
+    phone: leadData.phone,
+    email: leadData.email,
+    city: leadData.city,
+    state: leadData.state,
+    solarFor: leadData.solar_for,
+    monthlyBill: leadData.monthly_bill,
+    roofType: leadData.roof_type,
+    connectionType: leadData.connection_type,
+    financeInterest: leadData.finance_interest,
+    status: leadData.status,
+    assignedTo: leadData.assigned_to ?? undefined,
+    notes: leadData.notes,
+    createdAt: leadData.created_at,
+    updatedAt: leadData.updated_at
+  };
+
+  return { message: 'Lead submitted successfully', lead };
 }
 
 export async function fetchLeads(): Promise<Lead[]> {
-  return apiCall<Lead[]>(
-    `${API_BASE}/leads`,
-    { headers: getAuthHeaders() },
-    () => getStored<Lead[]>('leads', [])
-  );
+  const { data, error } = await supabase
+    .from('leads')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+
+  return (data ?? []).map((lead) => ({
+    id: lead.id,
+    fullName: lead.full_name,
+    phone: lead.phone,
+    email: lead.email,
+    city: lead.city,
+    state: lead.state,
+    solarFor: lead.solar_for,
+    monthlyBill: lead.monthly_bill,
+    roofType: lead.roof_type,
+    connectionType: lead.connection_type,
+    financeInterest: lead.finance_interest,
+    status: lead.status,
+    assignedTo: lead.assigned_to ?? undefined,
+    notes: lead.notes,
+    createdAt: lead.created_at,
+    updatedAt: lead.updated_at
+  }));
 }
 
 export async function updateLead(id: string, updates: Partial<Lead>): Promise<Lead> {
-  return apiCall<Lead>(
-    `${API_BASE}/leads/${id}`,
-    {
-      method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(updates)
-    },
-    () => {
-      const list = getStored<Lead[]>('leads', []);
-      const idx = list.findIndex(l => l.id === id);
-      const updated = idx !== -1 ? { ...list[idx], ...updates, updatedAt: new Date().toISOString() } : ({ ...updates, id } as Lead);
-      if (idx !== -1) list[idx] = updated;
-      else list.unshift(updated);
-      setStored('leads', list);
-      return updated;
-    }
-  );
+  const payload: Record<string, unknown> = {};
+
+  if (updates.fullName !== undefined) payload.full_name = updates.fullName;
+  if (updates.phone !== undefined) payload.phone = updates.phone;
+  if (updates.email !== undefined) payload.email = updates.email;
+  if (updates.city !== undefined) payload.city = updates.city;
+  if (updates.state !== undefined) payload.state = updates.state;
+  if (updates.solarFor !== undefined) payload.solar_for = updates.solarFor;
+  if (updates.monthlyBill !== undefined) payload.monthly_bill = updates.monthlyBill;
+  if (updates.roofType !== undefined) payload.roof_type = updates.roofType;
+  if (updates.connectionType !== undefined) payload.connection_type = updates.connectionType;
+  if (updates.financeInterest !== undefined) payload.finance_interest = updates.financeInterest;
+  if (updates.status !== undefined) payload.status = updates.status;
+  if (updates.assignedTo !== undefined) payload.assigned_to = updates.assignedTo;
+  if (updates.notes !== undefined) payload.notes = updates.notes;
+
+  const { data, error } = await supabase
+    .from('leads')
+    .update(payload)
+    .eq('id', id)
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    fullName: data.full_name,
+    phone: data.phone,
+    email: data.email,
+    city: data.city,
+    state: data.state,
+    solarFor: data.solar_for,
+    monthlyBill: data.monthly_bill,
+    roofType: data.roof_type,
+    connectionType: data.connection_type,
+    financeInterest: data.finance_interest,
+    status: data.status,
+    assignedTo: data.assigned_to ?? undefined,
+    notes: data.notes,
+    createdAt: data.created_at,
+    updatedAt: data.updated_at
+  };
 }
 
 export async function deleteLead(id: string): Promise<void> {
-  return apiCall<void>(
-    `${API_BASE}/leads/${id}`,
-    { method: 'DELETE', headers: getAuthHeaders() },
-    () => {
-      const list = getStored<Lead[]>('leads', []);
-      setStored('leads', list.filter(l => l.id !== id));
-    }
-  );
+  const { error } = await supabase
+    .from('leads')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
 }
 
 // QUOTES
 export async function submitQuote(data: any): Promise<{ message: string; quote: QuoteRequest }> {
-  return apiCall<{ message: string; quote: QuoteRequest }>(
-    `${API_BASE}/quotes`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    },
-    () => {
-      const list = getStored<QuoteRequest[]>('quotes', []);
-      const quote: QuoteRequest = {
-        id: `quote-${Date.now()}`,
-        name: data.name || 'Valued Customer',
-        phone: data.phone || '',
-        email: data.email || '',
-        city: data.city || 'Guntur',
-        state: data.state || 'Andhra Pradesh',
-        propertyType: data.propertyType || 'Residential',
-        monthlyBill: Number(data.monthlyBill || data.averageMonthlyBill) || 0,
-        roofType: data.roofType || 'RCC Flat Roof',
-        proposedKw: Number(data.proposedKw || data.recommendedKw) || 3,
-        estimatedCost: Number(data.estimatedCost || data.estimatedCostMin) || 120000,
-        estimatedSubsidy: Number(data.estimatedSubsidy) || 78000,
-        netCost: Number(data.netCost) || 42000,
-        status: 'Pending',
-        message: data.message || '',
-        createdAt: new Date().toISOString()
-      };
-      setStored('quotes', [quote, ...list]);
-      return { message: 'Quote submitted successfully', quote };
-    }
-  );
+  const id = `quote-${Date.now()}`;
+
+  const { data: quoteData, error } = await supabase
+    .from('quotes')
+    .insert({
+      id,
+      name: data.name || 'Valued Customer',
+      phone: data.phone || '',
+      email: data.email || '',
+      city: data.city || 'Guntur',
+      state: data.state || 'Andhra Pradesh',
+      property_type: data.propertyType || 'Residential',
+      monthly_bill: Number(data.monthlyBill || data.averageMonthlyBill) || 0,
+      roof_type: data.roofType || 'RCC Flat Roof',
+      proposed_kw: Number(data.proposedKw || data.recommendedKw) || 3,
+      estimated_cost: Number(data.estimatedCost || data.estimatedCostMin) || 120000,
+      estimated_subsidy: Number(data.estimatedSubsidy) || 78000,
+      net_cost: Number(data.netCost) || 42000,
+      status: 'Pending',
+      message: data.message || ''
+    })
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  const quote: QuoteRequest = {
+    id: quoteData.id,
+    name: quoteData.name,
+    phone: quoteData.phone,
+    email: quoteData.email,
+    city: quoteData.city,
+    state: quoteData.state,
+    propertyType: quoteData.property_type,
+    monthlyBill: Number(quoteData.monthly_bill),
+    roofType: quoteData.roof_type,
+    proposedKw: Number(quoteData.proposed_kw),
+    estimatedCost: Number(quoteData.estimated_cost),
+    estimatedSubsidy: Number(quoteData.estimated_subsidy),
+    netCost: Number(quoteData.net_cost),
+    status: quoteData.status,
+    message: quoteData.message,
+    createdAt: quoteData.created_at
+  };
+
+  return { message: 'Quote submitted successfully', quote };
 }
 
 export async function fetchQuotes(): Promise<QuoteRequest[]> {
-  return apiCall<QuoteRequest[]>(
-    `${API_BASE}/quotes`,
-    { headers: getAuthHeaders() },
-    () => getStored<QuoteRequest[]>('quotes', [])
-  );
+  const { data, error } = await supabase
+    .from('quotes')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+
+  return (data ?? []).map((quote) => ({
+    id: quote.id,
+    name: quote.name,
+    phone: quote.phone,
+    email: quote.email,
+    state: quote.state,
+    city: quote.city,
+    propertyType: quote.property_type,
+    monthlyBill: Number(quote.monthly_bill),
+    roofType: quote.roof_type,
+    proposedKw: Number(quote.proposed_kw),
+    estimatedCost: Number(quote.estimated_cost),
+    estimatedSubsidy: Number(quote.estimated_subsidy),
+    netCost: Number(quote.net_cost),
+    status: quote.status,
+    message: quote.message,
+    createdAt: quote.created_at
+  }));
 }
 
 export async function updateQuoteStatus(id: string, status: QuoteRequest['status']): Promise<QuoteRequest> {
-  return apiCall<QuoteRequest>(
-    `${API_BASE}/quotes/${id}/status`,
-    {
-      method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ status })
-    },
-    () => {
-      const list = getStored<QuoteRequest[]>('quotes', []);
-      const idx = list.findIndex(q => q.id === id);
-      const updated = idx !== -1 ? { ...list[idx], status } : ({ id, status } as QuoteRequest);
-      if (idx !== -1) list[idx] = updated;
-      else list.unshift(updated);
-      setStored('quotes', list);
-      return updated;
-    }
-  );
+  const { data, error } = await supabase
+    .from('quotes')
+    .update({ status })
+    .eq('id', id)
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    name: data.name,
+    phone: data.phone,
+    email: data.email,
+    state: data.state,
+    city: data.city,
+    propertyType: data.property_type,
+    monthlyBill: Number(data.monthly_bill),
+    roofType: data.roof_type,
+    proposedKw: Number(data.proposed_kw),
+    estimatedCost: Number(data.estimated_cost),
+    estimatedSubsidy: Number(data.estimated_subsidy),
+    netCost: Number(data.net_cost),
+    status: data.status,
+    message: data.message,
+    createdAt: data.created_at
+  };
 }
 
 export async function deleteQuoteRequest(id: string): Promise<void> {
-  return apiCall<void>(
-    `${API_BASE}/quotes/${id}`,
-    { method: 'DELETE', headers: getAuthHeaders() },
-    () => {
-      const list = getStored<QuoteRequest[]>('quotes', []);
-      setStored('quotes', list.filter(q => q.id !== id));
-    }
-  );
+  const { error } = await supabase
+    .from('quotes')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
 }
 
 // JOBS
 export async function fetchJobs(): Promise<JobOpening[]> {
-  return apiCall<JobOpening[]>(
-    `${API_BASE}/jobs`,
-    undefined,
-    () => getStored<JobOpening[]>('jobs', defaultJobs)
-  );
+  const { data, error } = await supabase
+    .from('jobs')
+    .select('*')
+    .order('id', { ascending: true });
+
+  if (error) throw error;
+
+  return (data ?? []).map((job) => ({
+    id: job.id,
+    title: job.title,
+    location: job.location,
+    type: job.type,
+    exp: job.exp,
+    desc: job.description,
+    department: job.department,
+    isActive: job.is_active,
+    postedDate: job.posted_date
+  }));
 }
 
 export async function createJob(job: Omit<JobOpening, 'id'>): Promise<JobOpening> {
-  return apiCall<JobOpening>(
-    `${API_BASE}/jobs`,
-    {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(job)
-    },
-    () => {
-      const list = getStored<JobOpening[]>('jobs', defaultJobs);
-      const newItem: JobOpening = { ...job, id: `job-${Date.now()}` };
-      setStored('jobs', [...list, newItem]);
-      return newItem;
-    }
-  );
+  const id = `job-${Date.now()}`;
+
+  const { data, error } = await supabase
+    .from('jobs')
+    .insert({
+      id,
+      title: job.title,
+      location: job.location,
+      type: job.type,
+      exp: job.exp,
+      description: job.desc,
+      department: job.department,
+      is_active: job.isActive,
+      posted_date: job.postedDate
+    })
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    title: data.title,
+    location: data.location,
+    type: data.type,
+    exp: data.exp,
+    desc: data.description,
+    department: data.department,
+    isActive: data.is_active,
+    postedDate: data.posted_date
+  };
 }
 
 export async function updateJob(id: string, updates: Partial<JobOpening>): Promise<JobOpening> {
-  return apiCall<JobOpening>(
-    `${API_BASE}/jobs/${id}`,
-    {
-      method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(updates)
-    },
-    () => {
-      const list = getStored<JobOpening[]>('jobs', defaultJobs);
-      const idx = list.findIndex(j => j.id === id);
-      const updated = idx !== -1 ? { ...list[idx], ...updates } : ({ ...updates, id } as JobOpening);
-      if (idx !== -1) list[idx] = updated;
-      else list.push(updated);
-      setStored('jobs', list);
-      return updated;
-    }
-  );
+  const payload: Record<string, unknown> = {};
+
+  if (updates.title !== undefined) payload.title = updates.title;
+  if (updates.location !== undefined) payload.location = updates.location;
+  if (updates.type !== undefined) payload.type = updates.type;
+  if (updates.exp !== undefined) payload.exp = updates.exp;
+  if (updates.desc !== undefined) payload.description = updates.desc;
+  if (updates.department !== undefined) payload.department = updates.department;
+  if (updates.isActive !== undefined) payload.is_active = updates.isActive;
+  if (updates.postedDate !== undefined) payload.posted_date = updates.postedDate;
+
+  const { data, error } = await supabase
+    .from('jobs')
+    .update(payload)
+    .eq('id', id)
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    title: data.title,
+    location: data.location,
+    type: data.type,
+    exp: data.exp,
+    desc: data.description,
+    department: data.department,
+    isActive: data.is_active,
+    postedDate: data.posted_date
+  };
 }
 
 export async function deleteJob(id: string): Promise<void> {
-  return apiCall<void>(
-    `${API_BASE}/jobs/${id}`,
-    { method: 'DELETE', headers: getAuthHeaders() },
-    () => {
-      const list = getStored<JobOpening[]>('jobs', defaultJobs);
-      setStored('jobs', list.filter(j => j.id !== id));
-    }
-  );
+  const { error } = await supabase
+    .from('jobs')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
 }
 
 // JOB APPLICATIONS
 export async function fetchJobApplications(): Promise<JobApplication[]> {
-  return apiCall<JobApplication[]>(
-    `${API_BASE}/job-applications`,
-    { headers: getAuthHeaders() },
-    () => getStored<JobApplication[]>('job_applications', [])
-  );
+  const { data, error } = await supabase
+    .from('job_applications')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+
+  return (data ?? []).map((application) => ({
+    id: application.id,
+    jobId: application.job_id ?? undefined,
+    name: application.name,
+    phone: application.phone,
+    email: application.email,
+    role: application.role,
+    experience: application.experience,
+    message: application.message,
+    status: application.status,
+    createdAt: application.created_at
+  }));
 }
 
 export async function submitJobApplication(data: Omit<JobApplication, 'id' | 'createdAt' | 'status'>): Promise<{ message: string; application: JobApplication }> {
-  return apiCall<{ message: string; application: JobApplication }>(
-    `${API_BASE}/job-applications`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    },
-    () => {
-      const list = getStored<JobApplication[]>('job_applications', []);
-      const app: JobApplication = {
-        ...data,
-        id: `app-${Date.now()}`,
-        status: 'New',
-        createdAt: new Date().toISOString()
-      };
-      setStored('job_applications', [app, ...list]);
-      return { message: 'Application submitted successfully', application: app };
-    }
-  );
+  const id = `app-${Date.now()}`;
+
+  const { data: applicationData, error } = await supabase
+    .from('job_applications')
+    .insert({
+      id,
+      job_id: data.jobId ?? null,
+      name: data.name,
+      phone: data.phone,
+      email: data.email,
+      role: data.role,
+      experience: data.experience,
+      message: data.message,
+      status: 'New'
+    })
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  const application: JobApplication = {
+    id: applicationData.id,
+    jobId: applicationData.job_id ?? undefined,
+    name: applicationData.name,
+    phone: applicationData.phone,
+    email: applicationData.email,
+    role: applicationData.role,
+    experience: applicationData.experience,
+    message: applicationData.message,
+    status: applicationData.status,
+    createdAt: applicationData.created_at
+  };
+
+  return { message: 'Application submitted successfully', application };
 }
 
 export async function updateJobApplicationStatus(id: string, status: JobApplication['status']): Promise<JobApplication> {
-  return apiCall<JobApplication>(
-    `${API_BASE}/job-applications/${id}/status`,
-    {
-      method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ status })
-    },
-    () => {
-      const list = getStored<JobApplication[]>('job_applications', []);
-      const idx = list.findIndex(a => a.id === id);
-      const updated = idx !== -1 ? { ...list[idx], status } : ({ id, status } as JobApplication);
-      if (idx !== -1) list[idx] = updated;
-      else list.unshift(updated);
-      setStored('job_applications', list);
-      return updated;
-    }
-  );
+  const { data, error } = await supabase
+    .from('job_applications')
+    .update({ status })
+    .eq('id', id)
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    jobId: data.job_id ?? undefined,
+    name: data.name,
+    phone: data.phone,
+    email: data.email,
+    role: data.role,
+    experience: data.experience,
+    message: data.message,
+    status: data.status,
+    createdAt: data.created_at
+  };
 }
 
 export async function deleteJobApplication(id: string): Promise<void> {
-  return apiCall<void>(
-    `${API_BASE}/job-applications/${id}`,
-    { method: 'DELETE', headers: getAuthHeaders() },
-    () => {
-      const list = getStored<JobApplication[]>('job_applications', []);
-      setStored('job_applications', list.filter(a => a.id !== id));
-    }
-  );
+  const { error } = await supabase
+    .from('job_applications')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
 }
 
 // HERO SLIDES
 export async function fetchHeroSlides(): Promise<HeroSlide[]> {
-  const data = await apiCall<HeroSlide[]>(
-    `${API_BASE}/hero-slides`,
-    undefined,
-    () => getStored<HeroSlide[]>('hero_slides', defaultHeroSlides)
-  );
-  if (Array.isArray(data) && data.length > 0) {
-    setStored('hero_slides', data);
-  }
-  return data;
+  const { data, error } = await supabase
+    .from('hero_slides')
+    .select('*')
+    .order('display_order', { ascending: true });
+
+  if (error) throw error;
+
+  return (data ?? []).map((slide) => ({
+    id: slide.id,
+    badge: slide.badge ?? undefined,
+    title: slide.title,
+    subtitle: slide.subtitle,
+    mediaType: slide.media_type,
+    mediaUrl: slide.media_url,
+    ctaPrimaryText: slide.cta_primary_text ?? undefined,
+    ctaPrimaryAction: slide.cta_primary_action ?? undefined,
+    ctaSecondaryText: slide.cta_secondary_text ?? undefined,
+    ctaSecondaryAction: slide.cta_secondary_action ?? undefined,
+    order: slide.display_order
+  }));
 }
 
 export async function createHeroSlide(data: Omit<HeroSlide, 'id'>): Promise<HeroSlide> {
-  const result = await apiCall<HeroSlide>(
-    `${API_BASE}/hero-slides`,
-    {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(data)
-    },
-    () => {
-      const list = getStored<HeroSlide[]>('hero_slides', defaultHeroSlides);
-      const newItem: HeroSlide = { ...data, id: `slide-${Date.now()}` };
-      setStored('hero_slides', [...list, newItem]);
-      return newItem;
-    }
-  );
-  const currentList = getStored<HeroSlide[]>('hero_slides', defaultHeroSlides);
-  const exists = currentList.some(s => s.id === result.id);
-  if (!exists) {
-    setStored('hero_slides', [...currentList, result]);
-  } else {
-    setStored('hero_slides', currentList.map(s => s.id === result.id ? result : s));
-  }
-  notifyDataUpdated();
-  return result;
+  const id = `slide-${Date.now()}`;
+
+  const { data: slide, error } = await supabase
+    .from('hero_slides')
+    .insert({
+      id,
+      badge: data.badge,
+      title: data.title,
+      subtitle: data.subtitle,
+      media_type: data.mediaType,
+      media_url: data.mediaUrl,
+      cta_primary_text: data.ctaPrimaryText,
+      cta_primary_action: data.ctaPrimaryAction,
+      cta_secondary_text: data.ctaSecondaryText,
+      cta_secondary_action: data.ctaSecondaryAction,
+      display_order: data.order
+    })
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: slide.id,
+    badge: slide.badge,
+    title: slide.title,
+    subtitle: slide.subtitle,
+    mediaType: slide.media_type,
+    mediaUrl: slide.media_url,
+    ctaPrimaryText: slide.cta_primary_text,
+    ctaPrimaryAction: slide.cta_primary_action,
+    ctaSecondaryText: slide.cta_secondary_text,
+    ctaSecondaryAction: slide.cta_secondary_action,
+    order: slide.display_order
+  };
 }
 
 export async function updateHeroSlide(id: string, updates: Partial<HeroSlide>): Promise<HeroSlide> {
-  const result = await apiCall<HeroSlide>(
-    `${API_BASE}/hero-slides/${id}`,
-    {
-      method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(updates)
-    },
-    () => {
-      const list = getStored<HeroSlide[]>('hero_slides', defaultHeroSlides);
-      const idx = list.findIndex(s => s.id === id);
-      const updated = idx !== -1 ? { ...list[idx], ...updates } : ({ ...updates, id } as HeroSlide);
-      if (idx !== -1) list[idx] = updated;
-      else list.push(updated);
-      setStored('hero_slides', list);
-      return updated;
-    }
-  );
-  const currentList = getStored<HeroSlide[]>('hero_slides', defaultHeroSlides);
-  const idx = currentList.findIndex(s => s.id === id);
-  if (idx !== -1) {
-    currentList[idx] = { ...currentList[idx], ...result };
-    setStored('hero_slides', currentList);
-  } else {
-    setStored('hero_slides', [...currentList, result]);
-  }
-  notifyDataUpdated();
-  return result;
+  const payload: Record<string, unknown> = {};
+
+  if (updates.badge !== undefined) payload.badge = updates.badge;
+  if (updates.title !== undefined) payload.title = updates.title;
+  if (updates.subtitle !== undefined) payload.subtitle = updates.subtitle;
+  if (updates.mediaType !== undefined) payload.media_type = updates.mediaType;
+  if (updates.mediaUrl !== undefined) payload.media_url = updates.mediaUrl;
+  if (updates.ctaPrimaryText !== undefined) payload.cta_primary_text = updates.ctaPrimaryText;
+  if (updates.ctaPrimaryAction !== undefined) payload.cta_primary_action = updates.ctaPrimaryAction;
+  if (updates.ctaSecondaryText !== undefined) payload.cta_secondary_text = updates.ctaSecondaryText;
+  if (updates.ctaSecondaryAction !== undefined) payload.cta_secondary_action = updates.ctaSecondaryAction;
+  if (updates.order !== undefined) payload.display_order = updates.order;
+
+  const { data: slide, error } = await supabase
+    .from('hero_slides')
+    .update(payload)
+    .eq('id', id)
+    .select('*')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: slide.id,
+    badge: slide.badge,
+    title: slide.title,
+    subtitle: slide.subtitle,
+    mediaType: slide.media_type,
+    mediaUrl: slide.media_url,
+    ctaPrimaryText: slide.cta_primary_text,
+    ctaPrimaryAction: slide.cta_primary_action,
+    ctaSecondaryText: slide.cta_secondary_text,
+    ctaSecondaryAction: slide.cta_secondary_action,
+    order: slide.display_order
+  };
 }
 
 export async function deleteHeroSlide(id: string): Promise<{ message: string }> {
-  const result = await apiCall<{ message: string }>(
-    `${API_BASE}/hero-slides/${id}`,
-    { method: 'DELETE', headers: getAuthHeaders() },
-    () => {
-      const list = getStored<HeroSlide[]>('hero_slides', defaultHeroSlides);
-      setStored('hero_slides', list.filter(s => s.id !== id));
-      return { message: 'Slide deleted successfully' };
+  const { error } = await supabase
+    .from('hero_slides')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
+
+  return { message: 'Hero slide deleted successfully' };
+}
+
+async function callAdminUsers(payload: Record<string, unknown>): Promise<any> {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+
+  if (sessionError) throw sessionError;
+  if (!sessionData.session?.access_token) {
+    throw new Error('You must be signed in to manage staff users.');
+  }
+
+  const response = await fetch(
+    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-users`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${sessionData.session.access_token}`
+      },
+      body: JSON.stringify(payload)
     }
   );
-  const currentList = getStored<HeroSlide[]>('hero_slides', defaultHeroSlides);
-  setStored('hero_slides', currentList.filter(s => s.id !== id));
-  notifyDataUpdated();
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(result.error || 'Staff user operation failed.');
+  }
+
   return result;
 }
 
-// STAFF USERS
-export async function fetchUsers(): Promise<User[]> {
-  return apiCall<User[]>(
-    `${API_BASE}/admin/users`,
-    { headers: getAuthHeaders() },
-    () => getStored<User[]>('users', defaultUsers)
-  );
+export async function createStaffUser(data: {
+  name: string;
+  email: string;
+  role: 'Admin' | 'Manager' | 'Sales' | 'Technician';
+  phone?: string;
+  password: string;
+}): Promise<User> {
+  const result = await callAdminUsers({
+    action: 'create',
+    ...data
+  });
+
+  return {
+    id: result.user.id,
+    name: result.user.name,
+    email: result.user.email,
+    role: result.user.role as User['role'],
+    phone: result.user.phone ?? undefined,
+    createdAt: result.user.created_at
+  };
 }
 
-export async function createStaffUser(data: { name: string; email: string; role: 'Admin' | 'Manager' | 'Sales' | 'Technician'; phone?: string; password: string }): Promise<User> {
-  return apiCall<User>(
-    `${API_BASE}/admin/users`,
-    {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(data)
-    },
-    () => {
-      const list = getStored<User[]>('users', defaultUsers);
-      const newUser: User = {
-        id: `usr-${Date.now()}`,
-        name: data.name,
-        email: data.email,
-        role: data.role as any,
-        phone: data.phone || '',
-        createdAt: new Date().toISOString()
-      };
-      setStored('users', [...list, newUser]);
-      return newUser;
-    }
-  );
-}
+export async function updateStaffUser(
+  id: string,
+  data: {
+    name?: string;
+    email?: string;
+    role?: 'Admin' | 'Manager' | 'Sales' | 'Technician';
+    phone?: string;
+    password?: string;
+  }
+): Promise<User> {
+  const result = await callAdminUsers({
+    action: 'update',
+    id,
+    ...data
+  });
 
-export async function updateStaffUser(id: string, data: { name?: string; email?: string; role?: 'Admin' | 'Manager' | 'Sales' | 'Technician'; phone?: string; password?: string }): Promise<User> {
-  return apiCall<User>(
-    `${API_BASE}/admin/users/${id}`,
-    {
-      method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(data)
-    },
-    () => {
-      const list = getStored<User[]>('users', defaultUsers);
-      const idx = list.findIndex(u => u.id === id);
-      const updated = idx !== -1 ? { ...list[idx], ...data } : ({ id, name: data.name || '', email: data.email || '', role: data.role || 'Admin', createdAt: new Date().toISOString() } as User);
-      if (idx !== -1) list[idx] = updated;
-      else list.push(updated);
-      setStored('users', list);
-      return updated;
-    }
-  );
+  return {
+    id: result.user.id,
+    name: result.user.name,
+    email: result.user.email,
+    role: result.user.role as User['role'],
+    phone: result.user.phone ?? undefined,
+    createdAt: result.user.created_at
+  };
 }
 
 export async function deleteStaffUser(id: string): Promise<{ success: boolean; message: string }> {
-  return apiCall<{ success: boolean; message: string }>(
-    `${API_BASE}/admin/users/${id}`,
-    { method: 'DELETE', headers: getAuthHeaders() },
-    () => {
-      const list = getStored<User[]>('users', defaultUsers);
-      setStored('users', list.filter(u => u.id !== id));
-      return { success: true, message: 'Staff user deleted successfully' };
-    }
-  );
+  return callAdminUsers({
+    action: 'delete',
+    id
+  });
 }
 
 // AUDIT / ANALYTICS
 export async function fetchAuditLogs(): Promise<AuditLog[]> {
-  return apiCall<AuditLog[]>(
-    `${API_BASE}/audit-logs`,
-    { headers: getAuthHeaders() },
-    () => getStored<AuditLog[]>('audit_logs', [])
-  );
+  const { data, error } = await supabase
+    .from('audit_logs')
+    .select('*')
+    .order('timestamp', { ascending: false });
+
+  if (error) throw error;
+
+  return (data ?? []).map((log) => ({
+    id: log.id,
+    timestamp: log.timestamp,
+    userEmail: log.user_email,
+    action: log.action,
+    details: log.details ?? {}
+  }));
 }
 
 export async function logVisitor(pathName?: string): Promise<void> {
   try {
-    const list = getStored<VisitorLog[]>('visitor_logs', []);
-    const log: VisitorLog = {
-      id: `vis-${Date.now()}`,
-      ip: '127.0.0.1',
+    await supabase.from('visitor_logs').insert({
       path: pathName || window.location.pathname,
       referrer: document.referrer || 'Direct',
-      userAgent: navigator.userAgent,
-      timestamp: new Date().toISOString()
-    };
-    setStored('visitor_logs', [log, ...list.slice(0, 99)]);
+      user_agent: navigator.userAgent
+    });
   } catch {
     // Ignore logging errors
   }
 }
 
 export async function fetchVisitorLogs(): Promise<VisitorLog[]> {
-  return apiCall<VisitorLog[]>(
-    `${API_BASE}/analytics/visitor-logs`,
-    { headers: getAuthHeaders() },
-    () => getStored<VisitorLog[]>('visitor_logs', [])
-  );
+  const { data, error } = await supabase
+    .from('visitor_logs')
+    .select('*')
+    .order('timestamp', { ascending: false });
+
+  if (error) throw error;
+
+  return (data ?? []).map((log) => ({
+    id: log.id,
+    ip: log.ip,
+    path: log.path,
+    referrer: log.referrer,
+    userAgent: log.user_agent,
+    deviceType: log.device_type,
+    timestamp: log.timestamp
+  }));
 }
 
 export async function fetchAnalyticsSummary(): Promise<any> {
-  return apiCall<any>(
-    `${API_BASE}/analytics/summary`,
-    { headers: getAuthHeaders() },
-    () => {
-      const leads = getStored<Lead[]>('leads', []);
-      const quotes = getStored<QuoteRequest[]>('quotes', []);
-      const products = getStored<Product[]>('products', defaultProducts);
-      const projects = getStored<Project[]>('projects', defaultProjects);
-      return {
-        totalLeads: leads.length,
-        totalQuotes: quotes.length,
-        totalProducts: products.length,
-        totalProjects: projects.length,
-        newLeadsToday: leads.filter(l => l.status === 'New').length,
-        pendingQuotes: quotes.filter(q => q.status === 'Pending').length
-      };
-    }
-  );
+  const [leadsResult, quotesResult, productsResult, projectsResult] = await Promise.all([
+    supabase.from('leads').select('id, status, created_at'),
+    supabase.from('quotes').select('id, status'),
+    supabase.from('products').select('id'),
+    supabase.from('projects').select('id')
+  ]);
+
+  if (leadsResult.error) throw leadsResult.error;
+  if (quotesResult.error) throw quotesResult.error;
+  if (productsResult.error) throw productsResult.error;
+  if (projectsResult.error) throw projectsResult.error;
+
+  const today = new Date().toISOString().slice(0, 10);
+  const leads = leadsResult.data ?? [];
+  const quotes = quotesResult.data ?? [];
+
+  return {
+    totalLeads: leads.length,
+    totalQuotes: quotes.length,
+    totalProducts: productsResult.data?.length ?? 0,
+    totalProjects: projectsResult.data?.length ?? 0,
+    newLeadsToday: leads.filter(
+      (lead) => lead.status === 'New' && lead.created_at?.startsWith(today)
+    ).length,
+    pendingQuotes: quotes.filter((quote) => quote.status === 'Pending').length
+  };
 }
 
 export async function fetchEmailNotifications(): Promise<EmailNotification[]> {
-  return apiCall<EmailNotification[]>(
-    `${API_BASE}/admin/email-notifications`,
-    { headers: getAuthHeaders() },
-    () => getStored<EmailNotification[]>('email_notifications', [])
-  );
-}
+  const { data, error } = await supabase
+    .from('email_notifications')
+    .select('*')
+    .order('sent_at', { ascending: false });
 
-export async function triggerTestEmail(): Promise<{ success: boolean; message: string }> {
-  return apiCall<{ success: boolean; message: string }>(
-    `${API_BASE}/admin/test-email`,
-    { method: 'POST', headers: getAuthHeaders() },
-    () => ({ success: true, message: 'Test email notification generated locally.' })
-  );
+  if (error) throw error;
+
+  return (data ?? []).map((notification) => ({
+    id: notification.id,
+    to: notification.to_email,
+    subject: notification.subject,
+    formType: notification.form_type,
+    customerName: notification.customer_name,
+    customerEmail: notification.customer_email,
+    customerPhone: notification.customer_phone,
+    details: notification.details ?? {},
+    sentAt: notification.sent_at,
+    status: notification.status,
+    deliveryMethod: notification.delivery_method,
+    errorMessage: notification.error_message
+  }));
 }
 
 export async function changeUserPassword(currentPassword: string, newPassword: string): Promise<{ success: boolean; message: string }> {
-  return apiCall<{ success: boolean; message: string }>(
-    `${API_BASE}/auth/change-password`,
-    {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ currentPassword, newPassword })
-    },
-    () => ({ success: true, message: 'Password updated successfully' })
-  );
+  const { data: authData, error: userError } = await supabase.auth.getUser();
+
+  if (userError) throw userError;
+  if (!authData.user?.email) {
+    throw new Error('You must be signed in to change your password.');
+  }
+
+  const { error: verifyError } = await supabase.auth.signInWithPassword({
+    email: authData.user.email,
+    password: currentPassword
+  });
+
+  if (verifyError) {
+    throw new Error('Current password is incorrect.');
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    password: newPassword
+  });
+
+  if (error) throw error;
+
+  return {
+    success: true,
+    message: 'Password updated successfully'
+  };
 }
 
-export async function updateUserProfile(updates: { name?: string; email?: string; phone?: string }): Promise<{ success: boolean; user: any; token: string; message: string }> {
-  return apiCall<{ success: boolean; user: any; token: string; message: string }>(
-    `${API_BASE}/auth/update-profile`,
-    {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(updates)
-    },
-    () => {
-      const cached = localStorage.getItem('sarva_solar_user');
-      const user = cached ? JSON.parse(cached) : { id: 'usr-0', name: 'Sarva Solar Admin', email: 'sarvasolars@gmail.com', role: 'Admin' };
-      const updatedUser = { ...user, ...updates };
-      const token = localStorage.getItem('sarva_solar_token') || 'sarva-token';
-      localStorage.setItem('sarva_solar_user', JSON.stringify(updatedUser));
-      return { success: true, user: updatedUser, token, message: 'Profile updated successfully' };
-    }
-  );
+export async function updateUserProfile(updates: { name?: string; email?: string; phone?: string }): Promise<{ success: boolean; user: User; message: string }> {
+  const { data: authData, error: authError } = await supabase.auth.getUser();
+
+  if (authError) throw authError;
+  if (!authData.user) throw new Error('You must be signed in to update your profile.');
+
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .update({
+      name: updates.name,
+      email: updates.email,
+      phone: updates.phone
+    })
+    .eq('id', authData.user.id)
+    .select('id, name, email, role, phone, created_at')
+    .single();
+
+  if (profileError) throw profileError;
+
+  if (updates.email && updates.email !== authData.user.email) {
+    const { error: emailError } = await supabase.auth.updateUser({
+      email: updates.email
+    });
+    if (emailError) throw emailError;
+  }
+
+  const user: User = {
+    id: profile.id,
+    name: profile.name,
+    email: profile.email,
+    role: profile.role as User['role'],
+    phone: profile.phone ?? undefined,
+    createdAt: profile.created_at
+  };
+
+  return {
+    success: true,
+    user,
+    message: 'Profile updated successfully'
+  };
 }
 
 // Media Upload & Storage APIs
 export async function uploadMediaFile(file: File): Promise<{ success: boolean; url: string; fileName: string; size: number; mediaType: string }> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = async () => {
-      try {
-        const fileData = reader.result as string;
-        const res = await fetch(`${API_BASE}/upload`, {
-          method: 'POST',
-          headers: getAuthHeaders(),
-          body: JSON.stringify({ fileName: file.name, fileData })
-        });
-        const contentType = res.headers.get('content-type') || '';
-        if (res.ok && contentType.includes('application/json')) {
-          const data = await res.json();
-          resolve(data);
-        } else {
-          // Fallback: Store locally as data URL if API not available
-          const url = fileData;
-          resolve({
-            success: true,
-            url,
-            fileName: file.name,
-            size: file.size,
-            mediaType: file.type.startsWith('video/') ? 'video' : file.type.includes('pdf') ? 'document' : 'image'
-          });
-        }
-      } catch (err) {
-        // Fallback for offline/static deployment
-        const fileData = reader.result as string;
-        resolve({
-          success: true,
-          url: fileData,
-          fileName: file.name,
-          size: file.size,
-          mediaType: file.type.startsWith('video/') ? 'video' : file.type.includes('pdf') ? 'document' : 'image'
-        });
-      }
-    };
-    reader.onerror = () => reject(new Error('Failed to read file'));
-    reader.readAsDataURL(file);
-  });
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '-');
+  const fileName = `${Date.now()}-${safeName}`;
+
+  const { error } = await supabase.storage
+    .from('media')
+    .upload(fileName, file, {
+      contentType: file.type || 'application/octet-stream',
+      upsert: false
+    });
+
+  if (error) throw error;
+
+  const { data } = supabase.storage
+    .from('media')
+    .getPublicUrl(fileName);
+
+  return {
+    success: true,
+    url: data.publicUrl,
+    fileName,
+    size: file.size,
+    mediaType: file.type.startsWith('video/')
+      ? 'video'
+      : file.type.includes('pdf')
+        ? 'document'
+        : 'image'
+  };
 }
 
 export async function fetchMediaList(): Promise<Array<{ name: string; url: string; size: number; type: string; createdAt: string }>> {
-  return apiCall<Array<{ name: string; url: string; size: number; type: string; createdAt: string }>>(
-    `${API_BASE}/media`,
-    { headers: getAuthHeaders() },
-    () => []
-  );
+  const { data, error } = await supabase.storage
+    .from('media')
+    .list('', {
+      limit: 1000,
+      sortBy: { column: 'created_at', order: 'desc' }
+    });
+
+  if (error) throw error;
+
+  return (data ?? [])
+    .filter((file) => file.name)
+    .map((file) => {
+      const { data: publicUrl } = supabase.storage
+        .from('media')
+        .getPublicUrl(file.name);
+
+      return {
+        name: file.name,
+        url: publicUrl.publicUrl,
+        size: file.metadata?.size ?? 0,
+        type: file.metadata?.mimetype ?? 'application/octet-stream',
+        createdAt: file.created_at ?? new Date().toISOString()
+      };
+    });
 }
 
 export async function deleteMediaFile(filename: string): Promise<{ success: boolean; message: string }> {
-  return apiCall<{ success: boolean; message: string }>(
-    `${API_BASE}/media/${encodeURIComponent(filename)}`,
-    { method: 'DELETE', headers: getAuthHeaders() },
-    () => ({ success: true, message: 'File deleted locally' })
-  );
+  const { error } = await supabase.storage
+    .from('media')
+    .remove([filename]);
+
+  if (error) throw error;
+
+  return {
+    success: true,
+    message: 'File deleted successfully'
+  };
 }
-
-export async function resetFullStackDatabase(): Promise<{ success: boolean; message: string }> {
-  // Clear any client caches
-  const keysToRemove = [
-    'sarva_solar_leads',
-    'sarva_solar_quotes',
-    'sarva_solar_products',
-    'sarva_solar_projects',
-    'sarva_solar_blogs',
-    'sarva_solar_services',
-    'sarva_solar_subsidies',
-    'sarva_solar_testimonials',
-    'sarva_solar_faqs',
-    'sarva_solar_gallery',
-    'sarva_solar_jobs',
-    'sarva_solar_job_applications',
-    'sarva_solar_settings',
-    'sarva_solar_hero_slides',
-    'sarva_solar_visitor_logs',
-    'sarva_solar_email_notifications'
-  ];
-  keysToRemove.forEach(k => {
-    try { localStorage.removeItem(k); } catch (e) {}
-  });
-
-  return apiCall<{ success: boolean; message: string }>(
-    `${API_BASE}/admin/reset-database`,
-    { method: 'POST', headers: getAuthHeaders() },
-    () => {
-      notifyDataUpdated();
-      return { success: true, message: 'Database reset to initial clean defaults' };
-    }
-  );
-}
-
