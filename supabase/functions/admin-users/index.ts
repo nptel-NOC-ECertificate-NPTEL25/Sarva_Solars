@@ -28,7 +28,16 @@ async function supabaseRequest(
 }
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return json({}, 204);
+  if (req.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "authorization, content-type, apikey, x-client-info",
+        "Access-Control-Allow-Methods": "POST, OPTIONS"
+      }
+    });
+  }
 
   if (req.method !== "POST") {
     return json({ error: "Method not allowed" }, 405);
@@ -197,10 +206,10 @@ Deno.serve(async (req) => {
       });
     }
 
-    const profileResponse = await supabaseRequest(
+    const profileFetchResponse = await supabaseRequest(
       `/rest/v1/profiles?id=eq.${encodeURIComponent(id)}&select=id,name,email,role,phone,created_at`
     );
-    const profilesUpdated = await profileResponse.json();
+    const profilesUpdated = await profileFetchResponse.json();
 
     return json({
       success: true,
