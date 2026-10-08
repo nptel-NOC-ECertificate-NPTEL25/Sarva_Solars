@@ -320,19 +320,6 @@ export function App() {
 
         {currentView === 'contact' && <ContactPage settings={settings} />}
 
-        {currentView === 'admin' && (
-          <AdminPage
-            user={currentUser}
-            onLoginSuccess={(u) => setCurrentUser(u)}
-            onLogout={async () => {
-              try {
-                await signOut();
-              } finally {
-                setCurrentUser(null);
-              }
-            }}
-          />
-        )}
       </main>
 
       {/* Footer */}
