@@ -72,7 +72,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ settings }) => {
                 </div>
                 <div>
                   <p className="text-slate-400 font-medium">Customer Support Phone</p>
-                  <p className="font-bold text-sm text-white">
+                  <p className="font-bold text-sm text-white flex flex-wrap gap-x-2 gap-y-1">
                     <a href={`tel:${settings.phone1.replace(/\s+/g, '')}`}>{settings.phone1}</a> /{' '}
                     <a href={`tel:${settings.phone2.replace(/\s+/g, '')}`}>{settings.phone2}</a>
                   </p>
@@ -85,7 +85,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ settings }) => {
                 </div>
                 <div>
                   <p className="text-slate-400 font-medium">Official Email</p>
-                  <p className="font-bold text-sm text-white">
+                  <p className="font-bold text-sm text-white flex flex-wrap gap-x-2 gap-y-1">
                     <a href={`mailto:${settings.email}`}>{settings.email}</a>
                   </p>
                 </div>
@@ -97,7 +97,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ settings }) => {
                 </div>
                 <div>
                   <p className="text-slate-400 font-medium">Working Hours</p>
-                  <p className="font-bold text-sm text-white">{settings.workingHours}</p>
+                  <p className="font-bold text-sm text-white flex flex-wrap gap-x-2 gap-y-1">{settings.workingHours}</p>
                 </div>
               </div>
             </div>

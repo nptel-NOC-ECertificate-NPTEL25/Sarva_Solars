@@ -67,7 +67,7 @@ export const Footer: React.FC<FooterProps> = ({ settings, onNavigate, onOpenQuot
               </div>
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
-                <div className="flex gap-3">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                   <a href={`tel:${settings.phone1.replace(/\s+/g, '')}`} className="hover:text-amber-400 font-medium">
                     {settings.phone1}
                   </a>

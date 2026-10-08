@@ -136,7 +136,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({ blogs, onOpenQuoteModal }) =
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 font-poppins">
                 {selectedBlog.title}
               </h2>
-              <div className="flex items-center gap-4 text-xs text-slate-500 border-b border-slate-200 pb-3">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 border-b border-slate-200 pb-3">
                 <span>By {selectedBlog.author}</span>
                 <span>•</span>
                 <span>Published {selectedBlog.publishedAt}</span>

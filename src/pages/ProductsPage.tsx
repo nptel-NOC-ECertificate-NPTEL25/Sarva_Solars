@@ -167,7 +167,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ products, onOpenQuot
               </h4>
               <div className="space-y-1.5 font-mono">
                 {Object.entries(selectedProduct.specs).map(([k, v]) => (
-                  <div key={k} className="flex justify-between border-b border-slate-200 pb-1">
+                  <div key={k} className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1 border-b border-slate-200 pb-1">
                     <span className="text-slate-500 font-sans">{k}:</span>
                     <span className="font-bold text-slate-800">{v}</span>
                   </div>

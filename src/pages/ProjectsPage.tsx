@@ -104,7 +104,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onOpenQuot
                 <h3 className="text-xl font-bold text-slate-900 font-poppins">
                   {p.title}
                 </h3>
-                <div className="flex items-center gap-2 text-xs text-slate-500 mt-1">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500 mt-1">
                   <MapPin className="w-3.5 h-3.5 text-amber-500" />
                   <span>{p.location}, {p.state}</span>
                   <span>•</span>
