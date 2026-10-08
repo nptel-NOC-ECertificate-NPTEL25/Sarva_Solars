@@ -91,7 +91,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden xl:flex items-center gap-1 2xl:gap-2 shrink-0">
+          <nav className="hidden xl:flex items-center gap-0.5 2xl:gap-1 shrink-0">
             {navItems.map((item) => {
               const isActive = currentView === item.id;
               return (
@@ -105,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({
                         setServicesDropdown(false);
                       }
                     }}
-                    className={`px-2.5 py-2 rounded-lg text-xs 2xl:text-sm font-semibold transition-all whitespace-nowrap flex items-center gap-1 ${
+                    className={`px-2 py-2 rounded-lg text-xs 2xl:text-sm font-semibold transition-all whitespace-nowrap flex items-center gap-1 ${
                       isActive
                         ? 'text-blue-600 bg-blue-50'
                         : item.highlight
