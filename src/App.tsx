@@ -62,7 +62,7 @@ const defaultFallbackSettings: AppSettings = {
 };
 
 export function App() {
-  const [currentView, setCurrentView] = useState<string>('home');
+  const [currentView, setCurrentView] = useState<string>(() => window.location.pathname === '/admin' ? 'admin' : 'home');
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState<boolean>(false);
 
   // Loaded API Data
@@ -175,7 +175,38 @@ export function App() {
     };
   }, [currentView]);
 
-  const handleNavigate = (view: string) => {
+  useEffect(() => {
+    const handlePopState = async () => {
+      const isAdminPath = window.location.pathname === '/admin';
+
+      if (!isAdminPath && currentView === 'admin') {
+        await signOut();
+        setCurrentUser(null);
+        setCurrentView('home');
+      } else if (isAdminPath && currentView !== 'admin') {
+        setCurrentView('admin');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [currentView]);
+
+  const handleNavigate = async (view: string) => {
+    const nextPath = view === 'admin' ? '/admin' : '/';
+
+    if (currentView === 'admin' && view !== 'admin') {
+      try {
+        await signOut();
+      } finally {
+        setCurrentUser(null);
+      }
+    }
+
+    if (window.location.pathname !== nextPath) {
+      window.history.pushState({}, '', nextPath);
+    }
+
     setCurrentView(view);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -187,6 +218,24 @@ export function App() {
         <p className="text-xs font-bold uppercase tracking-widest text-slate-500 font-poppins">
           Loading Sarva Solar Cleantech Platform...
         </p>
+      </div>
+    );
+  }
+
+  if (currentView === 'admin') {
+    return (
+      <div className="min-h-screen bg-slate-50 text-slate-900 font-inter antialiased">
+        <AdminPage
+          user={currentUser}
+          onLoginSuccess={(u) => setCurrentUser(u)}
+          onLogout={async () => {
+            try {
+              await signOut();
+            } finally {
+              setCurrentUser(null);
+            }
+          }}
+        />
       </div>
     );
   }

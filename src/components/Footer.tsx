@@ -5,7 +5,6 @@ import {
   Mail,
   MapPin,
   Clock,
-  ShieldCheck,
   Award,
   Send,
   MessageCircle,
@@ -186,15 +185,11 @@ export const Footer: React.FC<FooterProps> = ({ settings, onNavigate, onOpenQuot
             <span className="hover:text-slate-300 cursor-pointer" onClick={() => onNavigate('calculators')}>
               Solar ROI Calculator
             </span>
-            <button
-              onClick={() => onNavigate('admin')}
-              className="hover:text-amber-400 text-slate-400 transition-colors cursor-pointer flex items-center gap-1 text-xs"
-              title="Staff & Management Portal"
-            >
-              <ShieldCheck className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-              <span>Admin Login</span>
-            </button>
           </div>
+        </div>
+
+        <div className="mt-4 pt-4 border-t border-slate-800 text-center text-[10px] uppercase tracking-widest text-slate-500">
+          Developed By <span className="font-bold text-slate-400">DHARMINOVA GROUPS</span>
         </div>
       </div>
 
