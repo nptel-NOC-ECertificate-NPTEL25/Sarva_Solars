@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   Sparkles
 } from 'lucide-react';
-import { jsPDF } from 'jspdf';
 
 export const SolarCalculator: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'bill' | 'emi'>('bill');
@@ -58,7 +57,8 @@ export const SolarCalculator: React.FC = () => {
   const totalInterest = Math.max(0, totalPayable - loanAmount);
 
   // PDF Export using jsPDF
-  const handleDownloadPDF = () => {
+  const handleDownloadPDF = async () => {
+    const { jsPDF } = await import('jspdf');
     const doc = new jsPDF();
 
     // Header styling

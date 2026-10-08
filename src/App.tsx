@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { QuoteModal } from './components/QuoteModal';
@@ -13,7 +13,7 @@ import { BlogPage } from './pages/BlogPage';
 import { GalleryPage } from './pages/GalleryPage';
 import { CareersPage } from './pages/CareersPage';
 import { ContactPage } from './pages/ContactPage';
-import { AdminPage } from './pages/AdminPage';
+const AdminPage = lazy(() => import('./pages/AdminPage').then((module) => ({ default: module.AdminPage })));
 
 import {
   AppSettings,
@@ -224,8 +224,9 @@ export function App() {
 
   if (currentView === 'admin') {
     return (
-      <div className="min-h-screen bg-slate-50 text-slate-900 font-inter antialiased">
-        <AdminPage
+      <Suspense fallback={<div className="min-h-screen bg-slate-50 flex items-center justify-center"><p className="text-sm font-semibold text-slate-600">Loading admin panel...</p></div>}>
+        <div className="min-h-screen bg-slate-50 text-slate-900 font-inter antialiased">
+          <AdminPage
           user={currentUser}
           onLoginSuccess={(u) => setCurrentUser(u)}
           onLogout={async () => {
@@ -235,8 +236,9 @@ export function App() {
               setCurrentUser(null);
             }
           }}
-        />
-      </div>
+          />
+        </div>
+      </Suspense>
     );
   }
 
