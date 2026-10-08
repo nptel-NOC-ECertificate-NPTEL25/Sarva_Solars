@@ -1685,14 +1685,59 @@ export const AdminPage: React.FC<AdminPageProps> = ({ user, onLoginSuccess, onLo
               <p className="text-xs text-slate-500">Track and update pipeline status for every lead.</p>
             </div>
 
-            <a
-              href="/api/leads/export/csv"
-              download="sarva_solar_leads.csv"
+            <button
+              type="button"
+              onClick={() => {
+                const headers = [
+                  'ID', 'Full Name', 'Email', 'Phone', 'State', 'City',
+                  'Solar For', 'Monthly Bill', 'Roof Type', 'Connection Type',
+                  'Finance Interest', 'Status', 'Assigned To', 'Notes',
+                  'Created At', 'Updated At'
+                ];
+
+                const escapeCsv = (value: unknown) =>
+                  `"${String(value ?? '').replace(/"/g, '""')}"`;
+
+                const rows = leads.map((lead) => [
+                  lead.id,
+                  lead.fullName,
+                  lead.email,
+                  lead.phone,
+                  lead.state,
+                  lead.city,
+                  lead.solarFor,
+                  lead.monthlyBill,
+                  lead.roofType,
+                  lead.connectionType,
+                  lead.financeInterest,
+                  lead.status,
+                  lead.assignedTo,
+                  lead.notes,
+                  lead.createdAt,
+                  lead.updatedAt
+                ]);
+
+                const csv = [headers, ...rows]
+                  .map((row) => row.map(escapeCsv).join(','))
+                  .join('\\r\\n');
+
+                const blob = new Blob([`\\uFEFF${csv}`], {
+                  type: 'text/csv;charset=utf-8;'
+                });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'sarva_solar_leads.csv';
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                URL.revokeObjectURL(url);
+              }}
               className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 px-4 rounded-xl flex items-center gap-2 shadow-md"
             >
               <Download className="w-4 h-4" />
               <span>Export Leads CSV</span>
-            </a>
+            </button>
           </div>
 
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50 p-3 rounded-2xl">
