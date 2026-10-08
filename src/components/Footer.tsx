@@ -42,7 +42,7 @@ export const Footer: React.FC<FooterProps> = ({ settings, onNavigate, onOpenQuot
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => onNavigate('home')}>
               <img
-                src="/assets/.aistudio/logo.png"
+                src="/sarva-solar-logo.png"
                 alt="SARVA GROUP Logo"
                 className="w-12 h-12 rounded-2xl object-cover shadow-lg hover:scale-105 transition-transform"
               />

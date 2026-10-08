@@ -74,7 +74,7 @@ export const Header: React.FC<HeaderProps> = ({
             className="flex items-center gap-3 cursor-pointer group select-none shrink-0 mr-2 xl:mr-4"
           >
             <img
-              src="/assets/.aistudio/logo.png"
+              src="/sarva-solar-logo.png"
               alt="SARVA GROUP Logo"
               className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl object-cover shadow-lg group-hover:scale-105 transition-transform shrink-0"
             />
