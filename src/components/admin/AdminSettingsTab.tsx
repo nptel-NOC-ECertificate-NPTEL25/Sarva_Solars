@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Settings as SettingsIcon, Save, Building2, MapPin, Phone, Mail, HelpCircle } from 'lucide-react';
 import { AppSettings } from '../../types';
 import { updateSettings, notifyDataUpdated } from '../../services/api';
@@ -14,6 +14,12 @@ export const AdminSettingsTab: React.FC<AdminSettingsTabProps> = ({
   setSettingsState,
   showToast
 }) => {
+  const [formData, setFormData] = useState<AppSettings>(settings ?? ({} as AppSettings));
+
+  useEffect(() => {
+    if (settings) setFormData(settings);
+  }, [settings]);
+
   if (!settings) {
     return (
       <div className="p-8 text-center text-slate-500 bg-white rounded-3xl border border-slate-200">
@@ -21,8 +27,6 @@ export const AdminSettingsTab: React.FC<AdminSettingsTabProps> = ({
       </div>
     );
   }
-
-  const [formData, setFormData] = useState<AppSettings>(settings);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();

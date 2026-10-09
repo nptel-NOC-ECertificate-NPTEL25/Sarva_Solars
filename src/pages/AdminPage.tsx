@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { AdminSettingsTab } from '../components/admin/AdminSettingsTab';
 import {
   User,
   Lead,
@@ -857,157 +858,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ user, onLoginSuccess, onLo
         </div>
       )}
 
-      {/* TAB 2: SITE SETTINGS (PIN TO PIN) */}
-      {activeTab === 'settings' && settings && (
-        <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-xl space-y-6 text-xs">
-          <div className="flex justify-between items-center border-b border-slate-200 pb-4">
-            <div>
-              <h3 className="text-xl font-bold text-slate-900 font-poppins">
-                Company Details & Header/Footer Settings
-              </h3>
-              <p className="text-slate-500">Edit business contacts, addresses, announcement bar, map URLs pin-to-pin.</p>
-            </div>
-            <button
-              onClick={async () => {
-                if (!window.confirm('Are you sure you want to save and update company & website settings?')) {
-                  return;
-                }
-                await updateSettings(settings);
-                showToast('Website Settings & Company Info updated successfully!');
-                notifyDataUpdated();
-              }}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-black py-2.5 px-6 rounded-xl shadow-lg flex items-center gap-2"
-            >
-              <Save className="w-4 h-4" />
-              <span>Save All Settings</span>
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <h4 className="font-extrabold text-slate-900 text-sm">General Branding</h4>
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Company Name</label>
-                <input
-                  type="text"
-                  value={settings.companyName}
-                  onChange={(e) => setSettingsState({ ...settings, companyName: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-slate-900"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Company Tagline</label>
-                <input
-                  type="text"
-                  value={settings.tagline}
-                  onChange={(e) => setSettingsState({ ...settings, tagline: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-slate-900"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Address (Appears in Header & Footer)</label>
-                <textarea
-                  rows={3}
-                  value={settings.address}
-                  onChange={(e) => setSettingsState({ ...settings, address: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-slate-900"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Google Maps Embed URL</label>
-                <input
-                  type="text"
-                  value={settings.googleMapsEmbedUrl || ''}
-                  onChange={(e) => setSettingsState({ ...settings, googleMapsEmbedUrl: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-slate-900"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <h4 className="font-extrabold text-slate-900 text-sm">Contact Numbers & Hours</h4>
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Primary Phone</label>
-                <input
-                  type="text"
-                  value={settings.phone1}
-                  onChange={(e) => setSettingsState({ ...settings, phone1: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-slate-900"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Secondary Phone</label>
-                <input
-                  type="text"
-                  value={settings.phone2}
-                  onChange={(e) => setSettingsState({ ...settings, phone2: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-slate-900"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Official Email</label>
-                <input
-                  type="email"
-                  value={settings.email}
-                  onChange={(e) => setSettingsState({ ...settings, email: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-slate-900"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">WhatsApp Chat Number (Without +)</label>
-                <input
-                  type="text"
-                  value={settings.whatsappNumber}
-                  onChange={(e) => setSettingsState({ ...settings, whatsappNumber: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-slate-900"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Working Hours</label>
-                <input
-                  type="text"
-                  value={settings.workingHours}
-                  onChange={(e) => setSettingsState({ ...settings, workingHours: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-slate-900"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-4 border-t border-slate-200 space-y-4">
-            <h4 className="font-extrabold text-slate-900 text-sm">Top Announcement Banner</h4>
-            <div>
-              <label className="block font-bold text-slate-700 mb-1">Announcement Text</label>
-              <input
-                type="text"
-                value={settings.announcementBarText}
-                onChange={(e) => setSettingsState({ ...settings, announcementBarText: e.target.value })}
-                className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-slate-900"
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="showBar"
-                checked={settings.showAnnouncementBar}
-                onChange={(e) => setSettingsState({ ...settings, showAnnouncementBar: e.target.checked })}
-                className="w-4 h-4 accent-amber-500 rounded"
-              />
-              <label htmlFor="showBar" className="font-bold text-slate-800 cursor-pointer">
-                Display Announcement Bar across Website
-              </label>
-            </div>
-          </div>
-
-        </div>
+      {/* TAB 2: SITE SETTINGS */}
+      {activeTab === 'settings' && (
+        <AdminSettingsTab
+          settings={settings}
+          setSettingsState={(nextSettings) => setSettingsState(nextSettings)}
+          showToast={showToast}
+        />
       )}
 
       {/* TAB 3: SERVICES */}
