@@ -103,7 +103,7 @@ export function App() {
         fetchTestimonials().catch(() => []),
         fetchGallery().catch(() => []),
         fetchCurrentUser().catch(() => null),
-        fetchHeroSlides().catch(() => [])
+        fetchHeroSlides().catch((error) => { console.error('[Supabase Hero Slides]', error); return []; })
       ]);
       setSettings(set || defaultFallbackSettings);
       if (serv) setServices(serv);

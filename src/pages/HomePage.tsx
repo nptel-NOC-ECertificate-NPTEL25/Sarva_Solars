@@ -184,7 +184,15 @@ export const HomePage: React.FC<HomePageProps> = ({
         onMouseEnter={() => setIsAutoPlaying(false)}
         onMouseLeave={() => setIsAutoPlaying(true)}
       >
-        {/* Background Media (Video or Ambient Overlay) */}
+        {/* Background Media (Image or Video) */}
+        {activeSlide.mediaType === 'image' && activeSlide.mediaUrl && (
+          <img
+            key={activeSlide.id}
+            src={activeSlide.mediaUrl}
+            alt={activeSlide.title || 'Sarva Solar hero background'}
+            className="absolute inset-0 w-full h-full object-cover opacity-75 scale-105 transition-all duration-1000"
+          />
+        )}
         {activeSlide.mediaType === 'video' && activeVideoInfo ? (
           activeVideoInfo.type === 'youtube' || activeVideoInfo.type === 'vimeo' ? (
             <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none scale-125 opacity-75">

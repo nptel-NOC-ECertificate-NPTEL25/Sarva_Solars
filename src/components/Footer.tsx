@@ -194,16 +194,19 @@ export const Footer: React.FC<FooterProps> = ({ settings, onNavigate, onOpenQuot
       </div>
 
       {/* Floating WhatsApp Button */}
-      <a
-        href={`https://wa.me/${settings.whatsappNumber}?text=Hi%20Sarva%20Solar!%20I%20am%20interested%20in%20a%20solar%20rooftop%20quote.`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 bg-emerald-500 hover:bg-emerald-600 text-white p-3.5 rounded-full shadow-2xl transition-all transform hover:scale-110 flex items-center gap-2 border-2 border-white/20"
-        title="Chat on WhatsApp"
-      >
-        <MessageCircle className="w-6 h-6" />
-        <span className="hidden sm:inline font-extrabold text-xs pr-1">Chat on WhatsApp</span>
-      </a>
+      {settings.whatsappNumber?.replace(/\D/g, '') && (
+        <a
+          href={`https://wa.me/${settings.whatsappNumber.replace(/\D/g, '')}?text=Hi%20Sarva%20Solar20I%20am%20interested%20in%20a%20solar%20rooftop%20quote.`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 bg-emerald-500 hover:bg-emerald-600 text-white p-3 sm:p-3.5 rounded-full shadow-2xl transition-all transform hover:scale-110 flex items-center gap-2 border-2 border-white/20"
+          title="Chat on WhatsApp"
+          aria-label="Chat with Sarva Solar on WhatsApp"
+        >
+          <MessageCircle className="w-6 h-6" />
+          <span className="hidden sm:inline font-extrabold text-xs pr-1">Chat on WhatsApp</span>
+        </a>
+      )}
     </footer>
   );
 };
