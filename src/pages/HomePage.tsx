@@ -7,7 +7,6 @@ import {
   TrendingUp,
   Award,
   ChevronRight,
-  ChevronLeft,
   CheckCircle2,
   Users,
   Building2,
@@ -17,8 +16,6 @@ import {
   ArrowRight,
   Sparkles,
   FileCheck,
-  Play,
-  Pause,
   Video as VideoIcon,
   Image as ImageIcon
 } from 'lucide-react';
@@ -94,8 +91,6 @@ export const HomePage: React.FC<HomePageProps> = ({
 
   const slides = heroSlides && heroSlides.length > 0 ? heroSlides : defaultSlides;
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
 
   // Helper to parse video embed info for YouTube, Vimeo, or direct files
   const getVideoEmbedInfo = (url: string) => {
@@ -121,10 +116,6 @@ export const HomePage: React.FC<HomePageProps> = ({
     return { type: 'direct', embedUrl: url };
   };
 
-  // Reset video playing state when slide changes
-  useEffect(() => {
-    setIsVideoPlaying(true);
-  }, [currentSlideIndex]);
 
   // Ensure slide index stays in bounds if slides are added or removed
   useEffect(() => {
@@ -133,25 +124,21 @@ export const HomePage: React.FC<HomePageProps> = ({
     }
   }, [slides.length, currentSlideIndex]);
 
-  // Auto-advance slides every 7 seconds
+  // Images display for 4 seconds; video slides display for 12 seconds.
   useEffect(() => {
-    if (!isAutoPlaying || slides.length <= 1) return;
-    const timer = setInterval(() => {
+    if (slides.length <= 1) return;
+    const activeSlide = slides[currentSlideIndex] || slides[0];
+    const duration = activeSlide?.mediaType === 'video' ? 12000 : 4000;
+    const timer = window.setTimeout(() => {
       setCurrentSlideIndex((prev) => (prev + 1) % slides.length);
-    }, 7000);
-    return () => clearInterval(timer);
-  }, [isAutoPlaying, slides.length]);
+    }, duration);
+    return () => window.clearTimeout(timer);
+  }, [currentSlideIndex, slides]);
 
   const activeSlide = slides[currentSlideIndex] || slides[0];
   const activeVideoInfo = activeSlide.mediaType === 'video' ? getVideoEmbedInfo(activeSlide.mediaUrl) : null;
 
-  const handlePrevSlide = () => {
-    setCurrentSlideIndex((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
-  };
 
-  const handleNextSlide = () => {
-    setCurrentSlideIndex((prev) => (prev + 1) % slides.length);
-  };
 
   const handleCtaClick = (action?: string) => {
     if (!action || action === 'quote') {
@@ -181,8 +168,6 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* Hero Section Slider */}
       <section
         className="relative min-h-[85vh] flex items-center justify-center bg-slate-950 text-white overflow-hidden pt-12 pb-20 group"
-        onMouseEnter={() => setIsAutoPlaying(false)}
-        onMouseLeave={() => setIsAutoPlaying(true)}
       >
         {/* Background Media (Image or Video) */}
         {activeSlide.mediaType === 'image' && activeSlide.mediaUrl && (
@@ -195,7 +180,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         )}
         {activeSlide.mediaType === 'video' && activeVideoInfo ? (
           activeVideoInfo.type === 'youtube' || activeVideoInfo.type === 'vimeo' ? (
-            <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none scale-125 opacity-75 animate-heroCrossfade">
+            <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none scale-125 opacity-75 animate-heroEmbedFade">
               <iframe
                 key={activeSlide.id}
                 src={activeVideoInfo.embedUrl}
@@ -212,8 +197,6 @@ export const HomePage: React.FC<HomePageProps> = ({
               loop
               muted
               playsInline
-              onPlay={() => setIsVideoPlaying(true)}
-              onPause={() => setIsVideoPlaying(false)}
               className="absolute inset-0 w-full h-full object-cover opacity-75 scale-105 animate-heroCrossfade"
             >
               <source src={activeSlide.mediaUrl} type="video/mp4" />
@@ -227,8 +210,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950/25 via-transparent to-slate-950/25" />
         {/* Hero Content Box */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          {!(activeSlide.mediaType === 'video' && isVideoPlaying) ? (
-            <div className="animate-fadeIn">
+          <div key={currentSlideIndex} className="hero-cinematic">
               {/* Badge */}
               {activeSlide.badge && (
                 <div className="inline-flex items-center gap-2 bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs sm:text-sm font-extrabold px-4 py-2 rounded-full mb-6 backdrop-blur-md shadow-lg">
@@ -274,58 +256,9 @@ export const HomePage: React.FC<HomePageProps> = ({
                     <ChevronRight className="w-5 h-5 text-amber-400" />
                   </button>
                 )}
-
-                {activeSlide.mediaType === 'video' && (
-                  <button
-                    type="button"
-                    onClick={() => setIsVideoPlaying(true)}
-                    className="text-xs text-slate-300 hover:text-amber-400 underline font-semibold transition-colors mt-2 sm:mt-0"
-                  >
-                    Hide Overlay for Video
-                  </button>
-                )}
               </div>
             </div>
-          ) : (
-            <div className="mt-20 flex flex-col items-center justify-center animate-fadeIn">
-              <button
-                type="button"
-                onClick={() => setIsVideoPlaying(false)}
-                className="inline-flex items-center gap-2.5 bg-slate-950/25 hover:bg-slate-950/60 border border-amber-400/60 text-amber-300 hover:text-amber-200 text-xs sm:text-sm font-extrabold px-6 py-3 rounded-full backdrop-blur-md transition-all shadow-2xl hover:scale-105 active:scale-95 cursor-pointer ring-1 ring-amber-400/20"
-              >
-                <Pause className="w-4 h-4 text-amber-400 animate-pulse" />
-                <span>Video Playing (Content Hidden) — Click to Show Title & CTAs</span>
-              </button>
-            </div>
-          )}
 
-          {/* Slide Indicator Dots & Play Pause Controls */}
-          {slides.length > 1 && (
-            <div className="mt-10 flex items-center justify-center gap-3">
-              <button
-                type="button"
-                onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-                className="p-1.5 rounded-full bg-slate-900/80 border border-slate-700 text-slate-300 hover:text-amber-400 transition-colors"
-                title={isAutoPlaying ? 'Pause Slideshow' : 'Play Slideshow'}
-              >
-                {isAutoPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-              </button>
-              <div className="flex items-center gap-2">
-                {slides.map((slide, idx) => (
-                  <button
-                    key={slide.id}
-                    onClick={() => setCurrentSlideIndex(idx)}
-                    className={`h-2.5 rounded-full transition-all ${
-                      idx === currentSlideIndex
-                        ? 'w-8 bg-amber-400'
-                        : 'w-2.5 bg-slate-600 hover:bg-slate-400'
-                    }`}
-                    aria-label={`Go to slide ${idx + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
 
           {/* Floating Key Metrics - managed from Admin Settings */}
           {[
@@ -334,7 +267,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             { value: settings.panelWarranty?.trim(), label: 'Panel Warranty', color: 'text-blue-400' },
             { value: settings.customerRating?.trim(), label: 'Customer Rating', color: 'text-amber-400' },
           ].filter((metric) => metric.value).length > 0 && (
-            <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+            <div key={`metrics-${currentSlideIndex}`} className="hero-trust-metrics mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
               {[
                 { value: settings.installedCapacity?.trim(), label: 'Capacity Installed', color: 'text-amber-400' },
                 { value: settings.governmentSubsidy?.trim(), label: 'Government Subsidy', color: 'text-emerald-400' },
