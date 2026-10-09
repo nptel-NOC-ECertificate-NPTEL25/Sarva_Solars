@@ -23,7 +23,7 @@ import {
   Image as ImageIcon
 } from 'lucide-react';
 import { AppSettings, Project, ServiceItem, Testimonial, FAQItem, BlogArticle, HeroSlide } from '../types';
-import { SolarCalculator } from '../components/SolarCalculator';
+const SolarCalculator = React.lazy(() => import('../components/SolarCalculator').then(m => ({ default: m.SolarCalculator })));
 
 interface HomePageProps {
   settings: AppSettings;
@@ -484,7 +484,9 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       {/* Embedded Solar Savings Calculator */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SolarCalculator />
+        <React.Suspense fallback={<div className="py-8 text-center text-sm text-slate-500" role="status">Loading solar calculator...</div>}>
+          <SolarCalculator />
+        </React.Suspense>
       </section>
 
       {/* PM Surya Ghar Government Subsidy Banner */}
