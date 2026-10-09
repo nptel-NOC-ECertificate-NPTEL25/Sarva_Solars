@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { uploadMediaFile } from '../../services/api';
 import { X } from 'lucide-react';
 
 interface EditModalProps {
@@ -12,6 +13,8 @@ export const EditModal: React.FC<EditModalProps> = ({ type, data, onClose, onSav
   const [formData, setFormData] = useState<any>(
     data || getDefaultFormData(type)
   );
+  const [uploadingHeroMedia, setUploadingHeroMedia] = useState(false);
+  const [heroUploadError, setHeroUploadError] = useState('');
 
   function getDefaultFormData(t: string) {
     switch (t) {
@@ -152,12 +155,11 @@ export const EditModal: React.FC<EditModalProps> = ({ type, data, onClose, onSav
             <>
               <div>
                 <label className="block font-bold text-slate-700 mb-1">
-                  Main Headline Title <span className="text-red-500">*</span>
+                  Main Headline Title (Optional)
                 </label>
                 <input
                   type="text"
-                  required
-                  placeholder="e.g. Green Power, Bright Future. Clean Solar Energy for Every Roof."
+                  placeholder="Optional: e.g. Green Power, Bright Future. Clean Solar Energy for Every Roof."
                   value={formData.title || ''}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-slate-900"
@@ -251,6 +253,52 @@ export const EditModal: React.FC<EditModalProps> = ({ type, data, onClose, onSav
                   onChange={(e) => setFormData({ ...formData, mediaUrl: e.target.value })}
                   className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-slate-900 font-mono text-xs"
                 />
+                <div className="mt-3 rounded-xl border border-dashed border-amber-400 bg-amber-50/60 p-3">
+                  <label className="block font-bold text-slate-700 mb-2">
+                    Or upload a {formData.mediaType === 'video' ? 'video' : 'image'} file
+                  </label>
+                  <input
+                    type="file"
+                    accept={formData.mediaType === 'video' ? 'video/*' : 'image/*'}
+                    disabled={uploadingHeroMedia}
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      setHeroUploadError('');
+                      const expectedType = formData.mediaType === 'video' ? 'video/' : 'image/';
+                      if (!file.type.startsWith(expectedType)) {
+                        setHeroUploadError(`Please choose a valid ${formData.mediaType} file.`);
+                        e.target.value = '';
+                        return;
+                      }
+                      setUploadingHeroMedia(true);
+                      try {
+                        const result = await uploadMediaFile(file);
+                        setFormData((previous: any) => ({
+                          ...previous,
+                          mediaUrl: result.url,
+                          mediaType: result.mediaType === 'video' ? 'video' : 'image'
+                        }));
+                      } catch (error: any) {
+                        setHeroUploadError(error?.message || 'Upload failed. Please try again.');
+                      } finally {
+                        setUploadingHeroMedia(false);
+                        e.target.value = '';
+                      }
+                    }}
+                    className="block w-full text-xs text-slate-700 file:mr-3 file:rounded-lg file:border-0 file:bg-amber-400 file:px-3 file:py-2 file:font-bold file:text-slate-950 hover:file:bg-amber-500 disabled:opacity-50"
+                  />
+                  <p className="text-[11px] text-slate-500 mt-2">
+                    Uploads to Sarva Solar's media storage and fills in the public URL automatically. You can also paste an image or video URL above.
+                  </p>
+                  {uploadingHeroMedia && (
+                    <p role="status" className="mt-2 text-amber-700 font-bold">Uploading media…</p>
+                  )}
+                  {heroUploadError && (
+                    <p role="alert" className="mt-2 text-red-600">{heroUploadError}</p>
+                  )}
+                </div>
+
                 {formData.mediaType === 'video' && (
                   <p className="text-[11px] text-slate-500 mt-1">
                     Supports YouTube links (<code className="text-amber-500 font-mono">youtube.com/watch?v=...</code> or <code className="text-amber-500 font-mono">youtu.be/...</code>), Vimeo links, and direct <code className="text-amber-500 font-mono">.mp4</code> videos.

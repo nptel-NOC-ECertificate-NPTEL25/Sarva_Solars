@@ -190,12 +190,12 @@ export const HomePage: React.FC<HomePageProps> = ({
             key={activeSlide.id}
             src={activeSlide.mediaUrl}
             alt={activeSlide.title || 'Sarva Solar hero background'}
-            className="absolute inset-0 w-full h-full object-cover opacity-75 scale-105 transition-all duration-1000"
+            className="absolute inset-0 w-full h-full object-cover opacity-75 scale-105 animate-heroCrossfade"
           />
         )}
         {activeSlide.mediaType === 'video' && activeVideoInfo ? (
           activeVideoInfo.type === 'youtube' || activeVideoInfo.type === 'vimeo' ? (
-            <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none scale-125 opacity-75">
+            <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none scale-125 opacity-75 animate-heroCrossfade">
               <iframe
                 key={activeSlide.id}
                 src={activeVideoInfo.embedUrl}
@@ -214,7 +214,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               playsInline
               onPlay={() => setIsVideoPlaying(true)}
               onPause={() => setIsVideoPlaying(false)}
-              className="absolute inset-0 w-full h-full object-cover opacity-75 scale-105 transition-all duration-1000"
+              className="absolute inset-0 w-full h-full object-cover opacity-75 scale-105 animate-heroCrossfade"
             >
               <source src={activeSlide.mediaUrl} type="video/mp4" />
               <source src={activeSlide.mediaUrl} type="video/webm" />
@@ -225,27 +225,6 @@ export const HomePage: React.FC<HomePageProps> = ({
         {/* Gradient Overlays - Reduced darkness to 25% */}
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/25 via-slate-950/20 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950/25 via-transparent to-slate-950/25" />
-
-        {/* Slide Navigation Arrows */}
-        {slides.length > 1 && (
-          <>
-            <button
-              onClick={handlePrevSlide}
-              aria-label="Previous Slide"
-              className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-slate-900/60 hover:bg-amber-500 hover:text-slate-950 border border-slate-700/80 text-white backdrop-blur-md flex items-center justify-center transition-all opacity-80 hover:opacity-100 shadow-xl"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-            <button
-              onClick={handleNextSlide}
-              aria-label="Next Slide"
-              className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-slate-900/60 hover:bg-amber-500 hover:text-slate-950 border border-slate-700/80 text-white backdrop-blur-md flex items-center justify-center transition-all opacity-80 hover:opacity-100 shadow-xl"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-          </>
-        )}
-
         {/* Hero Content Box */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           {!(activeSlide.mediaType === 'video' && isVideoPlaying) ? (
@@ -263,9 +242,11 @@ export const HomePage: React.FC<HomePageProps> = ({
               )}
 
               {/* Main Headline */}
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black font-poppins tracking-tight leading-[1.15] max-w-5xl mx-auto drop-shadow-2xl">
-                {activeSlide.title}
-              </h1>
+              {activeSlide.title && (
+                <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black font-poppins tracking-tight leading-[1.15] max-w-5xl mx-auto drop-shadow-2xl">
+                  {activeSlide.title}
+                </h1>
+              )}
 
               {/* Subtitle */}
               <p className="mt-6 text-base sm:text-lg lg:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">

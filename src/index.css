@@ -145,3 +145,18 @@
     scroll-behavior: auto !important;
   }
 }
+
+
+/* Smoothly fade each new hero background into view. */
+@keyframes heroCrossfade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.75;
+  }
+}
+
+.animate-heroCrossfade {
+  animation: heroCrossfade 1.2s ease-in-out both;
+}
