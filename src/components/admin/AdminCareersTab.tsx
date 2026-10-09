@@ -193,26 +193,15 @@ export const AdminCareersTab: React.FC<AdminCareersTabProps> = ({
             <tbody className="divide-y divide-slate-200 bg-white">
               {applications.map((app) => (
                 <tr key={app.id} className="hover:bg-slate-50/80 transition-colors">
-                  <td className="p-3.5 font-bold text-slate-900">{app.fullName}</td>
+                  <td className="p-3.5 font-bold text-slate-900">{app.name}</td>
                   <td className="p-3.5 text-slate-600 font-mono text-[11px]">
                     <div>{app.phone}</div>
                     <div className="text-slate-400">{app.email}</div>
                   </td>
-                  <td className="p-3.5 font-medium text-slate-800">{app.jobTitle}</td>
+                  <td className="p-3.5 font-medium text-slate-800">{app.role}</td>
                   <td className="p-3.5 text-slate-600">{app.experience}</td>
                   <td className="p-3.5">
-                    {app.resumeUrl ? (
-                      <a
-                        href={app.resumeUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-blue-600 font-bold hover:underline flex items-center gap-1"
-                      >
-                        <FileText className="w-3.5 h-3.5" /> View Resume
-                      </a>
-                    ) : (
-                      <span className="text-slate-400">No link</span>
-                    )}
+                    <span className="text-slate-400">Not provided</span>
                   </td>
                   <td className="p-3.5">
                     <span

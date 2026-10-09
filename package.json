@@ -24,6 +24,8 @@
   },
   "devDependencies": {
     "@types/node": "^26.6.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "autoprefixer": "^10.4.21",
     "supabase": "^2.120.0",
     "tailwindcss": "^4.1.14",

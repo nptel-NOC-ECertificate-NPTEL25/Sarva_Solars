@@ -147,8 +147,6 @@ export const AdminStaffTab: React.FC<AdminStaffTabProps> = ({ currentUser, showT
                     className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
                       member.role === 'Admin'
                         ? 'bg-purple-100 text-purple-900 border border-purple-200'
-                        : member.role === 'Staff'
-                        ? 'bg-blue-100 text-blue-900 border border-blue-200'
                         : 'bg-slate-100 text-slate-700'
                     }`}
                   >

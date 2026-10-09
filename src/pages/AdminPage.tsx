@@ -17,7 +17,8 @@ import {
   AuditLog,
   VisitorLog,
   EmailNotification,
-  HeroSlide
+  HeroSlide,
+  UserRole
 } from '../types';
 import {
   loginUser,
@@ -326,7 +327,11 @@ export const AdminPage: React.FC<AdminPageProps> = ({ user, onLoginSuccess, onLo
     setEditingStaff(u);
     setStaffName(u.name);
     setStaffEmail(u.email);
-    setStaffRole(u.role);
+    setStaffRole(
+      u.role === 'Admin' || u.role === 'Manager' || u.role === 'Sales' || u.role === 'Technician'
+        ? u.role
+        : 'Sales'
+    );
     setStaffPhone(u.phone || '');
     setStaffPassword('');
     setShowStaffModal(true);

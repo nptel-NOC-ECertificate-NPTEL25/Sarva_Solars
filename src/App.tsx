@@ -325,7 +325,7 @@ export function App() {
       </main>
 
       {/* Footer */}
-      <Footer settings={settings} onNavigate={handleNavigate} />
+      <Footer settings={settings} onNavigate={handleNavigate} onOpenQuoteModal={() => setIsQuoteModalOpen(true)} />
 
       {/* Live Quote Modal */}
       <QuoteModal
