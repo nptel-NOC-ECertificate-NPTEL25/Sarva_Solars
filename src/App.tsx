@@ -3,16 +3,16 @@ import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { QuoteModal } from './components/QuoteModal';
 import { HomePage } from './pages/HomePage';
-import { AboutPage } from './pages/AboutPage';
-import { ServicesPage } from './pages/ServicesPage';
-import { ProjectsPage } from './pages/ProjectsPage';
-import { ProductsPage } from './pages/ProductsPage';
-import { SubsidyPage } from './pages/SubsidyPage';
-import { CalculatorsPage } from './pages/CalculatorsPage';
-import { BlogPage } from './pages/BlogPage';
-import { GalleryPage } from './pages/GalleryPage';
-import { CareersPage } from './pages/CareersPage';
-import { ContactPage } from './pages/ContactPage';
+const AboutPage = lazy(() => import('./pages/AboutPage').then(m => ({ default: m.AboutPage })));
+const ServicesPage = lazy(() => import('./pages/ServicesPage').then(m => ({ default: m.ServicesPage })));
+const ProjectsPage = lazy(() => import('./pages/ProjectsPage').then(m => ({ default: m.ProjectsPage })));
+const ProductsPage = lazy(() => import('./pages/ProductsPage').then(m => ({ default: m.ProductsPage })));
+const SubsidyPage = lazy(() => import('./pages/SubsidyPage').then(m => ({ default: m.SubsidyPage })));
+const CalculatorsPage = lazy(() => import('./pages/CalculatorsPage').then(m => ({ default: m.CalculatorsPage })));
+const BlogPage = lazy(() => import('./pages/BlogPage').then(m => ({ default: m.BlogPage })));
+const GalleryPage = lazy(() => import('./pages/GalleryPage').then(m => ({ default: m.GalleryPage })));
+const CareersPage = lazy(() => import('./pages/CareersPage').then(m => ({ default: m.CareersPage })));
+const ContactPage = lazy(() => import('./pages/ContactPage').then(m => ({ default: m.ContactPage })));
 const AdminPage = lazy(() => import('./pages/AdminPage').then((module) => ({ default: module.AdminPage })));
 
 import {
@@ -84,7 +84,7 @@ export function App() {
     document.documentElement.classList.add('light');
   }, []);
 
-  // Track customer site visits
+  // Track customer site visits whenever the viewed page changes
   useEffect(() => {
     logVisitor(currentView);
   }, [currentView]);
@@ -157,10 +157,13 @@ export function App() {
       }
     }
 
-    // 5. Periodic background sync polling every 8 seconds for cross-browser / cross-device updates
+    // 5. Poll every 60 seconds only while the tab is visible.
+    // Event listeners handle faster same-origin updates.
     const pollInterval = setInterval(() => {
-      loadAll();
-    }, 8000);
+      if (document.visibilityState === 'visible') {
+        loadAll();
+      }
+    }, 60000);
 
     return () => {
       window.removeEventListener('sarva_data_updated', handleUpdate);
@@ -257,6 +260,7 @@ export function App() {
 
       {/* Main Content Area */}
       <main className="flex-1">
+        <Suspense fallback={<div className="min-h-[40vh] flex items-center justify-center" role="status">Loading page...</div>}>
         {currentView === 'home' && (
           <HomePage
             settings={settings}
@@ -321,7 +325,7 @@ export function App() {
         {currentView === 'careers' && <CareersPage />}
 
         {currentView === 'contact' && <ContactPage settings={settings} />}
-
+        </Suspense>
       </main>
 
       {/* Footer */}
