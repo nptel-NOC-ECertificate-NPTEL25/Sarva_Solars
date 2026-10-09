@@ -338,25 +338,27 @@ export const HomePage: React.FC<HomePageProps> = ({
             </div>
           )}
 
-          {/* Floating Key Metrics */}
-          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
-            <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 backdrop-blur-md text-center shadow-xl">
-              <p className="text-2xl sm:text-3xl font-black text-amber-400 font-poppins">10,000+ kWp</p>
-              <p className="text-xs text-slate-400 mt-1 font-medium">Capacity Installed</p>
+          {/* Floating Key Metrics - managed from Admin Settings */}
+          {[
+            { value: settings.installedCapacity?.trim(), label: 'Capacity Installed', color: 'text-amber-400' },
+            { value: settings.governmentSubsidy?.trim(), label: 'Government Subsidy', color: 'text-emerald-400' },
+            { value: settings.panelWarranty?.trim(), label: 'Panel Warranty', color: 'text-blue-400' },
+            { value: settings.customerRating?.trim(), label: 'Customer Rating', color: 'text-amber-400' },
+          ].filter((metric) => metric.value).length > 0 && (
+            <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+              {[
+                { value: settings.installedCapacity?.trim(), label: 'Capacity Installed', color: 'text-amber-400' },
+                { value: settings.governmentSubsidy?.trim(), label: 'Government Subsidy', color: 'text-emerald-400' },
+                { value: settings.panelWarranty?.trim(), label: 'Panel Warranty', color: 'text-blue-400' },
+                { value: settings.customerRating?.trim(), label: 'Customer Rating', color: 'text-amber-400' },
+              ].filter((metric) => metric.value).map((metric) => (
+                <div key={metric.label} className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 backdrop-blur-md text-center shadow-xl">
+                  <p className={`text-2xl sm:text-3xl font-black ${metric.color} font-poppins`}>{metric.value}</p>
+                  <p className="text-xs text-slate-400 mt-1 font-medium">{metric.label}</p>
+                </div>
+              ))}
             </div>
-            <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 backdrop-blur-md text-center shadow-xl">
-              <p className="text-2xl sm:text-3xl font-black text-emerald-400 font-poppins">₹78,000</p>
-              <p className="text-xs text-slate-400 mt-1 font-medium">Max Govt Subsidy</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 backdrop-blur-md text-center shadow-xl">
-              <p className="text-2xl sm:text-3xl font-black text-blue-400 font-poppins">25 Years</p>
-              <p className="text-xs text-slate-400 mt-1 font-medium">Panel Warranty</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 backdrop-blur-md text-center shadow-xl">
-              <p className="text-2xl sm:text-3xl font-black text-amber-400 font-poppins">4.9 / 5.0</p>
-              <p className="text-xs text-slate-400 mt-1 font-medium">Customer Rating</p>
-            </div>
-          </div>
+          )}
         </div>
       </section>
 
@@ -378,7 +380,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           <motion.div
             whileHover={{ y: -6, scale: 1.02 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            className="p-8 rounded-3xl glass-card glass-card-hover border border-slate-200 shadow-xl space-y-4 hover:border-amber-500/50 transition-all group cursor-pointer"
+            className="p-8 rounded-3xl glass-card glass-card-hover border border-slate-200 shadow-xl space-y-4 hover:border-amber-500/50 transition-all group"
           >
             <div className="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center group-hover:scale-110 transition-transform">
               <Award className="w-8 h-8" />
@@ -394,7 +396,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           <motion.div
             whileHover={{ y: -6, scale: 1.02 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            className="p-8 rounded-3xl glass-card glass-card-hover border border-slate-200 shadow-xl space-y-4 hover:border-emerald-500/50 transition-all group cursor-pointer"
+            className="p-8 rounded-3xl glass-card glass-card-hover border border-slate-200 shadow-xl space-y-4 hover:border-emerald-500/50 transition-all group"
           >
             <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center group-hover:scale-110 transition-transform">
               <FileCheck className="w-8 h-8" />
@@ -410,7 +412,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           <motion.div
             whileHover={{ y: -6, scale: 1.02 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            className="p-8 rounded-3xl glass-card glass-card-hover border border-slate-200 shadow-xl space-y-4 hover:border-blue-500/50 transition-all group cursor-pointer"
+            className="p-8 rounded-3xl glass-card glass-card-hover border border-slate-200 shadow-xl space-y-4 hover:border-blue-500/50 transition-all group"
           >
             <div className="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center group-hover:scale-110 transition-transform">
               <ShieldCheck className="w-8 h-8" />

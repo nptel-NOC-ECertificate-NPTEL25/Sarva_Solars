@@ -193,6 +193,10 @@ export interface AppSettings {
   metaTitle: string;
   metaDescription: string;
   googleMapsEmbedUrl: string;
+  installedCapacity?: string;
+  customerRating?: string;
+  panelWarranty?: string;
+  governmentSubsidy?: string;
 }
 
 export interface HeroSlide {

@@ -1,6 +1,9 @@
 drop policy if exists "Authenticated users can upload media" on storage.objects;
 drop policy if exists "Authenticated users can update media" on storage.objects;
 drop policy if exists "Authenticated users can delete media" on storage.objects;
+drop policy if exists "Admins can upload media" on storage.objects;
+drop policy if exists "Admins can update media" on storage.objects;
+drop policy if exists "Admins can delete media" on storage.objects;
 
 create policy "Admins can upload media"
 on storage.objects

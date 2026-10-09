@@ -204,7 +204,65 @@ export const AdminSettingsTab: React.FC<AdminSettingsTabProps> = ({
           </div>
         </div>
 
-        {/* Section 4: Announcement Bar */}
+        {/* Section 4: Homepage Trust Metrics */}
+        <div className="space-y-4 pt-4 border-t border-slate-100">
+          <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-2">
+            <Building2 className="w-4 h-4 text-amber-500" />
+            Homepage Trust Metrics
+          </h4>
+
+          <p className="text-slate-500">
+            These values appear in the homepage highlights. Leave any field blank if the figure has not been verified.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block font-bold text-slate-700 mb-1">Installed Capacity</label>
+              <input
+                type="text"
+                value={formData.installedCapacity ?? ''}
+                onChange={(e) => setFormData({ ...formData, installedCapacity: e.target.value })}
+                placeholder="e.g. 10,000+ kWp"
+                className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-slate-900"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-slate-700 mb-1">Customer Rating</label>
+              <input
+                type="text"
+                value={formData.customerRating ?? ''}
+                onChange={(e) => setFormData({ ...formData, customerRating: e.target.value })}
+                placeholder="e.g. 4.9 / 5.0"
+                className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-slate-900"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-slate-700 mb-1">Panel Warranty</label>
+              <input
+                type="text"
+                value={formData.panelWarranty ?? ''}
+                onChange={(e) => setFormData({ ...formData, panelWarranty: e.target.value })}
+                placeholder="e.g. 25 Years"
+                className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-slate-900"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-slate-700 mb-1">Government Subsidy</label>
+              <input
+                type="text"
+                value={formData.governmentSubsidy ?? ''}
+                onChange={(e) => setFormData({ ...formData, governmentSubsidy: e.target.value })}
+                placeholder="e.g. Up to ₹78,000"
+                className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-slate-900"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Section 5: Announcement Bar */}
         <div className="space-y-4 pt-4 border-t border-slate-100">
           <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-2">
             <HelpCircle className="w-4 h-4 text-amber-500" />

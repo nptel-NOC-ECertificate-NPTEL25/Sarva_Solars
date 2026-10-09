@@ -100,7 +100,11 @@ export async function fetchSettings(): Promise<AppSettings> {
     showAnnouncementBar: data.show_announcement_bar,
     metaTitle: data.meta_title,
     metaDescription: data.meta_description,
-    googleMapsEmbedUrl: data.google_maps_embed_url
+    googleMapsEmbedUrl: data.google_maps_embed_url,
+    installedCapacity: data.installed_capacity ?? '',
+    customerRating: data.customer_rating ?? '',
+    panelWarranty: data.panel_warranty ?? '',
+    governmentSubsidy: data.government_subsidy ?? ''
   };
 }
 
@@ -118,7 +122,11 @@ export async function updateSettings(updates: Partial<AppSettings>): Promise<App
     show_announcement_bar: updates.showAnnouncementBar,
     meta_title: updates.metaTitle,
     meta_description: updates.metaDescription,
-    google_maps_embed_url: updates.googleMapsEmbedUrl
+    google_maps_embed_url: updates.googleMapsEmbedUrl,
+    installed_capacity: updates.installedCapacity,
+    customer_rating: updates.customerRating,
+    panel_warranty: updates.panelWarranty,
+    government_subsidy: updates.governmentSubsidy
   };
 
   Object.keys(payload).forEach((key) => {
@@ -150,7 +158,11 @@ export async function updateSettings(updates: Partial<AppSettings>): Promise<App
     showAnnouncementBar: data.show_announcement_bar,
     metaTitle: data.meta_title,
     metaDescription: data.meta_description,
-    googleMapsEmbedUrl: data.google_maps_embed_url
+    googleMapsEmbedUrl: data.google_maps_embed_url,
+    installedCapacity: data.installed_capacity ?? '',
+    customerRating: data.customer_rating ?? '',
+    panelWarranty: data.panel_warranty ?? '',
+    governmentSubsidy: data.government_subsidy ?? ''
   };
 }
 
