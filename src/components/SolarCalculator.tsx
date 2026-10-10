@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { submitLead } from '../services/api';
 import {
   Sun,
   Calculator,
@@ -15,27 +16,115 @@ export const SolarCalculator: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'bill' | 'emi'>('bill');
 
   // Bill Calculator State
-  const [monthlyBill, setMonthlyBill] = useState<number>(4500);
+  const [monthlyBill, setMonthlyBill] = useState<number>(0);
   const [propertyType, setPropertyType] = useState<'home' | 'commercial'>('home');
-  const [tariffRate, setTariffRate] = useState<number>(8.5);
+  const [tariffRate, setTariffRate] = useState<number>(0);
+  const [connectionType, setConnectionType] = useState<'On-Grid' | 'Off-Grid' | 'Hybrid'>('On-Grid');
 
-  // Calculations for Solar Bill
-  const estimatedKw = Math.max(1, Math.round((monthlyBill / (tariffRate * 120)) * 10) / 10);
-  const roofAreaSqFt = Math.round(estimatedKw * 80);
-  const annualUnits = Math.round(estimatedKw * 1440);
-  const annualSavings = Math.round(annualUnits * tariffRate);
-  const lifetimeSavings25Years = Math.round(annualSavings * 25 * 1.35); // 1.35 accounts for ~3% annual grid price hike
+  // Lead form state
+  const [leadName, setLeadName] = useState('');
+  const [leadPhone, setLeadPhone] = useState('');
+  const [leadEmail, setLeadEmail] = useState('');
+  const [leadState, setLeadState] = useState('Andhra Pradesh');
+  const [leadCity, setLeadCity] = useState('');
+  const [roofType, setRoofType] = useState('Terrace (Concrete)');
+  const [leadLoading, setLeadLoading] = useState(false);
+  const [leadSubmitted, setLeadSubmitted] = useState(false);
+  const [leadError, setLeadError] = useState('');
+
+  // Indicative estimates only. Actual generation and savings depend on site conditions,
+  // weather, consumption patterns, tariff structure, and export-metering rules.
+  const isEstimateReady = monthlyBill > 0 && tariffRate > 0;
+  const estimatedMonthlyUnits = isEstimateReady ? monthlyBill / tariffRate : 0;
+  const estimatedKw = isEstimateReady
+    ? Math.round((estimatedMonthlyUnits / 120) * 10) / 10
+    : 0;
+  const roofAreaSqFt = Math.ceil(estimatedKw * 100);
+  const annualUnits = Math.round(estimatedKw * 4 * 365);
+  const annualSavings = isEstimateReady
+    ? Math.round(Math.min(annualUnits * tariffRate, monthlyBill * 12))
+    : 0;
+
+  // ₹55,000/kW is an illustrative cost assumption, not a government-set price.
   const systemCostGross = Math.round(estimatedKw * 55000);
 
-  let subsidy = 0;
-  if (propertyType === 'home') {
-    if (estimatedKw <= 1) subsidy = 30000;
-    else if (estimatedKw <= 2) subsidy = 60000;
-    else subsidy = 78000;
-  }
+  // PM Surya Ghar residential CFA estimate for eligible on-grid systems:
+  // ₹30,000/kW for the first 2 kW and ₹18,000/kW for the next 1 kW.
+  const subsidy =
+    propertyType === 'home' && connectionType === 'On-Grid' && isEstimateReady
+      ? Math.round(
+          Math.min(estimatedKw, 2) * 30000 +
+          Math.min(Math.max(estimatedKw - 2, 0), 1) * 18000
+        )
+      : 0;
+
   const netInvestment = Math.max(0, systemCostGross - subsidy);
-  const paybackYears = Number((netInvestment / annualSavings).toFixed(1));
+  const paybackYears = annualSavings > 0
+    ? Number((netInvestment / annualSavings).toFixed(1))
+    : 0;
+  const lifetimeSavings25Years = Math.round(
+    annualSavings * ((Math.pow(1.03, 25) - 1) / 0.03)
+  );
   const co2ReductionTonsPerYear = Number((annualUnits * 0.00082).toFixed(1));
+
+  const handleLeadSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // One lead per calculator session; later edits recalculate locally.
+    if (leadSubmitted) return;
+
+    setLeadError('');
+
+    if (!isEstimateReady) {
+      setLeadError('Enter a monthly bill and tariff above zero to calculate an estimate first.');
+      return;
+    }
+
+    if (!leadName.trim() || !/^\d{10}$/.test(leadPhone.replace(/\D/g, ''))) {
+      setLeadError('Enter your full name and a valid 10-digit mobile number.');
+      return;
+    }
+setLeadLoading(true);
+    try {
+      await submitLead({
+        fullName: leadName.trim(),
+        phone: leadPhone.trim(),
+        email: leadEmail.trim(),
+        state: leadState.trim(),
+        city: leadCity.trim(),
+        solarFor: propertyType === 'home' ? 'Home' : 'Business',
+        monthlyBill: `₹${monthlyBill.toLocaleString('en-IN')}/month`,
+        roofType,
+        connectionType,
+        financeInterest: 'No',
+        notes: [
+          'Solar calculator enquiry.',
+          `Tariff ₹${tariffRate}/unit.`,
+          `Estimated monthly usage ${Math.round(estimatedMonthlyUnits)} units.`,
+          `Estimated system ${isEstimateReady ? `${estimatedKw} kW` : '—'}.`,
+          `Estimated annual generation ${annualUnits} kWh.`,
+          `Indicative system cost ₹${systemCostGross}.`,
+          `Estimated central subsidy ₹${subsidy}.`,
+          `Estimated net investment ₹${netInvestment}.`,
+          `Estimated annual energy-cost offset ₹${annualSavings}.`,
+          `Estimated simple payback ${paybackYears} years.`,
+          'Assumptions: 4 kWh/kW/day, ₹55,000/kW indicative cost, 100 sq ft/kW, and 3% annual tariff escalation for the lifetime projection.',
+        ].join(' ')
+      });
+      setLeadSubmitted(true);
+    } catch (error) {
+      const errorMessage =
+        error && typeof error === 'object' && 'message' in error
+          ? String(error.message)
+          : error instanceof Error
+            ? error.message
+            : 'Could not submit your enquiry. Please try again.';
+      console.error('Solar calculator lead submission failed:', error);
+      setLeadError(errorMessage);
+    } finally {
+      setLeadLoading(false);
+    }
+  };
 
   // EMI Calculator State
   const [loanAmount, setLoanAmount] = useState<number>(netInvestment || 100000);
@@ -56,76 +145,254 @@ export const SolarCalculator: React.FC = () => {
   const totalPayable = emi * totalMonths;
   const totalInterest = Math.max(0, totalPayable - loanAmount);
 
-  // PDF Export using jsPDF
+  // Professional Sarva Solars PDF estimation report.
   const handleDownloadPDF = async () => {
     const { jsPDF } = await import('jspdf');
-    const doc = new jsPDF();
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const now = new Date();
+    const reportRef = `SS-${now.getTime().toString().slice(-8)}`;
+    const generatedAt = now.toLocaleString('en-IN', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+      hour12: true,
+    });
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 15;
+    const contentWidth = pageWidth - margin * 2;
 
-    // Header styling
-    doc.setFillColor(11, 94, 215); // Primary #0B5ED7
-    doc.rect(0, 0, 210, 40, 'F');
+    const green: [number, number, number] = [17, 103, 69];
+    const darkGreen: [number, number, number] = [11, 65, 47];
+    const gold: [number, number, number] = [226, 170, 55];
+    const ink: [number, number, number] = [31, 41, 55];
+    const muted: [number, number, number] = [100, 116, 139];
+    const paleGreen: [number, number, number] = [239, 248, 242];
+    const paleGold: [number, number, number] = [255, 249, 234];
 
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(22);
-    doc.setFont('helvetica', 'bold');
-    doc.text('SARVA SOLAR', 15, 20);
+    // Load the actual website logo. If unavailable, the report remains branded
+    // with a typographic logo instead of failing to download.
+    const logoData = await new Promise<string | null>((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.naturalWidth || 300;
+          canvas.height = img.naturalHeight || 120;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return resolve(null);
+          ctx.drawImage(img, 0, 0);
+          resolve(canvas.toDataURL('image/png'));
+        } catch {
+          resolve(null);
+        }
+      };
+      img.onerror = () => resolve(null);
+      img.src = '/sarva-solar-logo.png';
+    });
 
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.text('Solar Energy Feasibility & Financial Savings Report', 15, 28);
-    doc.text(`Generated Date: ${new Date().toLocaleDateString('en-IN')}`, 145, 28);
+    const money = (value: number) =>
+      `Rs. ${Math.round(value).toLocaleString('en-IN')}`;
 
-    // Section 1: System Specs
-    doc.setTextColor(17, 24, 39);
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text('1. Recommended Solar Plant System', 15, 52);
+    const drawHeader = () => {
+      doc.setFillColor(...darkGreen);
+      doc.rect(0, 0, pageWidth, 39, 'F');
+      doc.setFillColor(...gold);
+      doc.rect(0, 39, pageWidth, 1.5, 'F');
 
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`• Property Type: ${propertyType === 'home' ? 'Residential Home' : 'Commercial Unit'}`, 20, 62);
-    doc.text(`• Current Monthly Electricity Bill: Rs. ${monthlyBill.toLocaleString('en-IN')}`, 20, 70);
-    doc.text(`• Recommended Capacity: ${estimatedKw} kWp Solar Rooftop Plant`, 20, 78);
-    doc.text(`• Required Shadow-Free Roof Space: ~${roofAreaSqFt} sq. ft.`, 20, 86);
-    doc.text(`• Estimated Annual Clean Generation: ${annualUnits.toLocaleString('en-IN')} Units (kWh)`, 20, 94);
+      if (logoData) {
+        doc.setFillColor(255, 255, 255);
+        doc.roundedRect(13, 6, 29, 26, 2, 2, 'F');
+        doc.addImage(logoData, 'PNG', 14.5, 7.5, 26, 23, undefined, 'FAST');
+      } else {
+        doc.setTextColor(255, 255, 255);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.text('SARVA', 15, 17);
+        doc.text('SOLARS', 15, 24);
+      }
 
-    // Section 2: Financial Savings & Subsidy
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text('2. Investment & Govt Subsidy Breakdown', 15, 110);
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(17);
+      doc.text('SARVA SOLARS', 47, 15);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.text('SOLAR ROOFTOP ESTIMATION REPORT', 47, 22);
+      doc.setTextColor(226, 210, 164);
+      doc.setFontSize(7.5);
+      doc.text(`Report Ref: ${reportRef}`, 47, 29);
+      doc.text(`Generated: ${generatedAt}`, pageWidth - 13, 29, { align: 'right' });
+    };
 
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`• Estimated System Turnkey Cost: Rs. ${systemCostGross.toLocaleString('en-IN')}`, 20, 120);
-    doc.text(`• PM Surya Ghar Govt Subsidy Benefit: - Rs. ${subsidy.toLocaleString('en-IN')}`, 20, 128);
-    doc.text(`• Estimated Net Out-of-Pocket Cost: Rs. ${netInvestment.toLocaleString('en-IN')}`, 20, 136);
-    doc.text(`• Estimated Annual Bill Savings: Rs. ${annualSavings.toLocaleString('en-IN')} / year`, 20, 144);
-    doc.text(`• Payback Period: ~${paybackYears} years`, 20, 152);
-    doc.text(`• 25-Year Cumulative Savings: Rs. ${lifetimeSavings25Years.toLocaleString('en-IN')}`, 20, 160);
+    const drawFooter = (page: number, total: number) => {
+      doc.setDrawColor(...gold);
+      doc.setLineWidth(0.6);
+      doc.line(margin, 274, pageWidth - margin, 274);
+      doc.setTextColor(...green);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.text('SARVA SOLARS', margin, 280);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(...muted);
+      doc.setFontSize(7);
+      doc.text('Brodipet 5/15, Guntur, Andhra Pradesh - 522002', margin, 285);
+      doc.text('Phone: +91 8985430100 / +91 9160513161', margin, 290);
+      doc.text('Email: solarsarva@gmail.com', pageWidth - margin, 285, { align: 'right' });
+      doc.text(`Page ${page} of ${total}`, pageWidth - margin, 290, { align: 'right' });
+    };
 
-    // Section 3: Environmental Impact
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text('3. Environmental Contribution', 15, 175);
+    let y = 48;
+    const ensureSpace = (height: number) => {
+      if (y + height > 266) {
+        doc.addPage();
+        drawHeader();
+        y = 48;
+      }
+    };
 
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`• CO2 Emission Reduction: ${co2ReductionTonsPerYear} Metric Tons per year`, 20, 185);
-    doc.text(`• Equivalent to planting approx. ${Math.round(co2ReductionTonsPerYear * 45)} mature trees.`, 20, 193);
+    const section = (title: string) => {
+      ensureSpace(15);
+      doc.setFillColor(...paleGreen);
+      doc.roundedRect(margin, y - 5, contentWidth, 10, 1.5, 1.5, 'F');
+      doc.setFillColor(...gold);
+      doc.rect(margin, y - 5, 1.5, 10, 'F');
+      doc.setTextColor(...darkGreen);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10.5);
+      doc.text(title, margin + 5, y + 1.5);
+      y += 13;
+    };
 
-    // Footer contact info
-    doc.setFillColor(245, 158, 11);
-    doc.rect(0, 260, 210, 37, 'F');
+    const row = (label: string, value: string, options: { bold?: boolean; color?: [number, number, number] } = {}) => {
+      const lines = doc.splitTextToSize(`${label}: ${value}`, contentWidth - 8);
+      const height = Math.max(6, lines.length * 4.5 + 1);
+      ensureSpace(height);
+      doc.setFont('helvetica', options.bold ? 'bold' : 'normal');
+      doc.setFontSize(8.8);
+      doc.setTextColor(...(options.color || ink));
+      doc.text(lines, margin + 4, y);
+      y += height;
+    };
 
-    doc.setTextColor(15, 23, 42);
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Sarva Solar EPC Solutions Pvt. Ltd.', 15, 270);
-    doc.setFont('helvetica', 'normal');
-    doc.text('Guntur HQ Address: Brodipet 5/15, Guntur, AP - 522002', 15, 277);
-    doc.text('Phone: +91 8985430100 / +91 9160513161 | Email: solarsarva@gmail.com', 15, 284);
+    const note = (text: string) => {
+      const lines = doc.splitTextToSize(text, contentWidth - 10);
+      const height = lines.length * 4 + 8;
+      ensureSpace(height);
+      doc.setFillColor(...paleGold);
+      doc.roundedRect(margin, y - 3, contentWidth, height, 1.5, 1.5, 'F');
+      doc.setTextColor(...ink);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.text(lines, margin + 5, y + 2);
+      y += height + 3;
+    };
 
-    doc.save(`Sarva_Solar_Feasibility_Report_${estimatedKw}kW.pdf`);
+    const metric = (x: number, top: number, width: number, label: string, value: string) => {
+      doc.setFillColor(...paleGreen);
+      doc.roundedRect(x, top, width, 20, 2, 2, 'F');
+      doc.setTextColor(...muted);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      doc.text(label, x + 4, top + 6);
+      doc.setTextColor(...darkGreen);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.text(doc.splitTextToSize(value, width - 8), x + 4, top + 14);
+    };
+
+    const monthlySavings = annualSavings / 12;
+    const estimatedPostSolarBill = Math.max(0, monthlyBill - monthlySavings);
+    const monthlyGeneration = Math.round(annualUnits / 12);
+    const annualTariffSavings = Math.round(annualSavings);
+    const financeEnabled = activeTab === 'emi';
+
+    doc.setProperties({
+      title: 'Sarva Solars - Solar Rooftop Estimation Report',
+      subject: `Indicative solar estimate ${reportRef}`,
+      author: 'Sarva Solars',
+      creator: 'Sarva Solars Solar Calculator',
+    });
+
+    drawHeader();
+
+    // Customer and report details
+    section('01  CUSTOMER & REPORT DETAILS');
+    row('Customer name', leadName.trim() || 'Not provided');
+    row('Mobile number', leadPhone.trim() || 'Not provided');
+    if (leadEmail.trim()) row('Email address', leadEmail.trim());
+    row('Location', [leadCity.trim(), leadState.trim()].filter(Boolean).join(', ') || 'Not provided');
+    row('Property category', propertyType === 'home' ? 'Residential' : 'Commercial');
+    row('Roof type', roofType || 'Not specified');
+    row('Solar connection', connectionType);
+    row('Report reference', reportRef);
+    row('Generated on', generatedAt);
+
+    // Quick summary
+    section('02  RECOMMENDED SOLAR SYSTEM');
+    ensureSpace(25);
+    const gap = 3;
+    const cardWidth = (contentWidth - gap * 2) / 3;
+    metric(margin, y, cardWidth, 'SYSTEM CAPACITY', `${estimatedKw.toFixed(1)} kWp`);
+    metric(margin + cardWidth + gap, y, cardWidth, 'MONTHLY GENERATION', `${monthlyGeneration.toLocaleString('en-IN')} units`);
+    metric(margin + (cardWidth + gap) * 2, y, cardWidth, 'ANNUAL GENERATION', `${annualUnits.toLocaleString('en-IN')} units`);
+    y += 26;
+
+    row('Current monthly electricity bill', money(monthlyBill));
+    row('Entered electricity tariff', `${money(tariffRate)} per unit`);
+    row('Estimated monthly consumption', `${Math.round(estimatedMonthlyUnits).toLocaleString('en-IN')} units`);
+    row('Estimated shadow-free roof area', `Approximately ${roofAreaSqFt.toLocaleString('en-IN')} sq. ft.`);
+    row('Daily generation assumption', '4 units per kWp per day');
+    row('Monthly generation estimate', 'Annual estimate divided by 12; actual output varies by season and site.');
+
+    // Financial overview
+    section('03  ESTIMATED SAVINGS & INVESTMENT');
+    row('Indicative system cost', money(systemCostGross), { bold: true });
+    row('Potential central subsidy estimate', `- ${money(subsidy)}`);
+    row('Estimated net investment', money(netInvestment), { bold: true, color: green });
+    row('Estimated monthly energy-cost offset', money(monthlySavings));
+    row('Estimated post-solar monthly bill', money(estimatedPostSolarBill));
+    row('Estimated annual energy-cost offset', money(annualTariffSavings));
+    row('Indicative simple payback period', annualSavings > 0 ? `Approximately ${paybackYears} years` : 'Not available');
+    row('Illustrative 25-year savings projection', money(lifetimeSavings25Years));
+    note('Savings and payback are indicative estimates, not guaranteed bill reductions. Actual results depend on system design, site shading, seasonal output, self-consumption, utility rules, tariff changes, degradation, and maintenance.');
+
+    // Finance illustration
+    section('04  FINANCING ILLUSTRATION');
+    row('Calculator mode at report generation', financeEnabled ? 'Bank EMI Finance' : 'Solar Rooftop & Savings');
+    row('Illustrative loan amount', money(loanAmount));
+    row('Assumed annual interest rate', `${interestRate.toFixed(2)}%`);
+    row('Assumed loan tenure', `${tenureYears} years (${totalMonths} monthly instalments)`);
+    row('Estimated monthly EMI', money(emi), { bold: true });
+    row('Estimated total repayment', money(totalPayable));
+    row('Estimated total interest', money(totalInterest));
+    note('This is a mathematical illustration only, not a loan offer or bank approval. Actual interest, fees, eligibility, EMI and tenure are determined by the lender. Loan amount may differ from the final project cost.');
+
+    // Environmental and assumptions
+    section('05  ENVIRONMENTAL INDICATION & ASSUMPTIONS');
+    row('Indicative annual CO2 reduction', `${co2ReductionTonsPerYear} metric tonnes (approximate)`);
+    row('System pricing assumption', 'Rs. 55,000 per kWp; illustrative only, not a confirmed quotation.');
+    row('Roof-space assumption', 'Approximately 100 sq. ft. per kWp; final layout requires a site survey.');
+    row('Tariff escalation assumption', '3% per year used for the 25-year projection.');
+    row('Generation basis', '4 kWh per kWp per day; weather, orientation, shading and equipment affect actual output.');
+
+    section('06  SUBSIDY, SCOPE & IMPORTANT NOTES');
+    row('Subsidy treatment', propertyType === 'home' && connectionType === 'On-Grid'
+      ? 'The displayed amount is an indicative central subsidy calculation for an eligible residential on-grid system; it is not an approval.'
+      : 'No central residential subsidy has been included for this selected property/connection category.');
+    note('Government scheme rules, system eligibility, approved capacity, applicant requirements and disbursement are subject to current official guidelines and approval. Confirm eligibility before making an investment decision.');
+    note('This report is a preliminary digital estimate, not a final commercial quotation, engineering design, savings guarantee, subsidy sanction, or financing commitment. Final pricing and specifications require a site survey, component selection, structural/electrical checks and written confirmation from Sarva Solars.');
+    row('Warranty and equipment specifications', 'To be confirmed in the final project quotation and manufacturer documentation.');
+    row('Recommended next step', 'Arrange a site assessment to validate roof area, shading, system sizing, meter requirements and final project cost.');
+
+    // Add a consistent footer and page numbers to every page.
+    const totalPages = doc.getNumberOfPages();
+    for (let page = 1; page <= totalPages; page++) {
+      doc.setPage(page);
+      drawFooter(page, totalPages);
+    }
+
+    const safeCapacity = estimatedKw.toFixed(1).replace('.', 'p');
+    doc.save(`Sarva_Solars_Estimation_${safeCapacity}kWp_${reportRef}.pdf`);
   };
 
   return (
@@ -140,7 +407,7 @@ export const SolarCalculator: React.FC = () => {
           Sarva Solar Savings & EMI Calculator
         </h2>
         <p className="text-sm text-slate-600 mt-2">
-          Calculate your exact rooftop plant capacity, government subsidy payout, monthly bill reduction, and zero-down financing options.
+          Estimate a suitable rooftop solar system, indicative costs, possible residential subsidy and potential savings. Actual results depend on your site, usage, tariff and scheme eligibility.
         </p>
 
         {/* Dual Tab Switcher */}
@@ -172,112 +439,119 @@ export const SolarCalculator: React.FC = () => {
       {activeTab === 'bill' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Controls Column */}
-          <div className="lg:col-span-5 space-y-6 bg-slate-50 p-6 rounded-2xl border border-slate-200">
+          <form onSubmit={handleLeadSubmit} className="lg:col-span-5 space-y-6 bg-slate-50 p-6 rounded-2xl border border-slate-200">
             <div>
-              <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">
-                Property Type
+              <label htmlFor="solar-lead-name" className="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Full Name</label>
+              <input id="solar-lead-name" name="fullName" required value={leadName} onChange={(e) => setLeadName(e.target.value)} autoComplete="name" className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900" placeholder="Enter your full name" />
+            </div>
+            <div>
+              <label htmlFor="solar-lead-phone" className="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Mobile Number</label>
+              <input id="solar-lead-phone" name="phone" required type="tel" inputMode="numeric" maxLength={10} pattern="[0-9]{10}" value={leadPhone} onChange={(e) => setLeadPhone(e.target.value.replace(/\D/g, '').slice(0, 10))} autoComplete="tel" className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900" placeholder="10-digit mobile number" />
+            </div>
+
+            <div>
+              <label htmlFor="monthly-electricity-bill" className="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">
+                Monthly Electricity Bill (₹)
               </label>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => setPropertyType('home')}
-                  className={`py-3 px-4 rounded-xl font-bold text-xs border transition-all ${
-                    propertyType === 'home'
-                      ? 'border-blue-600 bg-blue-50 text-blue-700 font-black'
-                      : 'border-slate-200 text-slate-600'
-                  }`}
-                >
-                  Residential Home
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPropertyType('commercial')}
-                  className={`py-3 px-4 rounded-xl font-bold text-xs border transition-all ${
-                    propertyType === 'commercial'
-                      ? 'border-blue-600 bg-blue-50 text-blue-700 font-black'
-                      : 'border-slate-200 text-slate-600'
-                  }`}
-                >
-                  Commercial / Factory
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <label className="text-xs font-extrabold text-slate-700 uppercase tracking-wider">
-                  Monthly Electricity Bill (₹)
-                </label>
-                <span className="text-base font-black text-blue-600 font-mono">
-                  ₹{monthlyBill.toLocaleString('en-IN')}
-                </span>
-              </div>
               <input
-                type="range"
-                min="1000"
-                max="50000"
-                step="500"
+                id="monthly-electricity-bill"
+                type="number"
+                min={0}
+                step={100}
                 value={monthlyBill}
-                onChange={(e) => setMonthlyBill(Number(e.target.value))}
-                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                onChange={(e) => setMonthlyBill(Math.max(0, Number(e.target.value) || 0))}
+                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200"
               />
-              <div className="flex justify-between text-[10px] text-slate-500 mt-1">
-                <span>₹1,000</span>
-                <span>₹25,000</span>
-                <span>₹50,000+</span>
-              </div>
+              <p className="mt-1 text-xs text-slate-500">Enter your average monthly bill in rupees.</p>
             </div>
 
             <div>
-              <div className="flex justify-between items-center mb-2">
-                <label className="text-xs font-extrabold text-slate-700 uppercase tracking-wider">
-                  DISCOM Tariff Rate (₹/unit)
-                </label>
-                <span className="text-sm font-bold text-slate-700 font-mono">
-                  ₹{tariffRate} / unit
-                </span>
-              </div>
+              <label htmlFor="discom-tariff-rate" className="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">
+                DISCOM Tariff Rate (₹/unit)
+              </label>
               <input
-                type="range"
-                min="5"
-                max="12"
-                step="0.5"
+                id="discom-tariff-rate"
+                type="number"
+                min={0}
+                step={0.01}
                 value={tariffRate}
-                onChange={(e) => setTariffRate(Number(e.target.value))}
-                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                onChange={(e) => setTariffRate(Math.max(0, Number(e.target.value) || 0))}
+                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200"
               />
+              <p className="mt-1 text-xs text-slate-500">Use your effective energy charge per unit. Actual DISCOM tariffs may be slab-based.</p>
             </div>
 
-            <div className="p-4 bg-amber-500/10 rounded-xl border border-amber-500/30 text-xs text-amber-800 flex items-start gap-2.5">
+            <div>
+              <label htmlFor="solar-connection-type" className="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">
+                Solar Connection Type
+              </label>
+              <select
+                id="solar-connection-type"
+                value={connectionType}
+                onChange={(e) => setConnectionType(e.target.value as 'On-Grid' | 'Off-Grid' | 'Hybrid')}
+                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900"
+              >
+                <option value="On-Grid">On-Grid</option>
+                <option value="Off-Grid">Off-Grid</option>
+                <option value="Hybrid">Hybrid</option>
+              </select>
+            </div>
+
+
+            {leadError && <p role="alert" className="text-sm font-medium text-red-600">{leadError}</p>}
+            <button type="submit" disabled={leadLoading || !isEstimateReady || leadSubmitted} className="w-full rounded-xl bg-amber-500 px-5 py-3 font-extrabold text-slate-950 transition hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-50">
+              {leadLoading ? 'Submitting…' : leadSubmitted ? 'Enquiry Submitted' : 'Calculate Savings'}
+            </button>
+
+            <div className="p-4 bg-amber-500/10 rounded-xl border border-amber-500/30 text-xs text-amber-900 flex items-start gap-2.5">
               <ShieldCheck className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
               <span>
-                {propertyType === 'home'
-                  ? `Qualifies for PM Surya Ghar Scheme with direct central Govt subsidy payout of ₹${subsidy.toLocaleString('en-IN')}.`
-                  : 'Commercial installations qualify for 40% Accelerated Depreciation tax deduction benefits.'}
+                {propertyType === 'home' && connectionType === 'On-Grid' ? (
+                  <>
+                    <strong>Indicative PM Surya Ghar subsidy estimate.</strong>{' '}
+                    The central assistance calculation uses ₹30,000/kW for the first 2 kW
+                    and ₹18,000/kW for the next 1 kW, capped at ₹78,000 for general states.
+                    Final eligibility and payment depend on current scheme rules, eligible
+                    equipment, DISCOM procedures and verification.
+                    {isEstimateReady && (
+                      <span className="block mt-2 font-bold">
+                        Estimated subsidy: ₹{subsidy.toLocaleString('en-IN')}
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <strong>Subsidy not included in this estimate.</strong>{' '}
+                    This calculator does not estimate residential PM Surya Ghar assistance
+                    for commercial, off-grid or hybrid configurations. Check current rules
+                    and local eligibility before making a financial decision.
+                  </>
+                )}
               </span>
             </div>
-          </div>
+          </form>
 
           {/* Results Output Cards */}
           <div className="lg:col-span-7 space-y-6">
+            <>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               <div className="p-4 rounded-2xl bg-blue-50 border border-blue-100 text-center">
                 <span className="text-[10px] uppercase font-bold text-slate-500">System Capacity</span>
-                <p className="text-2xl font-black text-blue-600 mt-1">{estimatedKw} kW</p>
+                <p className="text-2xl font-black text-blue-600 mt-1">{leadSubmitted && isEstimateReady ? `${estimatedKw} kW` : '—'}</p>
                 <span className="text-[10px] text-slate-500">Rooftop Plant</span>
               </div>
 
               <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-100 text-center">
                 <span className="text-[10px] uppercase font-bold text-emerald-600">Annual Units</span>
                 <p className="text-2xl font-black text-emerald-600 mt-1">
-                  {annualUnits.toLocaleString('en-IN')}
+                  {leadSubmitted && isEstimateReady ? annualUnits.toLocaleString('en-IN') : '—'}
                 </p>
                 <span className="text-[10px] text-slate-500">kWh Generated</span>
               </div>
 
               <div className="p-4 rounded-2xl bg-amber-50 border border-amber-100 text-center col-span-2 sm:col-span-1">
                 <span className="text-[10px] uppercase font-bold text-amber-600">Roof Area Req.</span>
-                <p className="text-2xl font-black text-slate-800 mt-1">{roofAreaSqFt} sq ft</p>
+                <p className="text-2xl font-black text-slate-800 mt-1">{leadSubmitted && isEstimateReady ? `${roofAreaSqFt} sq ft` : '—'}</p>
                 <span className="text-[10px] text-slate-500">Shadow Free Terrace</span>
               </div>
             </div>
@@ -290,31 +564,31 @@ export const SolarCalculator: React.FC = () => {
 
               <div className="flex justify-between text-sm text-slate-300">
                 <span>Estimated Turnkey Cost (Panels + Inverter + Structure):</span>
-                <span className="font-mono font-bold">₹{systemCostGross.toLocaleString('en-IN')}</span>
+                <span className="font-mono font-bold">{leadSubmitted && isEstimateReady ? `₹${systemCostGross.toLocaleString('en-IN')}` : '—'}</span>
               </div>
 
               <div className="flex justify-between text-sm text-emerald-400 font-bold">
                 <span>Central Govt Subsidy (PM Surya Ghar):</span>
-                <span className="font-mono">- ₹{subsidy.toLocaleString('en-IN')}</span>
+                <span className="font-mono">{leadSubmitted && isEstimateReady ? `- ₹${subsidy.toLocaleString('en-IN')}` : '—'}</span>
               </div>
 
               <div className="h-px bg-slate-800 my-2" />
 
               <div className="flex justify-between text-lg font-black text-white">
                 <span>Estimated Net Investment:</span>
-                <span className="font-mono text-amber-400">₹{netInvestment.toLocaleString('en-IN')}</span>
+                <span className="font-mono text-amber-400">{leadSubmitted && isEstimateReady ? `₹${netInvestment.toLocaleString('en-IN')}` : '—'}</span>
               </div>
 
               <div className="grid grid-cols-2 gap-4 pt-3 border-t border-slate-800 text-xs">
                 <div>
                   <span className="text-slate-400">Annual Bill Savings:</span>
                   <p className="text-base font-extrabold text-emerald-400 font-mono">
-                    ₹{annualSavings.toLocaleString('en-IN')} / year
+                    {leadSubmitted && isEstimateReady ? `₹${annualSavings.toLocaleString('en-IN')} / year` : '—'}
                   </p>
                 </div>
                 <div>
                   <span className="text-slate-400">Estimated Payback Period:</span>
-                  <p className="text-base font-extrabold text-blue-400 font-mono">~{paybackYears} Years</p>
+                  <p className="text-base font-extrabold text-blue-400 font-mono">{leadSubmitted && isEstimateReady && annualSavings > 0 ? `~${paybackYears} Years` : '—'}</p>
                 </div>
               </div>
             </div>
@@ -324,11 +598,14 @@ export const SolarCalculator: React.FC = () => {
               <button
                 onClick={handleDownloadPDF}
                 className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold text-xs sm:text-sm py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-transform transform active:scale-98"
-              >
+               disabled={!leadSubmitted || !isEstimateReady}>
                 <Download className="w-4 h-4" />
                 <span>Download PDF Feasibility Report</span>
               </button>
             </div>
+
+            </>
+
           </div>
         </div>
       )}
@@ -422,10 +699,10 @@ export const SolarCalculator: React.FC = () => {
             <div className="p-4 bg-blue-50 rounded-2xl border border-blue-100 text-xs text-slate-700 space-y-2">
               <div className="flex items-center gap-2 font-bold text-blue-700">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                <span>Zero Upfront Burden</span>
+                <span>Indicative Bank Finance Estimate</span>
               </div>
               <p>
-                In most cases, your monthly solar electricity bill savings (e.g. ₹4,000/mo) will be higher than your loan EMI (e.g. ₹2,200/mo) — making solar power positive cashflow from Day 1!
+                Compare your estimated loan EMI with your expected solar savings. The actual interest rate, loan approval, fees and energy savings depend on bank eligibility, your credit profile, system performance and local electricity tariffs.
               </p>
             </div>
           </div>

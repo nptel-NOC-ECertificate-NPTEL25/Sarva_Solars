@@ -963,27 +963,29 @@ export async function deleteGalleryItem(id: string): Promise<void> {
 export async function submitLead(data: any): Promise<{ message: string; lead: Lead }> {
   const id = `lead-${Date.now()}`;
 
-  const { data: leadData, error } = await supabase
+  const leadData = {
+    id,
+    full_name: data.fullName || data.name || 'Valued Customer',
+    phone: data.phone || '',
+    email: data.email || '',
+    city: data.city || 'Guntur',
+    state: data.state || 'Andhra Pradesh',
+    solar_for: data.solarFor || 'Home',
+    monthly_bill: String(data.monthlyBill || '0'),
+    roof_type: data.roofType || 'RCC Flat Roof',
+    connection_type: data.connectionType || null,
+    finance_interest: data.financeInterest || 'No',
+    status: 'New' as const,
+    notes: data.notes || ''
+  };
+
+  const { error } = await supabase
     .from('leads')
-    .insert({
-      id,
-      full_name: data.fullName || data.name || 'Valued Customer',
-      phone: data.phone || '',
-      email: data.email || '',
-      city: data.city || 'Guntur',
-      state: data.state || 'Andhra Pradesh',
-      solar_for: data.solarFor || 'Home',
-      monthly_bill: String(data.monthlyBill || '0'),
-      roof_type: data.roofType || 'RCC Flat Roof',
-      connection_type: data.connectionType || null,
-      finance_interest: data.financeInterest || 'No',
-      status: 'New',
-      notes: data.notes || ''
-    })
-    .select('*')
-    .single();
+    .insert(leadData);
 
   if (error) throw error;
+
+  const now = new Date().toISOString();
 
   const lead: Lead = {
     id: leadData.id,
@@ -995,13 +997,12 @@ export async function submitLead(data: any): Promise<{ message: string; lead: Le
     solarFor: leadData.solar_for,
     monthlyBill: leadData.monthly_bill,
     roofType: leadData.roof_type,
-    connectionType: leadData.connection_type,
+    connectionType: leadData.connection_type ?? undefined,
     financeInterest: leadData.finance_interest,
     status: leadData.status,
-    assignedTo: leadData.assigned_to ?? undefined,
     notes: leadData.notes,
-    createdAt: leadData.created_at,
-    updatedAt: leadData.updated_at
+    createdAt: now,
+    updatedAt: now
   };
 
   return { message: 'Lead submitted successfully', lead };
