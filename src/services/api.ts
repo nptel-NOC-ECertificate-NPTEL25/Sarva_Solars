@@ -959,6 +959,26 @@ export async function deleteGalleryItem(id: string): Promise<void> {
   if (error) throw error;
 }
 
+
+async function dispatchEmail(
+  formType: "Lead" | "Quote" | "JobApplication",
+  recordId: string
+): Promise<void> {
+  try {
+    const response = await fetch("/api/send-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ formType, recordId }),
+    });
+
+    if (!response.ok) {
+      console.error("Email dispatch request failed:", response.status);
+    }
+  } catch (error) {
+    console.error("Email dispatch could not be reached:", error);
+  }
+}
+
 // LEADS
 export async function submitLead(data: any): Promise<{ message: string; lead: Lead }> {
   const id = `lead-${Date.now()}`;
@@ -1005,6 +1025,7 @@ export async function submitLead(data: any): Promise<{ message: string; lead: Le
     updatedAt: now
   };
 
+  await dispatchEmail('Lead', leadData.id);
   return { message: 'Lead submitted successfully', lead };
 }
 
@@ -1138,6 +1159,7 @@ export async function submitQuote(data: any): Promise<{ message: string; quote: 
     createdAt: quoteData.created_at
   };
 
+  await dispatchEmail('Quote', quoteData.id);
   return { message: 'Quote submitted successfully', quote };
 }
 
@@ -1364,6 +1386,7 @@ export async function submitJobApplication(data: Omit<JobApplication, 'id' | 'cr
     createdAt: applicationData.created_at
   };
 
+  await dispatchEmail('JobApplication', applicationData.id);
   return { message: 'Application submitted successfully', application };
 }
 
